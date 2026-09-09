@@ -928,10 +928,16 @@ const CARL_HEART_PATH = [
   }
 ];
 
-  function setProgress(value) {
+function setProgress(value) {
   progress = Math.max(0, Math.min(100, value));
   fill.style.width = progress <= 0 ? "0%" : `${progress}%`;
   percent.textContent = `${Math.round(progress)}%`;
+
+  // BRICK 17 — Little Homie physically walks beneath the loader from 0% to 17%.
+  if (turtle && progress <= 17 && !noticed) {
+    const homieWalk = progress / 17;
+    turtle.style.setProperty("--lh-walk", homieWalk.toFixed(4));
+  }
 }
 
 const loading = setInterval(() => {
@@ -950,6 +956,7 @@ const loading = setInterval(() => {
 
   if (progress >= 17 && !noticed) {
     noticed = true;
+    turtle.style.setProperty("--lh-walk", "1");
     state = "notice";
     turtle.classList.remove("walk");
     turtle.classList.add("notice");
@@ -965,7 +972,7 @@ const loading = setInterval(() => {
     hidden = true;
     state = "hide";
     turtle.classList.remove("notice");
-    turtle.classList.add("hide");
+    turtle.classList.add("hide", "shelling");
   }
 
   if (progress >= 18.7 && !breached) {
@@ -4409,7 +4416,7 @@ function completeSequence() {
   }, 350);
 
   setTimeout(() => {
-    turtle.classList.remove("hide");
+    turtle.classList.remove("hide", "shelling", "covered-by-frank");
     turtle.classList.add("peek");
   }, 1500);
 
