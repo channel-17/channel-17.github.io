@@ -5053,6 +5053,12 @@ body {
 }
 
 @media (max-width: 430px) {
+  #turtle.turtle.homie-pixel.pixel-micro {
+    top: 16px !important;
+    width: 42px !important;
+    height: 26px !important;
+  }
+
   #signalGhost.signal-ghost,
   .signal-ghost {
     top: 14.5% !important;
@@ -5205,32 +5211,69 @@ body {
   pointer-events: none !important;
 }
 
-#turtle.turtle,
-#turtle.turtle.homie-pixel,
-#turtle.turtle.homie-pixel.pixel-b,
-#turtle.turtle.homie-pixel.pixel-b * {
-  opacity: 0 !important;
-  visibility: hidden !important;
+/* =========================================================
+   BRICK 17 — LITTLE HOMIE MICRO — INTEGRATED AUTHORITY
+   Red-X placeholder retired at source.
+========================================================= */
+#turtleTrack.turtle-track::after {
+  content: none !important;
+  display: none !important;
 }
 
-#turtleTrack.turtle-track::after {
-  content: "✕" !important;
+#turtle.turtle.homie-pixel.pixel-micro {
+  --lh-walk: 0;
   position: absolute !important;
-  left: 50% !important;
-  top: 112px !important;
-  transform: translate(-50%, -50%) !important;
-  color: var(--p19-red) !important;
-  font-family: Arial, sans-serif !important;
-  font-size: 58px !important;
-  font-weight: 900 !important;
-  line-height: 1 !important;
-  text-shadow:
-    0 0 8px rgba(255,29,37,.78),
-    0 0 18px rgba(255,29,37,.34) !important;
-  z-index: 9 !important;
+  left: 0 !important;
+  top: 17px !important;
+  width: 45px !important;
+  height: 28px !important;
+  margin: 0 !important;
   opacity: 1 !important;
   visibility: visible !important;
+  overflow: visible !important;
+  contain: none !important;
+  z-index: 3 !important;
+  image-rendering: pixelated !important;
+  shape-rendering: crispEdges !important;
+  filter: none !important;
+  transform: translate3d(calc(8px + (var(--lh-walk) * 142px)), 0, 0) !important;
+  transform-origin: 50% 70% !important;
 }
+
+#turtle.pixel-micro .homie-micro-svg {
+  display: block !important; width: 100% !important; height: 100% !important;
+  overflow: visible !important; shape-rendering: crispEdges !important; image-rendering: pixelated !important;
+}
+#turtle.pixel-micro .homie-micro-svg g { transform-box: fill-box; transform-origin: center; }
+#turtle.pixel-micro .homie-micro-svg rect { fill: #f2eee5 !important; shape-rendering: crispEdges !important; }
+#turtle.pixel-micro .lh-eye { fill: #020202 !important; }
+
+#turtle.pixel-micro.walk .lh-front-leg { animation: lhMicroFrontStep .34s steps(1,end) infinite !important; }
+#turtle.pixel-micro.walk .lh-rear-leg { animation: lhMicroRearStep .34s steps(1,end) infinite !important; }
+#turtle.pixel-micro.walk .lh-head, #turtle.pixel-micro.walk .lh-neck { animation: lhMicroHeadWalk .68s steps(2,end) infinite !important; }
+@keyframes lhMicroFrontStep { 50% { transform: translate(-1px,1px); } }
+@keyframes lhMicroRearStep { 50% { transform: translate(1px,-1px); } }
+@keyframes lhMicroHeadWalk { 50% { transform: translate(0,-1px); } }
+
+#turtle.pixel-micro.notice .lh-head, #turtle.pixel-micro.notice .lh-neck { animation: lhMicroNotice .22s steps(2,end) forwards !important; }
+@keyframes lhMicroNotice { to { transform: translate(-1px,-2px); } }
+
+#turtle.pixel-micro.hide .lh-head, #turtle.pixel-micro.hide .lh-neck,
+#turtle.pixel-micro.hide .lh-front-leg, #turtle.pixel-micro.hide .lh-rear-leg { opacity: 0 !important; visibility: hidden !important; }
+#turtle.pixel-micro.hide .lh-shell { animation: lhMicroBuriedShake .12s steps(2,end) infinite !important; }
+@keyframes lhMicroBuriedShake { 0%,100% { transform: translate(0,0); } 50% { transform: translate(1px,0); } }
+#turtle.pixel-micro.covered-by-frank { opacity: .16 !important; }
+
+#turtle.pixel-micro.peek .lh-front-leg, #turtle.pixel-micro.peek .lh-rear-leg { opacity: 0 !important; visibility: hidden !important; }
+#turtle.pixel-micro.peek .lh-head, #turtle.pixel-micro.peek .lh-neck { opacity: 1 !important; visibility: visible !important; animation: lhMicroPeek .58s steps(3,end) forwards !important; }
+@keyframes lhMicroPeek { 0% { transform: translate(-5px,1px); opacity: 0; } 45% { transform: translate(-3px,0); opacity: 1; } 100% { transform: translate(0,-1px); opacity: 1; } }
+
+#turtle.pixel-micro.escape .lh-head, #turtle.pixel-micro.escape .lh-neck,
+#turtle.pixel-micro.escape .lh-front-leg, #turtle.pixel-micro.escape .lh-rear-leg { opacity: 1 !important; visibility: visible !important; }
+#turtle.pixel-micro.escape { animation: lhMicroScurry 1.55s steps(14,end) forwards !important; }
+#turtle.pixel-micro.escape .lh-front-leg { animation: lhMicroFrontStep .16s steps(1,end) infinite !important; }
+#turtle.pixel-micro.escape .lh-rear-leg { animation: lhMicroRearStep .16s steps(1,end) infinite reverse !important; }
+@keyframes lhMicroScurry { 0% { transform: translate3d(150px,0,0) !important; opacity: 1; } 72% { transform: translate3d(268px,0,0) !important; opacity: 1; } 100% { transform: translate3d(316px,0,0) !important; opacity: 0; } }
 
 #loaderScene.loader-scene::after {
   left: calc(50% + 94px) !important;
@@ -5426,22 +5469,8 @@ body {
 }
 
 #turtleTrack.turtle-track::after {
-  content: "✕" !important;
-  position: absolute !important;
-  left: 50% !important;
-  top: 112px !important;
-  transform: translate(-50%, -50%) !important;
-  color: var(--p28-red) !important;
-  font-family: Arial, sans-serif !important;
-  font-size: 58px !important;
-  font-weight: 900 !important;
-  line-height: 1 !important;
-  text-shadow:
-    0 0 8px rgba(255,29,37,.78),
-    0 0 18px rgba(255,29,37,.34) !important;
-  z-index: 9 !important;
-  opacity: 1 !important;
-  visibility: visible !important;
+  content: none !important;
+  display: none !important;
 }
 
 /* Door tracks placeholder, not active visually until story calls it. */
@@ -13384,148 +13413,4 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
   clip-path:none !important;
   transform:none !important;
   animation:none !important;
-}
-
-
-/* =========================================================
-   BRICK 17 — LITTLE HOMIE MICRO AUTHORITY
-   Locked primitive pixel tortoise. Final authority for LH only.
-========================================================= */
-:root {
-  --lh-white: #f2eee5;
-  --lh-black: #020202;
-}
-
-#turtle.turtle.homie-pixel.pixel-micro {
-  --lh-walk: 0;
-  position: absolute !important;
-  left: 0 !important;
-  top: 17px !important;
-  width: 45px !important;
-  height: 28px !important;
-  margin: 0 !important;
-  opacity: 1 !important;
-  overflow: visible !important;
-  contain: none !important;
-  z-index: 3 !important;
-  image-rendering: pixelated !important;
-  shape-rendering: crispEdges !important;
-  filter: none !important;
-  transform: translate3d(calc(8px + (var(--lh-walk) * 142px)), 0, 0) !important;
-  transform-origin: 50% 70% !important;
-}
-
-#turtle.pixel-micro .homie-micro-svg {
-  display: block !important;
-  width: 100% !important;
-  height: 100% !important;
-  overflow: visible !important;
-  shape-rendering: crispEdges !important;
-  image-rendering: pixelated !important;
-}
-
-#turtle.pixel-micro .homie-micro-svg g {
-  transform-box: fill-box;
-  transform-origin: center;
-}
-
-#turtle.pixel-micro .homie-micro-svg rect {
-  fill: var(--lh-white) !important;
-  shape-rendering: crispEdges !important;
-}
-
-#turtle.pixel-micro .lh-eye {
-  fill: var(--lh-black) !important;
-}
-
-#turtle.pixel-micro.walk .lh-front-leg {
-  animation: lhMicroFrontStep .34s steps(1,end) infinite !important;
-}
-#turtle.pixel-micro.walk .lh-rear-leg {
-  animation: lhMicroRearStep .34s steps(1,end) infinite !important;
-}
-#turtle.pixel-micro.walk .lh-head,
-#turtle.pixel-micro.walk .lh-neck {
-  animation: lhMicroHeadWalk .68s steps(2,end) infinite !important;
-}
-
-@keyframes lhMicroFrontStep { 50% { transform: translate(-1px,1px); } }
-@keyframes lhMicroRearStep { 50% { transform: translate(1px,-1px); } }
-@keyframes lhMicroHeadWalk { 50% { transform: translate(0,-1px); } }
-
-#turtle.pixel-micro.notice .lh-head,
-#turtle.pixel-micro.notice .lh-neck {
-  animation: lhMicroNotice .22s steps(2,end) forwards !important;
-}
-@keyframes lhMicroNotice {
-  to { transform: translate(-1px,-2px); }
-}
-
-#turtle.pixel-micro.hide .lh-head,
-#turtle.pixel-micro.hide .lh-neck,
-#turtle.pixel-micro.hide .lh-front-leg,
-#turtle.pixel-micro.hide .lh-rear-leg {
-  opacity: 0 !important;
-  visibility: hidden !important;
-}
-
-#turtle.pixel-micro.hide .lh-shell {
-  animation: lhMicroBuriedShake .12s steps(2,end) infinite !important;
-}
-@keyframes lhMicroBuriedShake {
-  0%,100% { transform: translate(0,0); }
-  50% { transform: translate(1px,0); }
-}
-
-#turtle.pixel-micro.covered-by-frank {
-  opacity: .16 !important;
-}
-
-#turtle.pixel-micro.peek .lh-front-leg,
-#turtle.pixel-micro.peek .lh-rear-leg {
-  opacity: 0 !important;
-  visibility: hidden !important;
-}
-
-#turtle.pixel-micro.peek .lh-head,
-#turtle.pixel-micro.peek .lh-neck {
-  opacity: 1 !important;
-  visibility: visible !important;
-  animation: lhMicroPeek .58s steps(3,end) forwards !important;
-}
-@keyframes lhMicroPeek {
-  0% { transform: translate(-5px,1px); opacity:0; }
-  45% { transform: translate(-3px,0); opacity:1; }
-  100% { transform: translate(0,-1px); opacity:1; }
-}
-
-#turtle.pixel-micro.escape .lh-head,
-#turtle.pixel-micro.escape .lh-neck,
-#turtle.pixel-micro.escape .lh-front-leg,
-#turtle.pixel-micro.escape .lh-rear-leg {
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-#turtle.pixel-micro.escape {
-  animation: lhMicroScurry 1.55s steps(14,end) forwards !important;
-}
-#turtle.pixel-micro.escape .lh-front-leg {
-  animation: lhMicroFrontStep .16s steps(1,end) infinite !important;
-}
-#turtle.pixel-micro.escape .lh-rear-leg {
-  animation: lhMicroRearStep .16s steps(1,end) infinite reverse !important;
-}
-@keyframes lhMicroScurry {
-  0% { transform: translate3d(150px,0,0) !important; opacity:1; }
-  72% { transform: translate3d(268px,0,0) !important; opacity:1; }
-  100% { transform: translate3d(316px,0,0) !important; opacity:0; }
-}
-
-@media (max-width: 430px) {
-  #turtle.turtle.homie-pixel.pixel-micro {
-    top: 16px !important;
-    width: 42px !important;
-    height: 26px !important;
-  }
 }
