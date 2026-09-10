@@ -932,11 +932,6 @@ const CARL_HEART_PATH = [
   progress = Math.max(0, Math.min(100, value));
   fill.style.width = progress <= 0 ? "0%" : `${progress}%`;
   percent.textContent = `${Math.round(progress)}%`;
-
-  if (turtle && progress <= 17 && !noticed) {
-    const homieWalk = progress / 17;
-    turtle.style.setProperty("--lh-walk", homieWalk.toFixed(4));
-  }
 }
 
 const loading = setInterval(() => {
@@ -955,9 +950,8 @@ const loading = setInterval(() => {
 
   if (progress >= 17 && !noticed) {
     noticed = true;
-    turtle.style.setProperty("--lh-walk", "1");
     state = "notice";
-    turtle.classList.remove("walk");
+    turtle.classList.remove("crawl");
     turtle.classList.add("notice");
     loader.classList.add("offcourse");
 
@@ -4415,18 +4409,26 @@ function completeSequence() {
   }, 350);
 
   setTimeout(() => {
-    turtle.classList.remove("hide");
+    turtle.classList.remove("hide", "shelling", "covered-by-frank");
     turtle.classList.add("peek");
   }, 1500);
+
+  // Little Homie survives, comes fully back out, and walks IN PLACE
+  // at the exact old red-X anchor while he waits for the exit door.
+  setTimeout(() => {
+    turtle.classList.remove("peek");
+    turtle.classList.add("crawl-wait");
+  }, 2200);
 
   setTimeout(() => {
     loaderScene.classList.add("portal-open");
   }, 2650);
 
+  // Door finishes its drop/open beat first. Then Homie books it.
   setTimeout(() => {
-    turtle.classList.remove("peek");
+    turtle.classList.remove("crawl-wait");
     turtle.classList.add("escape");
-  }, 3400);
+  }, 3020);
 
   setTimeout(() => {
     loaderScene.classList.add("portal-close");
