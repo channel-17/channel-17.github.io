@@ -13832,3 +13832,56 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
   }
 }
 
+/* =========================================================
+   BRICK 17 — LITTLE HOMIE RIG 02
+   ASSEMBLY + SCALE REPAIR
+   Full-file authority. No loader geometry/progress changes.
+   The shell remains the assembly anchor; the four attached
+   pieces are pulled inward until the five PNGs read as one
+   tortoise, then the completed rig is enlarged as a unit.
+========================================================= */
+
+#turtle.turtle.homie-asset-rig {
+  width: 94px !important;
+  height: 56px !important;
+}
+
+#turtle.homie-asset-rig .lh-shell {
+  left: 18px !important;
+  top: 3px !important;
+  width: 57px !important;
+}
+
+#turtle.homie-asset-rig .lh-head {
+  left: 58px !important;
+  top: 12px !important;
+  width: 30px !important;
+}
+
+#turtle.homie-asset-rig .lh-back-leg {
+  left: 15px !important;
+  top: 32px !important;
+  width: 25px !important;
+}
+
+#turtle.homie-asset-rig .lh-front-leg {
+  left: 52px !important;
+  top: 32px !important;
+  width: 27px !important;
+}
+
+#turtle.homie-asset-rig .lh-tail {
+  left: 11px !important;
+  top: 22px !important;
+  width: 18px !important;
+}
+
+@media (max-width:430px) {
+  #turtle.turtle.homie-asset-rig {
+    left:50% !important;
+    top:210px !important;
+    width:94px !important;
+    height:56px !important;
+  }
+}
+
