@@ -4681,3 +4681,96 @@ if (rejectionClose) rejectionClose.addEventListener("click", () => {
   laughingCarl.classList.add("open");
   laughingCarl.setAttribute("aria-hidden", "false");
 });
+
+
+/* ============================================================
+   BRICK 17 — LITTLE HOMIE RIG04 / AUTOMATIC MASTER CALIBRATION
+   Uses Lh.B17.Full.png as a temporary pixel map. Each of Jinx's five
+   protected PNG pieces is matched against the full image, then placed
+   from measured source pixels. No hand-guessed assembly coordinates.
+   ============================================================ */
+(() => {
+  const rig = document.getElementById('turtle');
+  const master = document.getElementById('lhCalibrationMaster');
+  if (!rig || !master || !rig.classList.contains('homie-asset-rig')) return;
+
+  const pieces = [...rig.querySelectorAll('.lh-part')];
+  const waitImage = img => img.complete && img.naturalWidth
+    ? Promise.resolve(img)
+    : new Promise((resolve, reject) => {
+        img.addEventListener('load', () => resolve(img), { once:true });
+        img.addEventListener('error', reject, { once:true });
+      });
+
+  const pixels = img => {
+    const c = document.createElement('canvas');
+    c.width = img.naturalWidth; c.height = img.naturalHeight;
+    const x = c.getContext('2d', { willReadFrequently:true });
+    x.clearRect(0,0,c.width,c.height); x.drawImage(img,0,0);
+    return { w:c.width, h:c.height, d:x.getImageData(0,0,c.width,c.height).data };
+  };
+
+  const alphaBox = p => {
+    let minX=p.w, minY=p.h, maxX=-1, maxY=-1;
+    for (let y=0;y<p.h;y++) for (let x=0;x<p.w;x++) {
+      if (p.d[(y*p.w+x)*4+3] > 20) {
+        if(x<minX)minX=x; if(x>maxX)maxX=x; if(y<minY)minY=y; if(y>maxY)maxY=y;
+      }
+    }
+    return maxX < 0 ? null : {minX,minY,maxX,maxY,w:maxX-minX+1,h:maxY-minY+1};
+  };
+
+  // Exact-color template search. Because the five files were cut from the
+  // locked master, opaque pixels should exist unchanged in Lh.B17.Full.png.
+  const locate = (part, full) => {
+    const b=alphaBox(part); if(!b) return null;
+    const samples=[];
+    const step=Math.max(1, Math.floor(Math.min(b.w,b.h)/10));
+    for(let y=b.minY;y<=b.maxY;y+=step) for(let x=b.minX;x<=b.maxX;x+=step){
+      const i=(y*part.w+x)*4, a=part.d[i+3];
+      if(a>100) samples.push([x,y,part.d[i],part.d[i+1],part.d[i+2],a]);
+    }
+    let best=null, bestScore=Infinity;
+    const minOX=-b.minX, maxOX=full.w-1-b.maxX;
+    const minOY=-b.minY, maxOY=full.h-1-b.maxY;
+    for(let oy=minOY;oy<=maxOY;oy++) for(let ox=minOX;ox<=maxOX;ox++){
+      let score=0, used=0;
+      for(const [x,y,r,g,bl,a] of samples){
+        const fi=((y+oy)*full.w+(x+ox))*4;
+        const fa=full.d[fi+3];
+        if(fa<20){ score+=900; used++; continue; }
+        score += Math.abs(r-full.d[fi]) + Math.abs(g-full.d[fi+1]) + Math.abs(bl-full.d[fi+2]) + Math.abs(a-fa)*0.25;
+        used++;
+        if(best && score > bestScore) break;
+      }
+      if(used && score<bestScore){bestScore=score; best={x:ox,y:oy,score};}
+    }
+    return best;
+  };
+
+  Promise.all([waitImage(master), ...pieces.map(waitImage)]).then(() => {
+    const full=pixels(master);
+    const DISPLAY_W=96;
+    const scale=DISPLAY_W/full.w;
+    const displayH=Math.round(full.h*scale);
+    rig.style.setProperty('width', DISPLAY_W+'px', 'important');
+    rig.style.setProperty('height', displayH+'px', 'important');
+
+    for(const img of pieces){
+      const p=pixels(img), pos=locate(p,full);
+      if(!pos) throw new Error('Little Homie calibration failed: '+img.src);
+      img.style.setProperty('left', (pos.x*scale)+'px', 'important');
+      img.style.setProperty('top', (pos.y*scale)+'px', 'important');
+      img.style.setProperty('width', (p.w*scale)+'px', 'important');
+      img.style.setProperty('height', (p.h*scale)+'px', 'important');
+    }
+    requestAnimationFrame(() => rig.classList.add('lh-calibrated'));
+  }).catch(err => {
+    console.error(err);
+    // Fail visibly to the full locked Homie instead of showing exploded parts.
+    master.style.setProperty('opacity','1','important');
+    master.style.setProperty('visibility','visible','important');
+    rig.classList.add('lh-calibrated','lh-calibration-fallback');
+    pieces.forEach(p => p.style.setProperty('visibility','hidden','important'));
+  });
+})();
