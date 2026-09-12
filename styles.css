@@ -13591,297 +13591,84 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
 }
 
 /* ============================================================
-   BRICK 17 — LITTLE HOMIE / FIVE-ASSET MASTER RIG
-   SOURCE OF TRUTH: LH.B17 Tail / Shell / Head / BackLeg / FrontLeg.
-   Exact former red-X anchor: left 50%, top 210px.
-   IMPORTANT: loader geometry/progression is not touched here.
-   0–17%: fixed in place; rear flipper pushes, holds, recovers.
-   First whole-body translation occurs only during .escape.
+   BRICK 17 — LITTLE HOMIE / FIVE-ASSET MASTER RIG — RIG03
+   Protected five-PNG hardware. Shell is the assembly anchor.
+   Exact former red-X anchor: 50% / 210px.
+   Loader bar, percentage, chaos line and progression are untouched.
    ============================================================ */
-#turtleTrack.turtle-track::after {
-  content: none !important;
-  display: none !important;
-}
-
-#turtleTrack.turtle-track {
-  position: relative !important;
-  height: 220px !important;
-  overflow: visible !important;
-  pointer-events: none !important;
-}
+#turtleTrack.turtle-track::after { content:none !important; display:none !important; }
+#turtleTrack.turtle-track { position:relative !important; height:220px !important; overflow:visible !important; pointer-events:none !important; }
 
 #turtle.turtle.homie-asset-rig {
-  position: absolute !important;
-  left: 50% !important;
-  top: 210px !important;
-  width: 58px !important;
-  height: 34px !important;
-  margin: 0 !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  overflow: visible !important;
-  z-index: 126 !important;
-  transform: translate(-50%, -50%) !important;
-  transform-origin: 46% 76% !important;
-  image-rendering: pixelated !important;
-  filter: none !important;
+  position:absolute !important; left:50% !important; top:210px !important;
+  width:108px !important; height:64px !important; margin:0 !important;
+  opacity:1 !important; visibility:visible !important; overflow:visible !important;
+  z-index:126 !important; transform:translate(-50%,-50%) !important;
+  transform-origin:48% 76% !important; image-rendering:pixelated !important; filter:none !important;
 }
-
 #turtle.homie-asset-rig .lh-part {
-  position: absolute !important;
-  display: block !important;
-  height: auto !important;
-  max-width: none !important;
-  object-fit: contain !important;
-  pointer-events: none !important;
-  user-select: none !important;
-  -webkit-user-drag: none !important;
-  image-rendering: pixelated !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  transform-box: border-box !important;
+  position:absolute !important; display:block !important; height:auto !important; max-width:none !important;
+  object-fit:contain !important; pointer-events:none !important; user-select:none !important;
+  -webkit-user-drag:none !important; image-rendering:pixelated !important;
+  opacity:1 !important; visibility:visible !important; transform-box:border-box !important;
 }
+/* Rest pose: outer hardware is deliberately overlapped into the shell so it reads as ONE tortoise. */
+#turtle.homie-asset-rig .lh-shell { left:18px !important; top:3px !important; width:68px !important; z-index:3 !important; transform-origin:48% 78% !important; }
+#turtle.homie-asset-rig .lh-head { left:69px !important; top:13px !important; width:34px !important; z-index:5 !important; transform-origin:7% 62% !important; }
+#turtle.homie-asset-rig .lh-back-leg { left:15px !important; top:38px !important; width:29px !important; z-index:2 !important; transform-origin:78% 16% !important; }
+#turtle.homie-asset-rig .lh-front-leg { left:61px !important; top:38px !important; width:31px !important; z-index:4 !important; transform-origin:20% 16% !important; }
+#turtle.homie-asset-rig .lh-tail { left:9px !important; top:26px !important; width:22px !important; z-index:1 !important; transform-origin:90% 48% !important; }
 
-/* Reconstruct the locked Little Homie from Jinx's five cropped PNG pieces. */
-#turtle.homie-asset-rig .lh-shell {
-  left: 11px !important;
-  top: 2px !important;
-  width: 35px !important;
-  z-index: 3 !important;
-  transform-origin: 48% 78% !important;
-}
-#turtle.homie-asset-rig .lh-head {
-  left: 40px !important;
-  top: 8px !important;
-  width: 18px !important;
-  z-index: 5 !important;
-  transform-origin: 8% 62% !important;
-}
-#turtle.homie-asset-rig .lh-back-leg {
-  left: 7px !important;
-  top: 22px !important;
-  width: 15px !important;
-  z-index: 2 !important;
-  transform-origin: 76% 18% !important;
-}
-#turtle.homie-asset-rig .lh-front-leg {
-  left: 34px !important;
-  top: 22px !important;
-  width: 16px !important;
-  z-index: 4 !important;
-  transform-origin: 22% 18% !important;
-}
-#turtle.homie-asset-rig .lh-tail {
-  left: 2px !important;
-  top: 16px !important;
-  width: 11px !important;
-  z-index: 1 !important;
-  transform-origin: 90% 48% !important;
-}
-
-/* 0–17%: tortoise traction, not walking. The rig never translates. */
+/* 0–17%: traction cycle only. Whole rig stays nailed to the old X. */
 #turtle.homie-asset-rig.crawl .lh-back-leg,
-#turtle.homie-asset-rig.crawl-wait .lh-back-leg {
-  animation: b17LHBackPush 1.26s steps(1,end) infinite !important;
-}
+#turtle.homie-asset-rig.crawl-wait .lh-back-leg { animation:b17LHBackPush 1.34s steps(1,end) infinite !important; }
 #turtle.homie-asset-rig.crawl .lh-front-leg,
-#turtle.homie-asset-rig.crawl-wait .lh-front-leg {
-  animation: b17LHFrontBrace 1.26s steps(1,end) infinite !important;
-}
+#turtle.homie-asset-rig.crawl-wait .lh-front-leg { animation:b17LHFrontBrace 1.34s steps(1,end) infinite !important; }
 #turtle.homie-asset-rig.crawl .lh-shell,
-#turtle.homie-asset-rig.crawl-wait .lh-shell {
-  animation: b17LHShellLoad 1.26s steps(1,end) infinite !important;
-}
+#turtle.homie-asset-rig.crawl-wait .lh-shell { animation:b17LHShellLoad 1.34s steps(1,end) infinite !important; }
 #turtle.homie-asset-rig.crawl .lh-head,
-#turtle.homie-asset-rig.crawl-wait .lh-head {
-  animation: b17LHHeadLoad 1.26s steps(1,end) infinite !important;
-}
+#turtle.homie-asset-rig.crawl-wait .lh-head { animation:b17LHHeadLoad 1.34s steps(1,end) infinite !important; }
 #turtle.homie-asset-rig.crawl .lh-tail,
-#turtle.homie-asset-rig.crawl-wait .lh-tail {
-  animation: b17LHTailLoad 1.26s steps(1,end) infinite !important;
-}
+#turtle.homie-asset-rig.crawl-wait .lh-tail { animation:b17LHTailLoad 1.34s steps(1,end) infinite !important; }
+@keyframes b17LHBackPush { 0%,12%{transform:translate3d(0,0,0) rotate(0)} 25%{transform:translate3d(-2px,0,0) rotate(-4deg)} 38%,67%{transform:translate3d(-5px,2px,0) rotate(-10deg)} 78%{transform:translate3d(-3px,1px,0) rotate(-6deg)} 91%,100%{transform:translate3d(0,0,0) rotate(0)} }
+@keyframes b17LHFrontBrace { 0%,28%{transform:translate3d(0,0,0) rotate(0)} 38%,67%{transform:translate3d(1px,1px,0) rotate(3deg)} 82%,100%{transform:translate3d(0,0,0) rotate(0)} }
+@keyframes b17LHShellLoad { 0%,28%{transform:translate3d(0,0,0) rotate(0)} 38%,67%{transform:translate3d(1px,1px,0) rotate(.4deg)} 82%,100%{transform:translate3d(0,0,0) rotate(0)} }
+@keyframes b17LHHeadLoad { 0%,28%{transform:translate3d(0,0,0)} 38%,67%{transform:translate3d(1px,.5px,0)} 82%,100%{transform:translate3d(0,0,0)} }
+@keyframes b17LHTailLoad { 0%,100%{transform:rotate(0)} 38%,67%{transform:rotate(-3deg)} }
 
-@keyframes b17LHBackPush {
-  0%, 13%  { transform: translate3d(0,0,0) rotate(0deg); }
-  24%      { transform: translate3d(-1px,0,0) rotate(-3deg); }
-  36%      { transform: translate3d(-3px,1px,0) rotate(-8deg); }
-  37%, 69% { transform: translate3d(-3px,1px,0) rotate(-8deg); }
-  80%      { transform: translate3d(-2px,0,0) rotate(-4deg); }
-  90%,100% { transform: translate3d(0,0,0) rotate(0deg); }
-}
-@keyframes b17LHFrontBrace {
-  0%, 28%  { transform: translate3d(0,0,0) rotate(0deg); }
-  36%, 69% { transform: translate3d(1px,1px,0) rotate(3deg); }
-  82%,100% { transform: translate3d(0,0,0) rotate(0deg); }
-}
-@keyframes b17LHShellLoad {
-  0%, 28%  { transform: translate3d(0,0,0) rotate(0deg); }
-  36%, 69% { transform: translate3d(.6px,.8px,0) rotate(.35deg); }
-  82%,100% { transform: translate3d(0,0,0) rotate(0deg); }
-}
-@keyframes b17LHHeadLoad {
-  0%, 28%  { transform: translate3d(0,0,0); }
-  36%, 69% { transform: translate3d(.7px,.3px,0); }
-  82%,100% { transform: translate3d(0,0,0); }
-}
-@keyframes b17LHTailLoad {
-  0%,100% { transform: rotate(0deg); }
-  36%,69% { transform: rotate(-2deg); }
-}
+#turtle.homie-asset-rig.notice .lh-part { animation:none !important; }
+#turtle.homie-asset-rig.notice .lh-head { transform:translate3d(-1px,-3px,0) rotate(-5deg) !important; }
+#turtle.homie-asset-rig.notice .lh-shell { transform:translate3d(-.5px,-.5px,0) !important; }
 
-/* 17%: he notices the crash, still nailed to the loader anchor. */
-#turtle.homie-asset-rig.notice .lh-back-leg,
-#turtle.homie-asset-rig.notice .lh-front-leg,
-#turtle.homie-asset-rig.notice .lh-shell,
-#turtle.homie-asset-rig.notice .lh-head,
-#turtle.homie-asset-rig.notice .lh-tail {
-  animation: none !important;
-}
-#turtle.homie-asset-rig.notice .lh-head {
-  transform: translate3d(-1px,-2px,0) rotate(-4deg) !important;
-}
-#turtle.homie-asset-rig.notice .lh-shell {
-  transform: translate3d(-.4px,-.4px,0) !important;
-}
-
-/* 18.4%: shell instinct. Shell stays readable and shakes under chaos. */
 #turtle.homie-asset-rig.hide .lh-head,
 #turtle.homie-asset-rig.hide .lh-back-leg,
 #turtle.homie-asset-rig.hide .lh-front-leg,
-#turtle.homie-asset-rig.hide .lh-tail {
-  opacity: 0 !important;
-  visibility: hidden !important;
-  animation: none !important;
-}
-#turtle.homie-asset-rig.hide .lh-shell {
-  opacity: 1 !important;
-  visibility: visible !important;
-  animation: b17LHShellShake .12s steps(2,end) infinite !important;
-}
-@keyframes b17LHShellShake {
-  0%,100% { transform: translate3d(0,0,0); }
-  50% { transform: translate3d(1px,0,0); }
-}
-#turtle.homie-asset-rig.covered-by-frank { opacity: .16 !important; }
+#turtle.homie-asset-rig.hide .lh-tail { opacity:0 !important; visibility:hidden !important; animation:none !important; }
+#turtle.homie-asset-rig.hide .lh-shell { opacity:1 !important; visibility:visible !important; animation:b17LHShellShake .12s steps(2,end) infinite !important; }
+@keyframes b17LHShellShake { 0%,100%{transform:translate3d(0,0,0)} 50%{transform:translate3d(1px,0,0)} }
+#turtle.homie-asset-rig.covered-by-frank { opacity:.16 !important; }
 
-/* Chaos clears: head first. Still fixed. */
 #turtle.homie-asset-rig.peek .lh-shell { opacity:1 !important; visibility:visible !important; }
 #turtle.homie-asset-rig.peek .lh-back-leg,
 #turtle.homie-asset-rig.peek .lh-front-leg,
 #turtle.homie-asset-rig.peek .lh-tail { opacity:0 !important; visibility:hidden !important; }
-#turtle.homie-asset-rig.peek .lh-head {
-  opacity:1 !important;
-  visibility:visible !important;
-  animation:b17LHPeek .58s steps(3,end) forwards !important;
-}
-@keyframes b17LHPeek {
-  0% { transform:translate3d(-7px,2px,0); opacity:0; }
-  45% { transform:translate3d(-3px,0,0); opacity:1; }
-  100% { transform:translate3d(0,-1px,0); opacity:1; }
-}
+#turtle.homie-asset-rig.peek .lh-head { opacity:1 !important; visibility:visible !important; animation:b17LHPeek .58s steps(3,end) forwards !important; }
+@keyframes b17LHPeek { 0%{transform:translate3d(-9px,3px,0);opacity:0} 45%{transform:translate3d(-4px,0,0);opacity:1} 100%{transform:translate3d(0,-1px,0);opacity:1} }
 
-/* Back out of shell; same traction loop while the door opens. Still no travel. */
-#turtle.homie-asset-rig.crawl-wait .lh-head,
-#turtle.homie-asset-rig.crawl-wait .lh-back-leg,
-#turtle.homie-asset-rig.crawl-wait .lh-front-leg,
-#turtle.homie-asset-rig.crawl-wait .lh-tail,
-#turtle.homie-asset-rig.crawl-wait .lh-shell {
-  opacity:1 !important;
-  visibility:visible !important;
-}
+#turtle.homie-asset-rig.crawl-wait .lh-part { opacity:1 !important; visibility:visible !important; }
 
-/* Door destination stays on its established axis. */
-#loaderScene.loader-scene::after {
-  left: calc(50% + 94px) !important;
-  top: 240px !important;
-}
+/* Established door axis. */
+#loaderScene.loader-scene::after { left:calc(50% + 94px) !important; top:240px !important; }
 
-/* Only here does the audience learn he can actually go somewhere. */
-#turtle.homie-asset-rig.escape {
-  animation: b17LHBreakFree .92s steps(10,end) forwards !important;
-}
-#turtle.homie-asset-rig.escape .lh-back-leg {
-  animation: b17LHBackPush .24s steps(1,end) infinite !important;
-}
-#turtle.homie-asset-rig.escape .lh-front-leg {
-  animation: b17LHFrontBrace .24s steps(1,end) infinite !important;
-}
-#turtle.homie-asset-rig.escape .lh-shell {
-  animation: b17LHShellLoad .24s steps(1,end) infinite !important;
-}
+/* First whole-body travel in the entire intro. */
+#turtle.homie-asset-rig.escape { animation:b17LHBreakFree .92s steps(10,end) forwards !important; }
+#turtle.homie-asset-rig.escape .lh-back-leg { animation:b17LHBackPush .24s steps(1,end) infinite !important; }
+#turtle.homie-asset-rig.escape .lh-front-leg { animation:b17LHFrontBrace .24s steps(1,end) infinite !important; }
+#turtle.homie-asset-rig.escape .lh-shell { animation:b17LHShellLoad .24s steps(1,end) infinite !important; }
 #turtle.homie-asset-rig.escape .lh-head,
-#turtle.homie-asset-rig.escape .lh-tail {
-  opacity:1 !important;
-  visibility:visible !important;
-}
-@keyframes b17LHBreakFree {
-  0%   { transform:translate(-50%,-50%) translate3d(0,0,0); opacity:1; }
-  18%  { transform:translate(-50%,-50%) translate3d(8px,2px,0); opacity:1; }
-  42%  { transform:translate(-50%,-50%) translate3d(32px,9px,0); opacity:1; }
-  68%  { transform:translate(-50%,-50%) translate3d(63px,19px,0); opacity:1; }
-  86%  { transform:translate(-50%,-50%) translate3d(87px,27px,0); opacity:1; }
-  100% { transform:translate(-50%,-50%) translate3d(101px,30px,0); opacity:0; }
-}
+#turtle.homie-asset-rig.escape .lh-tail { opacity:1 !important; visibility:visible !important; }
+@keyframes b17LHBreakFree { 0%{transform:translate(-50%,-50%) translate3d(0,0,0);opacity:1} 18%{transform:translate(-50%,-50%) translate3d(8px,2px,0);opacity:1} 42%{transform:translate(-50%,-50%) translate3d(32px,9px,0);opacity:1} 68%{transform:translate(-50%,-50%) translate3d(63px,19px,0);opacity:1} 86%{transform:translate(-50%,-50%) translate3d(87px,27px,0);opacity:1} 100%{transform:translate(-50%,-50%) translate3d(101px,30px,0);opacity:0} }
 
 @media (max-width:430px) {
-  #turtle.turtle.homie-asset-rig {
-    left:50% !important;
-    top:210px !important;
-    width:58px !important;
-    height:34px !important;
-  }
+  #turtle.turtle.homie-asset-rig { left:50% !important; top:210px !important; width:108px !important; height:64px !important; }
 }
-
-/* =========================================================
-   BRICK 17 — LITTLE HOMIE RIG 02
-   ASSEMBLY + SCALE REPAIR
-   Full-file authority. No loader geometry/progress changes.
-   The shell remains the assembly anchor; the four attached
-   pieces are pulled inward until the five PNGs read as one
-   tortoise, then the completed rig is enlarged as a unit.
-========================================================= */
-
-#turtle.turtle.homie-asset-rig {
-  width: 94px !important;
-  height: 56px !important;
-}
-
-#turtle.homie-asset-rig .lh-shell {
-  left: 18px !important;
-  top: 3px !important;
-  width: 57px !important;
-}
-
-#turtle.homie-asset-rig .lh-head {
-  left: 58px !important;
-  top: 12px !important;
-  width: 30px !important;
-}
-
-#turtle.homie-asset-rig .lh-back-leg {
-  left: 15px !important;
-  top: 32px !important;
-  width: 25px !important;
-}
-
-#turtle.homie-asset-rig .lh-front-leg {
-  left: 52px !important;
-  top: 32px !important;
-  width: 27px !important;
-}
-
-#turtle.homie-asset-rig .lh-tail {
-  left: 11px !important;
-  top: 22px !important;
-  width: 18px !important;
-}
-
-@media (max-width:430px) {
-  #turtle.turtle.homie-asset-rig {
-    left:50% !important;
-    top:210px !important;
-    width:94px !important;
-    height:56px !important;
-  }
-}
-
