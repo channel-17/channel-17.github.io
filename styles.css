@@ -13712,3 +13712,27 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
   object-fit:fill !important;
   image-rendering:pixelated !important;
 }
+
+
+/* BRICK 17 — LITTLE HOMIE FULL-BODY CALIBRATION AUTHORITY */
+#turtle.turtle.homie-full-only{
+ position:absolute!important;left:50%!important;top:210px!important;
+ width:96px!important;height:64px!important;margin:0!important;padding:0!important;
+ opacity:1!important;visibility:visible!important;overflow:visible!important;
+ background:transparent!important;border:0!important;filter:none!important;
+ transform:translate(-50%,-50%)!important;transform-origin:50% 50%!important;
+ animation:none!important;transition:none!important;pointer-events:none!important;z-index:90!important;
+}
+#turtle.homie-full-only .homie-full-image{
+ position:absolute!important;inset:0!important;display:block!important;
+ width:100%!important;height:100%!important;object-fit:contain!important;object-position:center!important;
+ margin:0!important;padding:0!important;opacity:1!important;visibility:visible!important;
+ background:transparent!important;border:0!important;filter:none!important;
+ transform:none!important;animation:none!important;image-rendering:pixelated!important;pointer-events:none!important;
+}
+#turtle.homie-full-only.walk,#turtle.homie-full-only.notice,#turtle.homie-full-only.hide,
+#turtle.homie-full-only.peek,#turtle.homie-full-only.crawl,#turtle.homie-full-only.crawl-wait,
+#turtle.homie-full-only.escape{
+ left:50%!important;top:210px!important;opacity:1!important;visibility:visible!important;
+ transform:translate(-50%,-50%)!important;animation:none!important;
+}
