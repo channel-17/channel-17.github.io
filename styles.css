@@ -5519,7 +5519,7 @@ body {
 
 #turtle.turtle.homie-full {
   position: absolute !important;
-  left: 50% !important;
+  left: 47% !important;
   top: 210px !important;
   width: 210px !important;
   height: 126px !important;
@@ -5562,7 +5562,7 @@ body {
 #turtle.turtle.homie-full.walk,
 #turtle.turtle.homie-full.crawl,
 #turtle.turtle.homie-full.crawl-wait {
-  left: 50% !important;
+  left: 47% !important;
   top: 210px !important;
   opacity: 1 !important;
   visibility: visible !important;
