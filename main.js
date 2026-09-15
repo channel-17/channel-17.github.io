@@ -4,6 +4,15 @@
 const fill = document.getElementById("fill");
 const percent = document.getElementById("percent");
 const turtle = document.getElementById("turtle");
+  // BRICK 17 — LITTLE HOMIE MECHANICAL WAKE / HEAD
+  // Shell first. Head snaps fully out after a short dead-space beat.
+  if (turtle) {
+    turtle.classList.remove("homie-head-out");
+    window.setTimeout(() => {
+      turtle.classList.add("homie-head-out");
+    }, 650);
+  }
+
 const virusLayer = document.getElementById("virusLayer");
 const loader = document.getElementById("loader");
 const loaderScene = document.getElementById("loaderScene");
@@ -2410,6 +2419,10 @@ function snapshotFrostActors() {
 
     if (actor.classList.contains("carl-trigger-heart")) {
       snapshot.classList.add("c17-frost-story-heart");
+      snapshot.style.setProperty("background", "transparent", "important");
+      snapshot.style.setProperty("border", "0", "important");
+      snapshot.style.setProperty("box-shadow", "none", "important");
+      snapshot.style.setProperty("outline", "0", "important");
       copyFrozenLayerState(actor, snapshot, ".carl-heart-red");
       copyFrozenLayerState(actor, snapshot, ".carl-heart-grey");
 
