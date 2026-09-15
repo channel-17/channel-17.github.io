@@ -13514,3 +13514,37 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
   opacity: 1 !important;
   visibility: visible !important;
 }
+
+
+/* =========================================================
+   BRICK 17 — LITTLE HOMIE HEAD: MEASURED PIXEL-BOUND FIX
+   Current.LH(5) measured the visible head ~162px below shell.
+   Keep the head asset at full calibrated scale and translate its
+   visible content into the shell's anatomical front/right position.
+   Shell remains permanent.
+========================================================= */
+#turtle.turtle.homie-full .homie-head-image {
+  position: absolute !important;
+  inset: 0 !important;
+  left: auto !important;
+  top: auto !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  z-index: 2 !important;
+  transform: translate(8px, -162px) !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+#turtle.turtle.homie-full.homie-head-out .homie-head-image {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+#turtle.turtle.homie-full .homie-shell-image,
+#turtle.turtle.homie-full.homie-head-out .homie-shell-image {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
