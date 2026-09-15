@@ -5555,6 +5555,17 @@ body {
   image-rendering: pixelated !important;
 }
 
+#turtle.turtle.homie-full .homie-head-image {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+#turtle.turtle.homie-full.homie-head-out .homie-head-image {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+
 #turtle.turtle.homie-full.notice,
 #turtle.turtle.homie-full.hide,
 #turtle.turtle.homie-full.peek,
@@ -10135,6 +10146,10 @@ html.frost-dead-world .screen {
   z-index: 10036 !important;
   opacity: 1 !important;
   visibility: visible !important;
+background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  outline: 0 !important;
 }
 
 .c17-frost-story-heart .carl-heart-layer {
