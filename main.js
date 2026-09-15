@@ -4,14 +4,6 @@
 const fill = document.getElementById("fill");
 const percent = document.getElementById("percent");
 const turtle = document.getElementById("turtle");
-  // BRICK 17 — LITTLE HOMIE MECHANICAL WAKE / HEAD
-  // Shell first. Head snaps fully out after a short dead-space beat.
-  if (turtle) {
-    turtle.classList.remove("homie-head-out");
-    window.setTimeout(() => {
-      turtle.classList.add("homie-head-out");
-    }, 650);
-  }
 
 const virusLayer = document.getElementById("virusLayer");
 const loader = document.getElementById("loader");
@@ -109,6 +101,10 @@ if (loaderScene) {
     loaderScene.classList.add("boot-visible");
   }, LOADER_BOOT_DELAY_MS);
   setTimeout(() => {
+    // Little Homie wakes mechanically: shell -> BOOM head -> loader starts at 1%.
+    turtle?.classList.add("homie-head-out");
+    loaderScene.classList.add("homie-awake");
+    setProgress(1);
     loaderBootComplete = true;
   }, LOADER_BOOT_DELAY_MS + LOADER_FADE_IN_MS);
 } else {
@@ -4516,7 +4512,8 @@ function c17UpdateLoaderPercentPass43() {
   }
 
   value = Math.max(0, Math.min(100, Math.round(value)));
-  percent.textContent = value + "%";
+  if (!loaderScene?.classList.contains("homie-awake")) return;
+  percent.textContent = Math.max(1, value) + "%";
 }
 
 setInterval(c17UpdateLoaderPercentPass43, 50);
