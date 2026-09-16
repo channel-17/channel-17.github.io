@@ -3953,6 +3953,16 @@ body {
 
 #fill.fill::before { display: none !important; }
 
+#loaderScene.loader-scene > #percent.percent {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+#loaderScene.loader-scene.homie-awake > #percent.percent {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
 #percent.percent {
   position: absolute !important;
   inset: auto !important;
@@ -5539,27 +5549,40 @@ body {
 }
 
 #turtle.turtle.homie-full .homie-full-image {
-  position: absolute !important;
-  inset: 0 !important;
   display: block !important;
-  width: 100% !important;
-  height: 100% !important;
   object-fit: contain !important;
   object-position: center !important;
   background: transparent !important;
   border: 0 !important;
   box-shadow: none !important;
-  opacity: 1 !important;
-  visibility: visible !important;
   filter: none !important;
-  transform: none !important;
   animation: none !important;
   image-rendering: pixelated !important;
 }
 
+#turtle.turtle.homie-full .homie-shell-image {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+  z-index: 1 !important;
+}
+
 #turtle.turtle.homie-full .homie-head-image {
+  position: absolute !important;
+  inset: auto !important;
+  left: 50% !important;
+  top: 34% !important;
+  width: 25% !important;
+  height: auto !important;
   opacity: 0 !important;
   visibility: hidden !important;
+  transform: none !important;
+  clip-path: none !important;
+  z-index: 2 !important;
 }
 
 #turtle.turtle.homie-full.homie-head-out .homie-head-image {
@@ -5567,6 +5590,10 @@ body {
   visibility: visible !important;
 }
 
+#turtle.turtle.homie-full.homie-head-out .homie-shell-image {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
 
 #turtle.turtle.homie-full.notice,
 #turtle.turtle.homie-full.hide,
@@ -13455,73 +13482,4 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
   clip-path:none !important;
   transform:none !important;
   animation:none !important;
-}
-
-
-/* =========================================================
-   BRICK 17 — LITTLE HOMIE WAKE GATE
-   Empty loader + shell first. No 0%. Head snaps out, then 1%.
-========================================================= */
-#loaderScene.loader-scene > #percent.percent {
-  opacity: 0 !important;
-  visibility: hidden !important;
-}
-
-#loaderScene.loader-scene.homie-awake > #percent.percent {
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-
-/* =========================================================
-   BRICK 17 — LITTLE HOMIE CLEAN HEAD ASSET
-   LH.B17.Head.Clean.png is a genuinely cropped transparent PNG.
-   Shell remains persistent. Head is now positioned as a normal asset.
-========================================================= */
-#turtle.turtle.homie-full .homie-shell-image {
-  position: absolute !important;
-  inset: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: contain !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  z-index: 1 !important;
-}
-
-#turtle.turtle.homie-full .homie-head-image {
-  position: absolute !important;
-  inset: auto !important;
-  left: 66% !important;
-  top: 34% !important;
-  width: 25% !important;
-  height: auto !important;
-  object-fit: contain !important;
-  z-index: 2 !important;
-  opacity: 0 !important;
-  visibility: hidden !important;
-  transform: none !important;
-  clip-path: none !important;
-}
-
-#turtle.turtle.homie-full.homie-head-out .homie-head-image {
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-#turtle.turtle.homie-full.homie-head-out .homie-shell-image {
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-
-/* =========================================================
-   BRICK 17 — LITTLE HOMIE HEAD SEAT
-   Current.LH(8): geometry-only correction.
-   Same Clean Head asset, same size, same Y. Move left only.
-========================================================= */
-#turtle.turtle.homie-full .homie-head-image {
-  left: 50% !important;
-  top: 34% !important;
-  width: 25% !important;
 }
