@@ -13513,3 +13513,15 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
   opacity: 1 !important;
   visibility: visible !important;
 }
+
+
+/* =========================================================
+   BRICK 17 — LITTLE HOMIE HEAD SEAT
+   Current.LH(8): geometry-only correction.
+   Same Clean Head asset, same size, same Y. Move left only.
+========================================================= */
+#turtle.turtle.homie-full .homie-head-image {
+  left: 50% !important;
+  top: 34% !important;
+  width: 25% !important;
+}
