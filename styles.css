@@ -13474,8 +13474,9 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
 
 
 /* =========================================================
-   BRICK 17 — LITTLE HOMIE: PERSISTENT SHELL + HEAD SOCKET
-   Shell is permanent during wake-up. Head is an added layer.
+   BRICK 17 — LITTLE HOMIE CLEAN HEAD ASSET
+   LH.B17.Head.Clean.png is a genuinely cropped transparent PNG.
+   Shell remains persistent. Head is now positioned as a normal asset.
 ========================================================= */
 #turtle.turtle.homie-full .homie-shell-image {
   position: absolute !important;
@@ -13488,20 +13489,19 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
   z-index: 1 !important;
 }
 
-/* Head PNG is NOT treated as a full-canvas layer.
-   Give it an independent anatomical socket on the shell's right/front edge. */
 #turtle.turtle.homie-full .homie-head-image {
   position: absolute !important;
   inset: auto !important;
-  left: 67% !important;
-  top: 31% !important;
-  width: 31% !important;
-  height: 38% !important;
+  left: 66% !important;
+  top: 34% !important;
+  width: 25% !important;
+  height: auto !important;
   object-fit: contain !important;
-  object-position: center !important;
   z-index: 2 !important;
   opacity: 0 !important;
   visibility: hidden !important;
+  transform: none !important;
+  clip-path: none !important;
 }
 
 #turtle.turtle.homie-full.homie-head-out .homie-head-image {
@@ -13509,41 +13509,6 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
   visibility: visible !important;
 }
 
-/* Wake state must never suppress the shell. */
-#turtle.turtle.homie-full.homie-head-out .homie-shell-image {
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-
-/* =========================================================
-   BRICK 17 — LITTLE HOMIE HEAD: MEASURED PIXEL-BOUND FIX
-   Current.LH(5) measured the visible head ~162px below shell.
-   Keep the head asset at full calibrated scale and translate its
-   visible content into the shell's anatomical front/right position.
-   Shell remains permanent.
-========================================================= */
-#turtle.turtle.homie-full .homie-head-image {
-  position: absolute !important;
-  inset: 0 !important;
-  left: auto !important;
-  top: auto !important;
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: contain !important;
-  object-position: center !important;
-  z-index: 2 !important;
-  transform: translate(8px, -162px) !important;
-  opacity: 0 !important;
-  visibility: hidden !important;
-}
-
-#turtle.turtle.homie-full.homie-head-out .homie-head-image {
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-#turtle.turtle.homie-full .homie-shell-image,
 #turtle.turtle.homie-full.homie-head-out .homie-shell-image {
   opacity: 1 !important;
   visibility: visible !important;
