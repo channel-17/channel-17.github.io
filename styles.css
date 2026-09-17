@@ -5532,7 +5532,7 @@ body {
   left: 47% !important;
   top: 210px !important;
   width: 210px !important;
-  height: 126px !important;
+  height: 100px !important;
   margin: 0 !important;
   padding: 0 !important;
   overflow: visible !important;
@@ -5548,53 +5548,82 @@ body {
   transition: none !important;
 }
 
-#turtle.turtle.homie-full .homie-full-image {
-  display: block !important;
+/* LOCKED HARDWARE RULE:
+   Every body piece uses the SAME common crop, SAME box, SAME scale.
+   Never independently size or position Homie's anatomy again. */
+#turtle.turtle.homie-full .homie-piece {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
   object-fit: contain !important;
   object-position: center !important;
   background: transparent !important;
   border: 0 !important;
   box-shadow: none !important;
   filter: none !important;
-  animation: none !important;
+  transform: none !important;
   image-rendering: pixelated !important;
+  pointer-events: none !important;
 }
 
+/* Shell exists from the first visible frame. */
 #turtle.turtle.homie-full .homie-shell-image {
-  position: absolute !important;
-  inset: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
   opacity: 1 !important;
   visibility: visible !important;
-  transform: none !important;
   z-index: 1 !important;
 }
 
+/* Head is its own beat. */
 #turtle.turtle.homie-full .homie-head-image {
-  position: absolute !important;
-  inset: auto !important;
-  left: 39% !important;
-  top: 34% !important;
-  width: 25% !important;
-  height: auto !important;
   opacity: 0 !important;
   visibility: hidden !important;
-  transform: none !important;
-  clip-path: none !important;
-  z-index: 2 !important;
+  z-index: 5 !important;
 }
-
 #turtle.turtle.homie-full.homie-head-out .homie-head-image {
   opacity: 1 !important;
   visibility: visible !important;
 }
 
-#turtle.turtle.homie-full.homie-head-out .homie-shell-image {
+/* Tail + BOTH feet remain hidden until the second mechanical POP. */
+#turtle.turtle.homie-full .homie-tail-image,
+#turtle.turtle.homie-full .homie-front-leg-image,
+#turtle.turtle.homie-full .homie-back-leg-image {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+#turtle.turtle.homie-full.homie-limbs-out .homie-tail-image,
+#turtle.turtle.homie-full.homie-limbs-out .homie-front-leg-image,
+#turtle.turtle.homie-full.homie-limbs-out .homie-back-leg-image {
   opacity: 1 !important;
   visibility: visible !important;
 }
 
+#turtle.turtle.homie-full .homie-tail-image { z-index: 2 !important; }
+#turtle.turtle.homie-full .homie-back-leg-image { z-index: 3 !important; }
+#turtle.turtle.homie-full .homie-front-leg-image { z-index: 4 !important; }
+
+/* Mechanical working motion: feet only.
+   The body geometry NEVER changes. */
+#turtle.turtle.homie-full.walk .homie-front-leg-image {
+  animation: homieFrontMechanical 0.54s steps(2, end) infinite !important;
+  transform-origin: 68% 72% !important;
+}
+#turtle.turtle.homie-full.walk .homie-back-leg-image {
+  animation: homieBackMechanical 0.54s steps(2, end) infinite reverse !important;
+  transform-origin: 31% 72% !important;
+}
+@keyframes homieFrontMechanical {
+  0%, 100% { transform: rotate(-4deg) !important; }
+  50% { transform: rotate(4deg) !important; }
+}
+@keyframes homieBackMechanical {
+  0%, 100% { transform: rotate(-4deg) !important; }
+  50% { transform: rotate(4deg) !important; }
+}
+
+/* Existing 17%+ story-state classes may change behavior later,
+   but they do NOT get to alter the locked assembly geometry here. */
 #turtle.turtle.homie-full.notice,
 #turtle.turtle.homie-full.hide,
 #turtle.turtle.homie-full.peek,
@@ -5607,7 +5636,6 @@ body {
   opacity: 1 !important;
   visibility: visible !important;
   transform: translate(-50%, -50%) !important;
-  animation: none !important;
 }
 
 #loaderScene.loader-scene::after {
