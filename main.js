@@ -97,16 +97,26 @@ let loaderBootComplete = false;
 
 if (loaderScene) {
   loaderScene.classList.add("booting-in");
+
+  // STATE 0 — empty loader bar + shell only.
   setTimeout(() => {
     loaderScene.classList.add("boot-visible");
   }, LOADER_BOOT_DELAY_MS);
+
+  // STATE 1 — mechanical BOOM: head appears BY ITSELF.
+  const homieHeadPopAt = LOADER_BOOT_DELAY_MS + LOADER_FADE_IN_MS;
   setTimeout(() => {
-    // Little Homie wakes mechanically: shell -> BOOM head -> loader starts at 1%.
     turtle?.classList.add("homie-head-out");
+  }, homieHeadPopAt);
+
+  // STATE 2 — tiny beat later: tail + both feet appear together.
+  // Only now does 1% begin and Little Homie starts working.
+  setTimeout(() => {
+    turtle?.classList.add("homie-limbs-out", "walk");
     loaderScene.classList.add("homie-awake");
     setProgress(1);
     loaderBootComplete = true;
-  }, LOADER_BOOT_DELAY_MS + LOADER_FADE_IN_MS);
+  }, homieHeadPopAt + 240);
 } else {
   loaderBootComplete = true;
 }
