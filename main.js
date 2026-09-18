@@ -95,25 +95,45 @@ const LOADER_BOOT_DELAY_MS = 780;
 const LOADER_FADE_IN_MS = 1680;
 let loaderBootComplete = false;
 
+const homieFrame = document.getElementById("homieFrame");
+let homieWalkTimer = null;
+let homieWalkPhase = 0;
+
+function setHomieFrame(src) {
+  if (homieFrame && homieFrame.getAttribute("src") !== src) homieFrame.setAttribute("src", src);
+}
+
+function startHomieWalk() {
+  if (homieWalkTimer) clearInterval(homieWalkTimer);
+  homieWalkPhase = 0;
+  setHomieFrame("LH.Walk.A.png");
+  homieWalkTimer = setInterval(() => {
+    if (!turtle?.classList.contains("walk")) {
+      clearInterval(homieWalkTimer);
+      homieWalkTimer = null;
+      return;
+    }
+    homieWalkPhase ^= 1;
+    setHomieFrame(homieWalkPhase ? "LH.Walk.B.png" : "LH.Walk.A.png");
+  }, 430);
+}
+
 if (loaderScene) {
   loaderScene.classList.add("booting-in");
 
-  // STATE 0 — empty loader bar + shell only.
-  setTimeout(() => {
-    loaderScene.classList.add("boot-visible");
-  }, LOADER_BOOT_DELAY_MS);
+  // Empty bar + shell. No percentage.
+  setHomieFrame("LH.Shell.png");
+  setTimeout(() => loaderScene.classList.add("boot-visible"), LOADER_BOOT_DELAY_MS);
 
-  // STATE 1 — mechanical BOOM: head appears BY ITSELF.
+  // Head pops out alone. Still no percentage.
   const homieHeadPopAt = LOADER_BOOT_DELAY_MS + LOADER_FADE_IN_MS;
-  setTimeout(() => {
-    turtle?.classList.add("homie-head-out");
-  }, homieHeadPopAt);
+  setTimeout(() => setHomieFrame("LH.Shell.Head.png"), homieHeadPopAt);
 
-  // STATE 2 — tiny beat later: tail + both feet appear together.
-  // Only now does 1% begin and Little Homie starts working.
+  // Appendages appear; 1% + mechanical walk begin together.
   setTimeout(() => {
-    turtle?.classList.add("homie-limbs-out", "walk");
+    turtle?.classList.add("walk");
     loaderScene.classList.add("homie-awake");
+    startHomieWalk();
     setProgress(1);
     loaderBootComplete = true;
   }, homieHeadPopAt + 240);
