@@ -13549,3 +13549,94 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
   transform:none !important;
   animation:none !important;
 }
+
+
+/* =========================================================
+   B17 LITTLE HOMIE — SCREENSHOT AUTHORITY / SHREDDER PASS
+   ========================================================= */
+#turtle.turtle.homie-full:not(.escape) { left:49% !important; }
+
+/* Shiver is a viewport-registered, topmost layer. */
+#turtle.turtle.homie-full .homie-fx.active.shiver {
+  position:fixed !important;
+  left:var(--lh-fx-left) !important;
+  top:var(--lh-fx-top) !important;
+  width:var(--lh-fx-width) !important;
+  height:var(--lh-fx-height) !important;
+  transform:none !important;
+  display:block !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  z-index:2147483000 !important;
+  pointer-events:none !important;
+  object-fit:contain !important;
+  image-rendering:pixelated !important;
+}
+
+/* No rectangular Homie surround at 100% peek. */
+#loaderScene.loader-scene.homie-stage-naked #turtle {
+  border:0 !important;
+  outline:0 !important;
+  box-shadow:none !important;
+  background:transparent !important;
+}
+#loaderScene.loader-scene.homie-stage-naked #turtle::before,
+#loaderScene.loader-scene.homie-stage-naked #turtle::after,
+#loaderScene.loader-scene.homie-stage-naked .homie-stage,
+#loaderScene.loader-scene.homie-stage-naked .turtle-stage,
+#loaderScene.loader-scene.homie-stage-naked .homie-box {
+  display:none !important;
+}
+
+/* Red-line reference, rendered in loader cream: SHORT and LOCAL. */
+#homieDoor.homie-door {
+  position:absolute !important;
+  width:3px !important;
+  height:0 !important;
+  background:#FFF6CF !important;
+  opacity:0 !important;
+  visibility:hidden !important;
+  z-index:40 !important;
+  pointer-events:none !important;
+  transform-origin:top center !important;
+  box-shadow:none !important;
+}
+#loaderScene.loader-scene.portal-open #homieDoor.homie-door {
+  visibility:visible !important;
+  opacity:1 !important;
+  animation:lhDoorCut .55s steps(10,end) forwards !important;
+}
+@keyframes lhDoorCut {
+  from { height:0; }
+  to { height:var(--homie-door-height,58px); }
+}
+#loaderScene.loader-scene.portal-close #homieDoor.homie-door {
+  visibility:visible !important;
+  opacity:1 !important;
+  height:var(--homie-door-height,58px) !important;
+  animation:lhDoorSeal .55s steps(10,end) forwards !important;
+}
+@keyframes lhDoorSeal {
+  from { height:var(--homie-door-height,58px); }
+  to { height:0; }
+}
+
+/* Center -> door. Final quarter feeds him behind the slit like a shredder. */
+#turtle.turtle.homie-full.escape.homie-sprint {
+  left:49% !important;
+  animation:lhRunToShredder 4s linear forwards !important;
+  will-change:left,clip-path !important;
+}
+@keyframes lhRunToShredder {
+  0%   { left:49% !important; clip-path:inset(0 0 0 0); }
+  70%  { clip-path:inset(0 0 0 0); }
+  78%  { clip-path:inset(0 10% 0 0); }
+  85%  { clip-path:inset(0 28% 0 0); }
+  91%  { clip-path:inset(0 52% 0 0); }
+  96%  { clip-path:inset(0 78% 0 0); }
+  100% { left:76% !important; clip-path:inset(0 100% 0 0); }
+}
+#turtle.turtle.homie-full.through-door {
+  opacity:0 !important;
+  visibility:hidden !important;
+}
