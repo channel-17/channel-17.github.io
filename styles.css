@@ -5549,8 +5549,10 @@ body {
 }
 
 /* LITTLE HOMIE FRAME AUTHORITY — finished 815x390 exports.
-   One image. One box. No anatomy assembly. */
-#turtle.turtle.homie-full .homie-frame {
+   One registered body frame + one registered transparent FX frame.
+   No anatomy assembly. */
+#turtle.turtle.homie-full .homie-frame,
+#turtle.turtle.homie-full .homie-fx {
   display: block !important;
   position: absolute !important;
   inset: 0 !important;
@@ -5567,10 +5569,22 @@ body {
   pointer-events: none !important;
 }
 
+#turtle.turtle.homie-full .homie-frame { z-index: 2 !important; }
+
+#turtle.turtle.homie-full .homie-fx {
+  z-index: 1 !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+#turtle.turtle.homie-full .homie-fx.active {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Before the finale Homie obeys his assigned loader coordinates. */
 #turtle.turtle.homie-full.notice,
 #turtle.turtle.homie-full.hide,
 #turtle.turtle.homie-full.peek,
-#turtle.turtle.homie-full.escape,
 #turtle.turtle.homie-full.walk,
 #turtle.turtle.homie-full.crawl,
 #turtle.turtle.homie-full.crawl-wait {
@@ -5579,6 +5593,82 @@ body {
   opacity: 1 !important;
   visibility: visible !important;
   transform: translate(-50%, -50%) !important;
+}
+
+/* FINAL BREAK OF CHARACTER:
+   same registered frame; the whole creature physically leaves his loader post. */
+#turtle.turtle.homie-full.escape.homie-sprint {
+  left: 47% !important;
+  top: 210px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translate(-50%, -50%) !important;
+  animation: homieRunForHisDigitalLife 4.10s linear forwards !important;
+  z-index: 26 !important;
+}
+
+@keyframes homieRunForHisDigitalLife {
+  0%   { left: 47% !important; }
+  100% { left: 102% !important; }
+}
+
+#turtle.turtle.homie-full.through-door {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+/* THE DOOR IS THE CUT.
+   No PNG. No panel. One hard computer line slicing north -> south. */
+#homieDoor.homie-door {
+  --homie-door-ground: 58vh;
+  position: fixed !important;
+  left: 88vw !important;
+  top: 0 !important;
+  width: 4px !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: #FFF6CF !important;
+  box-shadow: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  z-index: 27 !important;
+  image-rendering: pixelated !important;
+}
+
+#loaderScene.loader-scene.portal-open #homieDoor.homie-door {
+  opacity: 1 !important;
+  visibility: visible !important;
+  animation: homieDoorKnifeDown .62s steps(9, end) forwards !important;
+}
+
+#loaderScene.loader-scene.portal-close #homieDoor.homie-door {
+  opacity: 1 !important;
+  visibility: visible !important;
+  height: var(--homie-door-ground) !important;
+  animation: homieDoorKnifeUp .54s steps(9, end) forwards !important;
+}
+
+@keyframes homieDoorKnifeDown {
+  from { height: 0; }
+  to   { height: var(--homie-door-ground); }
+}
+@keyframes homieDoorKnifeUp {
+  from { height: var(--homie-door-ground); }
+  to   { height: 0; }
+}
+
+/* Once the cut seals, the loader world retires.
+   The symbol is NOT inside loaderScene, so it remains alone and clickable. */
+#loaderScene.loader-scene.finale-clear #loader.loader,
+#loaderScene.loader-scene.finale-clear #percent.percent,
+#loaderScene.loader-scene.finale-clear #turtleTrack.turtle-track,
+#loaderScene.loader-scene.finale-clear #homieDoor.homie-door,
+#loaderScene.loader-scene.finale-clear::after {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
 #loaderScene.loader-scene::after {
