@@ -4534,73 +4534,107 @@ function completeSequence() {
   setProgress(100);
   stopHomieFx();
 
-  setTimeout(() => stopAttack(), 500);
+  if (homieWalkTimer) {
+    clearInterval(homieWalkTimer);
+    homieWalkTimer = null;
+  }
 
-  // 100% gets a clean breath. Track is structural only; never a visible box.
-  setTimeout(() => loaderScene.classList.add("homie-stage-naked"), 1250);
+  setTimeout(() => stopAttack(), 450);
 
-  // Peek.
+  // 100% gets its own clean beat.
   setTimeout(() => {
-    turtle.classList.remove("hide", "notice", "walk", "escape", "through-door");
+    loaderScene.classList.add("homie-stage-naked");
+  }, 1100);
+
+  // PEEK: head only. Then absolutely nothing for a moment.
+  setTimeout(() => {
+    turtle.classList.remove(
+      "hide", "notice", "walk", "escape", "homie-sprint",
+      "through-door", "door-excited", "door-ready"
+    );
+    turtle.style.removeProperty("--lh-door-x");
     turtle.classList.add("peek");
     setHomieFrame("LH.Peek.png");
-  }, 1900);
+  }, 1850);
 
-  // Real scene-relative slit: just beyond loader's right tip, entirely below bar.
+  // Door cuts DOWN only after Homie has had time to look around.
   setTimeout(() => {
     if (!homieDoor || !loader || !loaderScene) return;
+
     const sceneRect = loaderScene.getBoundingClientRect();
     const loaderRect = loader.getBoundingClientRect();
 
-    const doorX = Math.round(loaderRect.right - sceneRect.left + 8);
-    const doorTop = Math.round(loaderRect.bottom - sceneRect.top + 12);
-    const doorHeight = 54;
+    // Small slit: just outside the loader's right tip and fully below the bar.
+    const doorX = Math.round(loaderRect.right - sceneRect.left + 7);
+    const doorTop = Math.round(loaderRect.bottom - sceneRect.top + 14);
+    const doorHeight = 58;
 
     homieDoor.style.setProperty("left", `${doorX}px`, "important");
     homieDoor.style.setProperty("top", `${doorTop}px`, "important");
     homieDoor.style.setProperty("--homie-door-height", `${doorHeight}px`);
 
-    // Turtle left is percentage-based inside a full-width track.
-    // Put his center slightly through the slit so the clip reads like a shredder.
-    const endPct = Math.max(60, Math.min(88, ((doorX + 18) / sceneRect.width) * 100));
+    // Convert the physical door coordinate into the turtle-track coordinate space.
+    const trackRect = turtleTrack.getBoundingClientRect();
+    const doorInTrack = doorX + sceneRect.left - trackRect.left;
+
+    // Registered turtle is 229px wide. We want him to run THROUGH the slit,
+    // not vanish before reaching it. This target carries his body beyond the door.
+    const endCenterPx = doorInTrack + 112;
+    const endPct = (endCenterPx / trackRect.width) * 100;
+
+    turtle.style.setProperty("--lh-door-x", `${doorInTrack}px`);
     turtle.style.setProperty("--lh-run-end", `${endPct}%`);
 
     loaderScene.classList.add("portal-open");
-  }, 3400);
+  }, 3650);
 
-  // Full body comes out.
+  // He sees the way home. Full body comes out, but he does NOT run yet.
   setTimeout(() => {
     turtle.classList.remove("peek");
+    turtle.classList.add("door-excited");
     setHomieFrame("LH.Walk.A.png");
-  }, 4200);
+  }, 4550);
 
-  // Recognition beat -> break character.
+  // Tiny coil-up / recognition beat.
   setTimeout(() => {
+    turtle.classList.add("door-ready");
+  }, 5100);
+
+  // BREAK CHARACTER. Feet tick at analog speed; haste data panics behind him.
+  setTimeout(() => {
+    turtle.classList.remove("door-ready");
     turtle.classList.add("escape", "walk", "homie-sprint");
     startHomieWalk();
     startPanicStrips();
-  }, 5000);
+  }, 5650);
 
-  // Last ass pixel clears the slit; crisis data dies.
+  // By here his final registered pixel has crossed the stationary slit.
   setTimeout(() => {
     stopHomieFx();
-    if (homieWalkTimer) clearInterval(homieWalkTimer);
-    homieWalkTimer = null;
+    if (homieWalkTimer) {
+      clearInterval(homieWalkTimer);
+      homieWalkTimer = null;
+    }
     turtle.classList.remove("walk", "homie-sprint");
     turtle.classList.add("through-door");
-  }, 9000);
+  }, 9450);
 
+  // Beat after the last digital ass pixel is gone.
   setTimeout(() => {
     loaderScene.classList.remove("portal-open");
     loaderScene.classList.add("portal-close");
-  }, 9350);
+  }, 9750);
 
+  // Door + flashing 100% loader retire together.
   setTimeout(() => {
     loaderScene.classList.remove("portal-close");
     loaderScene.classList.add("finale-clear");
-  }, 10050);
+  }, 10350);
 
-  setTimeout(() => signalNode.classList.add("ready"), 10550);
+  // Only the symbol survives and becomes the entrance to Channel 17.
+  setTimeout(() => {
+    signalNode.classList.add("ready");
+  }, 10650);
 }
 
 function openChannel() {
