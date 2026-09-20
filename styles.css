@@ -13738,3 +13738,160 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
   height: 100% !important;
   transform: none !important;
 }
+
+
+/* =========================================================
+   BRICK 17 — FORENSIC FINALE FIRE
+   Video authority 2026-09-20.
+   This block is intentionally LAST and overrides legacy loader rot.
+   ========================================================= */
+
+/* The giant 100% rectangle was legacy track/pseudo-element rot.
+   turtleTrack is geometry ONLY. */
+#turtleTrack.turtle-track,
+#loaderScene.loader-scene.homie-stage-naked #turtleTrack.turtle-track {
+  position: relative !important;
+  width: 100% !important;
+  overflow: visible !important;
+  background: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  clip-path: none !important;
+}
+#turtleTrack.turtle-track::before,
+#turtleTrack.turtle-track::after {
+  content: none !important;
+  display: none !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Retire EVERY old pseudo-door. The real #homieDoor is now scene-relative. */
+#loaderScene.loader-scene::before,
+#loaderScene.loader-scene::after {
+  content: none !important;
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+/* User reference: keep current scale, move him UP close under the loader. */
+#turtle.turtle.homie-full,
+#turtle.turtle.homie-full.notice,
+#turtle.turtle.homie-full.hide,
+#turtle.turtle.homie-full.peek,
+#turtle.turtle.homie-full.walk,
+#turtle.turtle.homie-full.crawl,
+#turtle.turtle.homie-full.crawl-wait {
+  left: 49% !important;
+  top: 125px !important;
+  width: 229px !important;
+  height: 109px !important;
+  margin: 0 !important;
+  transform: translate(-50%,-50%) !important;
+  background: transparent !important;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+  image-rendering: pixelated !important;
+}
+
+/* Shiver A/B share the exact authored Homie canvas. */
+#turtle.turtle.homie-full .homie-frame,
+#turtle.turtle.homie-full .homie-fx,
+#turtle.turtle.homie-full .homie-fx.active,
+#turtle.turtle.homie-full .homie-fx.active.shiver {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  transform: none !important;
+  image-rendering: pixelated !important;
+  pointer-events: none !important;
+}
+#turtle.turtle.homie-full .homie-frame { z-index: 2 !important; }
+#turtle.turtle.homie-full .homie-fx { z-index: 12 !important; }
+#turtle.turtle.homie-full .homie-fx.active {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* The door: one short computer cut. */
+#homieDoor.homie-door {
+  position: absolute !important;
+  width: 3px !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: var(--c17-loader-cream,#b8ad92) !important;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: 0 0 5px rgba(184,173,146,.28) !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  z-index: 150 !important;
+  pointer-events: none !important;
+  transform: none !important;
+}
+#loaderScene.loader-scene.portal-open #homieDoor.homie-door {
+  opacity: 1 !important;
+  visibility: visible !important;
+  animation: b17DoorDown .58s steps(9,end) forwards !important;
+}
+#loaderScene.loader-scene.portal-close #homieDoor.homie-door {
+  opacity: 1 !important;
+  visibility: visible !important;
+  height: var(--homie-door-height,54px) !important;
+  animation: b17DoorUp .54s steps(9,end) forwards !important;
+}
+@keyframes b17DoorDown {
+  from { height:0; }
+  to { height:var(--homie-door-height,54px); }
+}
+@keyframes b17DoorUp {
+  from { height:var(--homie-door-height,54px); }
+  to { height:0; }
+}
+
+/* Break from center, run to the actual slit, then feed through it.
+   Speed-line PNGs remain registered to Homie's canvas while his feet tick A/B. */
+#turtle.turtle.homie-full.escape.homie-sprint {
+  top: 125px !important;
+  width: 229px !important;
+  height: 109px !important;
+  left: 49% !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: 140 !important;
+  animation: b17RunIntoDoor 4s linear forwards !important;
+  will-change: left,clip-path !important;
+}
+@keyframes b17RunIntoDoor {
+  0%   { left:49% !important; clip-path:inset(0 0 0 0); }
+  64%  { clip-path:inset(0 0 0 0); }
+  72%  { clip-path:inset(0 8% 0 0); }
+  80%  { clip-path:inset(0 24% 0 0); }
+  87%  { clip-path:inset(0 46% 0 0); }
+  93%  { clip-path:inset(0 70% 0 0); }
+  97%  { clip-path:inset(0 88% 0 0); }
+  100% { left:var(--lh-run-end,76%) !important; clip-path:inset(0 100% 0 0); }
+}
+#turtle.turtle.homie-full.through-door {
+  opacity:0 !important;
+  visibility:hidden !important;
+}
+
+/* Finale retirement: symbol remains because it lives outside loaderScene. */
+#loaderScene.loader-scene.finale-clear #loader.loader,
+#loaderScene.loader-scene.finale-clear #percent.percent,
+#loaderScene.loader-scene.finale-clear #turtleTrack.turtle-track,
+#loaderScene.loader-scene.finale-clear #homieDoor.homie-door {
+  opacity:0 !important;
+  visibility:hidden !important;
+  pointer-events:none !important;
+}
