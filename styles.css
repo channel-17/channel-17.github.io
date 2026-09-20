@@ -13556,22 +13556,7 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
    ========================================================= */
 #turtle.turtle.homie-full:not(.escape) { left:49% !important; }
 
-/* Shiver is a viewport-registered, topmost layer. */
-#turtle.turtle.homie-full .homie-fx.active.shiver {
-  position:fixed !important;
-  left:var(--lh-fx-left) !important;
-  top:var(--lh-fx-top) !important;
-  width:var(--lh-fx-width) !important;
-  height:var(--lh-fx-height) !important;
-  transform:none !important;
-  display:block !important;
-  visibility:visible !important;
-  opacity:1 !important;
-  z-index:2147483000 !important;
-  pointer-events:none !important;
-  object-fit:contain !important;
-  image-rendering:pixelated !important;
-}
+
 
 /* No rectangular Homie surround at 100% peek. */
 #loaderScene.loader-scene.homie-stage-naked #turtle {
@@ -13639,4 +13624,70 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
 #turtle.turtle.homie-full.through-door {
   opacity:0 !important;
   visibility:hidden !important;
+}
+
+
+/* =========================================================
+   B17 LH — REFERENCE SCALE + REGISTERED SHIVER FIRE
+   Screenshot authority 09/20:
+   tiny Homie beneath loader; shivers share his exact 815x390 box.
+   ========================================================= */
+
+/* Resting visual authority: centered with a tiny optical left bias. */
+#turtle.turtle.homie-full {
+  left: 49% !important;
+  top: 210px !important;
+  width: 150px !important;
+  height: 71.78px !important;
+  transform: translate(-50%, -50%) !important;
+  overflow: visible !important;
+  background: transparent !important;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  image-rendering: pixelated !important;
+}
+
+/* Body and FX are the SAME registered canvas.
+   No fixed positioning. No viewport math. No independent coordinates. */
+#turtle.turtle.homie-full .homie-frame,
+#turtle.turtle.homie-full .homie-fx,
+#turtle.turtle.homie-full .homie-fx.active,
+#turtle.turtle.homie-full .homie-fx.active.shiver {
+  position: absolute !important;
+  inset: 0 !important;
+  left: 0 !important;
+  top: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  transform: none !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  background: transparent !important;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  pointer-events: none !important;
+  image-rendering: pixelated !important;
+}
+
+#turtle.turtle.homie-full .homie-frame {
+  z-index: 2 !important;
+}
+
+#turtle.turtle.homie-full .homie-fx {
+  z-index: 5 !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+#turtle.turtle.homie-full .homie-fx.active {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Preserve the same small scale while he breaks character and runs. */
+#turtle.turtle.homie-full.escape.homie-sprint {
+  width: 150px !important;
+  height: 71.78px !important;
 }
