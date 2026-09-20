@@ -96,11 +96,66 @@ const LOADER_FADE_IN_MS = 1680;
 let loaderBootComplete = false;
 
 const homieFrame = document.getElementById("homieFrame");
+const homieFx = document.getElementById("homieFx");
+const homieDoor = document.getElementById("homieDoor");
+
 let homieWalkTimer = null;
 let homieWalkPhase = 0;
+let homieFxTimer = null;
+let homieFxStep = 0;
 
 function setHomieFrame(src) {
   if (homieFrame && homieFrame.getAttribute("src") !== src) homieFrame.setAttribute("src", src);
+}
+
+function setHomieFx(src = "") {
+  if (!homieFx) return;
+  if (!src) {
+    homieFx.removeAttribute("src");
+    homieFx.classList.remove("active");
+    return;
+  }
+  if (homieFx.getAttribute("src") !== src) homieFx.setAttribute("src", src);
+  homieFx.classList.add("active");
+}
+
+function stopHomieFx() {
+  if (homieFxTimer) clearTimeout(homieFxTimer);
+  homieFxTimer = null;
+  homieFxStep = 0;
+  setHomieFx("");
+}
+
+function startHomieShiver() {
+  stopHomieFx();
+  const shiver = ["LH.PixelShiver.A.png", "LH.PixelShiver.B.png"];
+  const tick = () => {
+    setHomieFx(shiver[homieFxStep % shiver.length]);
+    homieFxStep += 1;
+    homieFxTimer = setTimeout(tick, 92);
+  };
+  tick();
+}
+
+function startPanicStrips() {
+  stopHomieFx();
+
+  // ABRACADABRA, MOTHERFUCKER:
+  // authored digital crisis — deliberately NOT alphabetical and NOT random.
+  const panic = [
+    "A","B","C","A","D","B","C","D","A","D","B","C","A","A","B","A",
+    "D","C","B","D","A","C","A","B","D","B","C","A"
+  ];
+  const holds = [58,44,67,39,52,43,61,37,48,64,41,55,36,72,45,38];
+
+  const tick = () => {
+    const letter = panic[homieFxStep % panic.length];
+    setHomieFx(`LH.SpeedLines.${letter}.png`);
+    const hold = holds[homieFxStep % holds.length];
+    homieFxStep += 1;
+    homieFxTimer = setTimeout(tick, hold);
+  };
+  tick();
 }
 
 function startHomieWalk() {
@@ -1001,6 +1056,10 @@ const loading = setInterval(() => {
     state = "hide";
     turtle.classList.remove("notice");
     turtle.classList.add("hide");
+
+    // Panic beat: full retreat to shell; pixel-shiver belongs to Homie's world.
+    setHomieFrame("LH.Shell.png");
+    startHomieShiver();
   }
 
   if (progress >= 18.7 && !breached) {
@@ -4453,37 +4512,71 @@ function completeSequence() {
 
   loader.classList.remove("offcourse");
   loader.classList.add("complete");
+  setProgress(100);
+
+  // Chaos is over. Homie is still buried while the world clears.
+  stopHomieFx();
 
   setTimeout(() => {
     stopAttack();
-    signalNode.classList.add("ready");
   }, 350);
 
+  // 100% is full/flashing, symbol survives above it. Then: cautious half-head peek.
   setTimeout(() => {
-    turtle.classList.remove("hide");
+    turtle.classList.remove("hide", "notice", "walk");
     turtle.classList.add("peek");
+    setHomieFrame("LH.Peek.png");
   }, 1500);
 
+  // Brief beat. Then the website cuts Homie a way home:
+  // north -> south, a hard digital knife-line to his grounding level.
   setTimeout(() => {
+    if (!homieDoor) return;
+
+    const turtleRect = turtle.getBoundingClientRect();
+    const groundY = Math.round(turtleRect.top + (turtleRect.height * 0.56));
+    homieDoor.style.setProperty("--homie-door-ground", `${groundY}px`);
     loaderScene.classList.add("portal-open");
   }, 2650);
 
+  // Door reaches ground. Homie breaks character and RUNS.
   setTimeout(() => {
     turtle.classList.remove("peek");
     turtle.classList.add("escape");
-  }, 3400);
 
+    setHomieFrame("LH.Walk.A.png");
+    startHomieWalk();
+    startPanicStrips();
+
+    // Feet remain analog/mechanical. Translation is slow to us, warp speed to him.
+    turtle.classList.add("homie-sprint");
+  }, 3350);
+
+  // Last digital ass clears the cut: panic data dies INSTANTLY.
   setTimeout(() => {
+    stopHomieFx();
+    if (homieWalkTimer) clearInterval(homieWalkTimer);
+    homieWalkTimer = null;
+    turtle.classList.remove("walk");
+    turtle.classList.add("through-door");
+  }, 7450);
+
+  // Tiny silence after he makes it.
+  setTimeout(() => {
+    loaderScene.classList.remove("portal-open");
     loaderScene.classList.add("portal-close");
-  }, 4480);
+  }, 7700);
 
+  // Door retracts south -> north and disappears.
   setTimeout(() => {
-    loader.classList.add("homie-cut-out");
-  }, 7350);
+    loaderScene.classList.remove("portal-close");
+    loaderScene.classList.add("finale-clear");
+  }, 8350);
 
+  // Loader gone. Homie gone. Door gone. Symbol alone becomes Channel 17.
   setTimeout(() => {
-    loaderScene.classList.add("fade-out");
-  }, 8200);
+    signalNode.classList.add("ready");
+  }, 8550);
 }
 
 function openChannel() {
