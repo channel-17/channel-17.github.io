@@ -13691,3 +13691,50 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
   width: 150px !important;
   height: 71.78px !important;
 }
+
+
+/* =========================================================
+   B17 LH — USER REFERENCE GEOMETRY CORRECTION
+   Authority: user's manual resize/reposition reference.
+   Bigger than prior 150px pass + materially closer to loader.
+   ========================================================= */
+
+#turtle.turtle.homie-full {
+  left: 49% !important;
+  top: 165px !important;
+  width: 229px !important;
+  height: 109px !important;
+}
+
+/* Beat the older state-specific 210px anchors. */
+#turtle.turtle.homie-full.notice,
+#turtle.turtle.homie-full.hide,
+#turtle.turtle.homie-full.peek,
+#turtle.turtle.homie-full.walk,
+#turtle.turtle.homie-full.crawl,
+#turtle.turtle.homie-full.crawl-wait {
+  left: 49% !important;
+  top: 165px !important;
+  width: 229px !important;
+  height: 109px !important;
+}
+
+/* Sprint begins from the exact same registered size/height. */
+#turtle.turtle.homie-full.escape.homie-sprint {
+  top: 165px !important;
+  width: 229px !important;
+  height: 109px !important;
+}
+
+/* Keep shiver A/B welded to the same 815x390 registered Homie canvas. */
+#turtle.turtle.homie-full .homie-fx,
+#turtle.turtle.homie-full .homie-fx.active,
+#turtle.turtle.homie-full .homie-fx.active.shiver {
+  position: absolute !important;
+  inset: 0 !important;
+  left: 0 !important;
+  top: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  transform: none !important;
+}
