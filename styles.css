@@ -5588,6 +5588,9 @@ body {
 #turtle.turtle.homie-full.notice,
 #turtle.turtle.homie-full.hide,
 #turtle.turtle.homie-full.peek,
+#turtle.turtle.homie-full.full-head,
+#turtle.turtle.homie-full.door-excited,
+#turtle.turtle.homie-full.door-ready,
 #turtle.turtle.homie-full.walk,
 #turtle.turtle.homie-full.crawl,
 #turtle.turtle.homie-full.crawl-wait {
@@ -13783,6 +13786,9 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
   pointer-events: none !important;
 }
 #turtle.turtle.homie-full .homie-frame { z-index: 2 !important; }
+#turtle.turtle.homie-full.peek .homie-frame {
+  mix-blend-mode: screen !important;
+}
 #turtle.turtle.homie-full .homie-fx { z-index: 12 !important; }
 #turtle.turtle.homie-full .homie-fx.active {
   opacity: 1 !important;
@@ -13828,6 +13834,10 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
 
 /* Break from center, run to the actual slit, then feed through it.
    Speed-line PNGs remain registered to Homie's canvas while his feet tick A/B. */
+#turtle.turtle.homie-full.escape.homie-sprint .homie-fx.active {
+  left: -46px !important;
+}
+
 #turtle.turtle.homie-full.escape.homie-sprint {
   top: 184px !important;
   width: 229px !important;
