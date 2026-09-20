@@ -128,24 +128,17 @@ function stopHomieFx() {
 
 function startHomieShiver() {
   stopHomieFx();
-  if (!homieFx || !turtle) return;
+  if (!homieFx) return;
 
   const shiver = ["LH.PixelShiver.A.png", "LH.PixelShiver.B.png"];
-  const syncBox = () => {
-    const r = turtle.getBoundingClientRect();
-    homieFx.style.setProperty("--lh-fx-left", `${Math.round(r.left)}px`);
-    homieFx.style.setProperty("--lh-fx-top", `${Math.round(r.top)}px`);
-    homieFx.style.setProperty("--lh-fx-width", `${Math.round(r.width)}px`);
-    homieFx.style.setProperty("--lh-fx-height", `${Math.round(r.height)}px`);
-  };
 
   const tick = () => {
-    syncBox();
     setHomieFx(shiver[homieFxStep % shiver.length]);
     homieFx.classList.add("shiver");
     homieFxStep += 1;
     homieFxTimer = setTimeout(tick, 82);
   };
+
   tick();
 }
 
