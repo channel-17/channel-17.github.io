@@ -5529,10 +5529,10 @@ body {
 
 #turtle.turtle.homie-full {
   position: absolute !important;
-  left: 47% !important;
+  left: 51% !important;
   top: 210px !important;
-  width: 210px !important;
-  height: 100px !important;
+  width: 229px !important;
+  height: 109px !important;
   margin: 0 !important;
   padding: 0 !important;
   overflow: visible !important;
@@ -5571,6 +5571,9 @@ body {
 
 #turtle.turtle.homie-full .homie-frame { z-index: 2 !important; }
 
+/* Pixel panic must visibly surround the shell. */
+#turtle.turtle.homie-full .homie-fx { z-index: 4 !important; }
+
 #turtle.turtle.homie-full .homie-fx {
   z-index: 1 !important;
   opacity: 0 !important;
@@ -5603,12 +5606,14 @@ body {
   opacity: 1 !important;
   visibility: visible !important;
   transform: translate(-50%, -50%) !important;
-  animation: homieRunForHisDigitalLife 4.10s linear forwards !important;
+  animation: homieRunForHisDigitalLife 4.00s linear forwards !important;
   z-index: 26 !important;
 }
 
 @keyframes homieRunForHisDigitalLife {
-  0%   { left: 47% !important; }
+  0%   { left: 51% !important; }
+  100% { left: 75% !important; }
+}
   100% { left: 102% !important; }
 }
 
@@ -5620,11 +5625,11 @@ body {
 /* THE DOOR IS THE CUT.
    No PNG. No panel. One hard computer line slicing north -> south. */
 #homieDoor.homie-door {
-  --homie-door-ground: 58vh;
-  position: fixed !important;
-  left: 88vw !important;
+  --homie-door-ground: 150px;
+  position: absolute !important;
+  left: 73.5% !important;
   top: 0 !important;
-  width: 4px !important;
+  width: 3px !important;
   height: 0 !important;
   margin: 0 !important;
   padding: 0 !important;
