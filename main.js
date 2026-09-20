@@ -175,23 +175,29 @@ function startHomieWalk() {
 
 if (loaderScene) {
   loaderScene.classList.add("booting-in");
-
-  // Empty bar + shell. No percentage.
   setHomieFrame("LH.Shell.png");
   setTimeout(() => loaderScene.classList.add("boot-visible"), LOADER_BOOT_DELAY_MS);
 
-  // Head pops out alone. Still no percentage.
-  const homieHeadPopAt = LOADER_BOOT_DELAY_MS + LOADER_FADE_IN_MS;
-  setTimeout(() => setHomieFrame("LH.Shell.Head.png"), homieHeadPopAt);
+  const shellBreathAt = LOADER_BOOT_DELAY_MS + LOADER_FADE_IN_MS + 520;
 
-  // Appendages appear; 1% + mechanical walk begin together.
+  // Head alone: wake up, look, realize.
+  setTimeout(() => setHomieFrame("LH.Shell.Head.png"), shellBreathAt);
+
+  // Appendages appear. Do not walk yet.
+  setTimeout(() => setHomieFrame("LH.Walk.A.png"), shellBreathAt + 720);
+
+  // Bearings found: mechanical walk begins.
   setTimeout(() => {
     turtle?.classList.add("walk");
-    loaderScene.classList.add("homie-awake");
     startHomieWalk();
+  }, shellBreathAt + 1320);
+
+  // Let the walk exist before 1% and progression wake up.
+  setTimeout(() => {
+    loaderScene.classList.add("homie-awake");
     setProgress(1);
     loaderBootComplete = true;
-  }, homieHeadPopAt + 240);
+  }, shellBreathAt + 2050);
 } else {
   loaderBootComplete = true;
 }
@@ -4509,74 +4515,69 @@ function stopAttack() {
 }
 function completeSequence() {
   state = "done";
-
   loader.classList.remove("offcourse");
   loader.classList.add("complete");
   setProgress(100);
-
-  // Chaos is over. Homie is still buried while the world clears.
   stopHomieFx();
 
-  setTimeout(() => {
-    stopAttack();
-  }, 350);
+  setTimeout(() => stopAttack(), 500);
 
-  // 100% is full/flashing, symbol survives above it. Then: cautious half-head peek.
+  // Full 100% world breathes. Then: cautious peek.
   setTimeout(() => {
     turtle.classList.remove("hide", "notice", "walk");
     turtle.classList.add("peek");
     setHomieFrame("LH.Peek.png");
-  }, 1500);
+  }, 1900);
 
-  // Brief beat. Then the website cuts Homie a way home:
-  // north -> south, a hard digital knife-line to his grounding level.
+  // Homie gets time to realize the chaos is gone. Then the cut appears.
   setTimeout(() => {
     if (!homieDoor) return;
-
+    const sceneRect = loaderScene.getBoundingClientRect();
     const turtleRect = turtle.getBoundingClientRect();
-    const groundY = Math.round(turtleRect.top + (turtleRect.height * 0.56));
+
+    // Small LOCAL cut under the far-right pyramid tip.
+    const doorX = Math.round(sceneRect.width * 0.735);
+    const groundY = Math.round(turtleRect.top - sceneRect.top + (turtleRect.height * 0.60));
+    homieDoor.style.setProperty("left", `${doorX}px`, "important");
     homieDoor.style.setProperty("--homie-door-ground", `${groundY}px`);
     loaderScene.classList.add("portal-open");
-  }, 2650);
+  }, 3300);
 
-  // Door reaches ground. Homie breaks character and RUNS.
+  // Cut reaches ground. Full Homie pops out — but does not run immediately.
   setTimeout(() => {
     turtle.classList.remove("peek");
-    turtle.classList.add("escape");
-
     setHomieFrame("LH.Walk.A.png");
+  }, 4050);
+
+  // Recognition beat, then break character and RUN.
+  setTimeout(() => {
+    turtle.classList.add("escape", "walk", "homie-sprint");
     startHomieWalk();
     startPanicStrips();
+  }, 4725);
 
-    // Feet remain analog/mechanical. Translation is slow to us, warp speed to him.
-    turtle.classList.add("homie-sprint");
-  }, 3350);
-
-  // Last digital ass clears the cut: panic data dies INSTANTLY.
+  // Last digital ass clears the cut. Panic data dies instantly.
   setTimeout(() => {
     stopHomieFx();
     if (homieWalkTimer) clearInterval(homieWalkTimer);
     homieWalkTimer = null;
     turtle.classList.remove("walk");
     turtle.classList.add("through-door");
-  }, 7450);
+  }, 8725);
 
-  // Tiny silence after he makes it.
+  // Silence, then the cut seals upward.
   setTimeout(() => {
     loaderScene.classList.remove("portal-open");
     loaderScene.classList.add("portal-close");
-  }, 7700);
+  }, 9100);
 
-  // Door retracts south -> north and disappears.
   setTimeout(() => {
     loaderScene.classList.remove("portal-close");
     loaderScene.classList.add("finale-clear");
-  }, 8350);
+  }, 9800);
 
-  // Loader gone. Homie gone. Door gone. Symbol alone becomes Channel 17.
-  setTimeout(() => {
-    signalNode.classList.add("ready");
-  }, 8550);
+  // Loader gone. Symbol alone.
+  setTimeout(() => signalNode.classList.add("ready"), 10350);
 }
 
 function openChannel() {
