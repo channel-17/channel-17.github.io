@@ -128,11 +128,23 @@ function stopHomieFx() {
 
 function startHomieShiver() {
   stopHomieFx();
+  if (!homieFx || !turtle) return;
+
   const shiver = ["LH.PixelShiver.A.png", "LH.PixelShiver.B.png"];
+  const syncBox = () => {
+    const r = turtle.getBoundingClientRect();
+    homieFx.style.setProperty("--lh-fx-left", `${Math.round(r.left)}px`);
+    homieFx.style.setProperty("--lh-fx-top", `${Math.round(r.top)}px`);
+    homieFx.style.setProperty("--lh-fx-width", `${Math.round(r.width)}px`);
+    homieFx.style.setProperty("--lh-fx-height", `${Math.round(r.height)}px`);
+  };
+
   const tick = () => {
+    syncBox();
     setHomieFx(shiver[homieFxStep % shiver.length]);
+    homieFx.classList.add("shiver");
     homieFxStep += 1;
-    homieFxTimer = setTimeout(tick, 92);
+    homieFxTimer = setTimeout(tick, 82);
   };
   tick();
 }
@@ -4522,50 +4534,49 @@ function completeSequence() {
 
   setTimeout(() => stopAttack(), 500);
 
-  // Full 100% world breathes. Then: cautious peek.
+  // Kill the obsolete Homie surround before the peek.
+  setTimeout(() => loaderScene.classList.add("homie-stage-naked"), 1450);
+
   setTimeout(() => {
-    turtle.classList.remove("hide", "notice", "walk");
+    turtle.classList.remove("hide", "notice", "walk", "escape", "through-door");
     turtle.classList.add("peek");
     setHomieFrame("LH.Peek.png");
   }, 1900);
 
-  // Homie gets time to realize the chaos is gone. Then the cut appears.
+  // SHORT local slit: below loader and just outside its right tip.
   setTimeout(() => {
-    if (!homieDoor) return;
+    if (!homieDoor || !loader || !loaderScene) return;
     const sceneRect = loaderScene.getBoundingClientRect();
-    const turtleRect = turtle.getBoundingClientRect();
+    const loaderRect = loader.getBoundingClientRect();
+    const doorX = Math.round(loaderRect.right - sceneRect.left + 10);
+    const doorTop = Math.round(loaderRect.bottom - sceneRect.top + 10);
 
-    // Small LOCAL cut under the far-right pyramid tip.
-    const doorX = Math.round(sceneRect.width * 0.735);
-    const groundY = Math.round(turtleRect.top - sceneRect.top + (turtleRect.height * 0.60));
     homieDoor.style.setProperty("left", `${doorX}px`, "important");
-    homieDoor.style.setProperty("--homie-door-ground", `${groundY}px`);
+    homieDoor.style.setProperty("top", `${doorTop}px`, "important");
+    homieDoor.style.setProperty("--homie-door-height", "58px");
     loaderScene.classList.add("portal-open");
   }, 3300);
 
-  // Cut reaches ground. Full Homie pops out — but does not run immediately.
   setTimeout(() => {
     turtle.classList.remove("peek");
     setHomieFrame("LH.Walk.A.png");
   }, 4050);
 
-  // Recognition beat, then break character and RUN.
+  // Recognition beat, then actual travel from center to the stationary slit.
   setTimeout(() => {
     turtle.classList.add("escape", "walk", "homie-sprint");
     startHomieWalk();
     startPanicStrips();
   }, 4725);
 
-  // Last digital ass clears the cut. Panic data dies instantly.
   setTimeout(() => {
     stopHomieFx();
     if (homieWalkTimer) clearInterval(homieWalkTimer);
     homieWalkTimer = null;
-    turtle.classList.remove("walk");
+    turtle.classList.remove("walk", "homie-sprint");
     turtle.classList.add("through-door");
   }, 8725);
 
-  // Silence, then the cut seals upward.
   setTimeout(() => {
     loaderScene.classList.remove("portal-open");
     loaderScene.classList.add("portal-close");
@@ -4576,7 +4587,6 @@ function completeSequence() {
     loaderScene.classList.add("finale-clear");
   }, 9800);
 
-  // Loader gone. Symbol alone.
   setTimeout(() => signalNode.classList.add("ready"), 10350);
 }
 
