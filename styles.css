@@ -13755,7 +13755,7 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
 #turtle.turtle.homie-full.crawl,
 #turtle.turtle.homie-full.crawl-wait {
   left: 49% !important;
-  top: 125px !important;
+  top: 184px !important;
   width: 229px !important;
   height: 109px !important;
   margin: 0 !important;
@@ -13829,7 +13829,7 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
 /* Break from center, run to the actual slit, then feed through it.
    Speed-line PNGs remain registered to Homie's canvas while his feet tick A/B. */
 #turtle.turtle.homie-full.escape.homie-sprint {
-  top: 125px !important;
+  top: 184px !important;
   width: 229px !important;
   height: 109px !important;
   left: 49% !important;
