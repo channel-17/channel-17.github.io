@@ -4547,79 +4547,107 @@ function completeSequence() {
   setTimeout(() => stopAttack(), 450);
   setTimeout(() => loaderScene.classList.add("homie-stage-naked"), 1100);
 
-  // Peek. Nothing else happens yet.
+  // LOCKED: Peek is the protected handoff point.
   setTimeout(() => {
-    turtle.classList.remove("hide","notice","walk","escape","homie-sprint",
-      "through-door","door-excited","door-ready","full-head");
-    turtle.style.removeProperty("--lh-door-x");
+    turtle.classList.remove(
+      "hide","notice","walk","escape","homie-sprint","through-door",
+      "door-excited","door-ready","full-head","lh-final-run","lh-shredding"
+    );
+    turtle.style.removeProperty("--lh-run-px");
+    turtle.style.removeProperty("--lh-shred-px");
     turtle.classList.add("peek");
     setHomieFrame("LH.Peek.png");
   }, 1850);
 
-  // Peek becomes full head/neck, still locked dead center.
+  // POST-PEEK REBUILD STARTS HERE.
+  // Full head/neck replaces Peek at the exact same locked center.
   setTimeout(() => {
     turtle.classList.remove("peek");
     turtle.classList.add("full-head");
     setHomieFrame("LH.Shell.Head.png");
-  }, 3350);
+  }, 3450);
 
-  // Full head/neck gets a real pause BEFORE the door exists.
+  // Full head/neck BREATHES before the door exists.
   setTimeout(() => {
-    if (!homieDoor || !loader || !loaderScene) return;
-    const sceneRect = loaderScene.getBoundingClientRect();
-    const loaderRect = loader.getBoundingClientRect();
-    const doorX = Math.round(loaderRect.right - sceneRect.left + 7);
-    const doorTop = Math.round(loaderRect.bottom - sceneRect.top + 14);
-    const doorHeight = 58;
+    if (!homieDoor || !loaderScene || !turtleTrack) return;
 
-    homieDoor.style.setProperty("left", `${doorX}px`, "important");
-    homieDoor.style.setProperty("top", `${doorTop}px`, "important");
+    const sceneRect = loaderScene.getBoundingClientRect();
+    const trackRect = turtleTrack.getBoundingClientRect();
+
+    // One small vertical computer slit on the right, aligned to Homie's ground zone.
+    const doorXScene = Math.round(sceneRect.width * 0.765);
+    const doorTopScene = 150;
+    const doorHeight = 78;
+
+    homieDoor.style.left = `${doorXScene}px`;
+    homieDoor.style.top = `${doorTopScene}px`;
     homieDoor.style.setProperty("--homie-door-height", `${doorHeight}px`);
 
-    const trackRect = turtleTrack.getBoundingClientRect();
-    const doorInTrack = doorX + sceneRect.left - trackRect.left;
-    const endPct = ((doorInTrack + 112) / trackRect.width) * 100;
-    turtle.style.setProperty("--lh-run-end", `${endPct}%`);
+    // Convert the stationary door into turtleTrack coordinates once.
+    const doorXTrack = (sceneRect.left + doorXScene) - trackRect.left;
+
+    // Homie is 229px wide in the final state. Run until his right edge meets the slit.
+    const runCenter = doorXTrack - (229 / 2);
+
+    // Then continue exactly one Homie width through the stationary slit.
+    const shredCenter = doorXTrack + (229 / 2);
+
+    turtle.style.setProperty("--lh-run-px", `${runCenter}px`);
+    turtle.style.setProperty("--lh-shred-px", `${shredCenter}px`);
 
     loaderScene.classList.add("portal-open");
-  }, 4850);
+  }, 5200);
 
-  // Door is visible. He reacts; full body comes out but remains centered.
+  // Door has fully established. THEN Homie reacts, but remains center-locked.
   setTimeout(() => {
     turtle.classList.remove("full-head");
     turtle.classList.add("door-excited");
     setHomieFrame("LH.Walk.A.png");
-  }, 5550);
+  }, 6100);
 
-  setTimeout(() => turtle.classList.add("door-ready"), 6100);
+  // One human beat with body out before he bolts.
+  setTimeout(() => {
+    turtle.classList.add("door-ready");
+  }, 6800);
 
-  // Only NOW does he leave the locked center and run toward the door.
+  // BREAK CHARACTER: feet tick at analog speed; whole registered canvas travels.
   setTimeout(() => {
     turtle.classList.remove("door-ready");
-    turtle.classList.add("escape","walk","homie-sprint");
+    turtle.classList.add("walk","lh-final-run");
     startHomieWalk();
     startPanicStrips();
-  }, 6650);
+  }, 7450);
 
+  // His nose reaches the stationary slit. Now the slit becomes the shred boundary.
+  setTimeout(() => {
+    turtle.classList.remove("lh-final-run");
+    turtle.classList.add("lh-shredding");
+  }, 10050);
+
+  // Last Homie pixel is home. Kill haste immediately.
   setTimeout(() => {
     stopHomieFx();
-    if (homieWalkTimer) clearInterval(homieWalkTimer);
-    homieWalkTimer = null;
-    turtle.classList.remove("walk","homie-sprint");
+    if (homieWalkTimer) {
+      clearInterval(homieWalkTimer);
+      homieWalkTimer = null;
+    }
+    turtle.classList.remove("walk","lh-shredding");
     turtle.classList.add("through-door");
-  }, 10450);
+  }, 11550);
 
+  // Brief empty-door beat, then seal it.
   setTimeout(() => {
     loaderScene.classList.remove("portal-open");
     loaderScene.classList.add("portal-close");
-  }, 10750);
+  }, 11850);
 
+  // Door + flashing 100% loader retire together. Symbol survives alone.
   setTimeout(() => {
     loaderScene.classList.remove("portal-close");
     loaderScene.classList.add("finale-clear");
-  }, 11350);
+  }, 12500);
 
-  setTimeout(() => signalNode.classList.add("ready"), 11650);
+  setTimeout(() => signalNode.classList.add("ready"), 12800);
 }
 
 function openChannel() {
