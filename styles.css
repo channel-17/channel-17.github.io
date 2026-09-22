@@ -5614,6 +5614,8 @@ body {
   0%   { left: 51% !important; }
   100% { left: 75% !important; }
 }
+  100% { left: 102% !important; }
+}
 
 #turtle.turtle.homie-full.through-door {
   opacity: 0 !important;
@@ -13896,8 +13898,9 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
 
 
 /* =========================================================
-   BRICK 17 — LITTLE HOMIE FINAL AUTHORITY
-   RECOVERED FULL CSS — SOURCE AUTHORITY
+   BRICK 17 — LITTLE HOMIE FINAL CHOREOGRAPHY FIRE
+   Authority: reviewed Current.LH video + Jinx finale direction.
+   LAST BLOCK WINS.
    ========================================================= */
 
 :root {
@@ -13905,26 +13908,48 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
   --lh-h: 109px;
 }
 
-#turtleTrack.turtle-track {
-  position: relative !important;
-  width: 100% !important;
-  overflow: visible !important;
+/* ---------------------------------------------------------
+   1. BLACK SQUARE: ERASE IT, DON'T HIDE IT WITH ANOTHER BOX.
+   Every structural Homie wrapper is transparent and unpainted.
+   --------------------------------------------------------- */
+#loaderScene.loader-scene,
+#loaderScene.loader-scene.homie-stage-naked,
+#turtleTrack.turtle-track,
+#turtle.turtle.homie-full,
+#turtle.turtle.homie-full::before,
+#turtle.turtle.homie-full::after,
+#turtleTrack.turtle-track::before,
+#turtleTrack.turtle-track::after {
   background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
   border: 0 !important;
   outline: 0 !important;
   box-shadow: none !important;
 }
 
+#turtle.turtle.homie-full::before,
+#turtle.turtle.homie-full::after,
+#turtleTrack.turtle-track::before,
+#turtleTrack.turtle-track::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* ---------------------------------------------------------
+   2. HOMIE LIVES BELOW THE BAR.
+   Preserve size + optical horizontal bias. The full registered
+   canvas sits beneath the loader instead of overlapping it.
+   --------------------------------------------------------- */
 #turtle.turtle.homie-full,
 #turtle.turtle.homie-full.notice,
 #turtle.turtle.homie-full.hide,
 #turtle.turtle.homie-full.peek,
-#turtle.turtle.homie-full.full-head,
-#turtle.turtle.homie-full.door-excited,
-#turtle.turtle.homie-full.door-ready,
 #turtle.turtle.homie-full.walk,
 #turtle.turtle.homie-full.crawl,
-#turtle.turtle.homie-full.crawl-wait {
+#turtle.turtle.homie-full.crawl-wait,
+#turtle.turtle.homie-full.door-excited,
+#turtle.turtle.homie-full.door-ready {
   left: 49% !important;
   top: 184px !important;
   width: var(--lh-w) !important;
@@ -13932,19 +13957,18 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
   margin: 0 !important;
   transform: translate(-50%, -50%) !important;
   overflow: visible !important;
-  background: transparent !important;
-  border: 0 !important;
-  outline: 0 !important;
-  box-shadow: none !important;
   image-rendering: pixelated !important;
 }
 
+/* Exact registered artwork stack. */
 #turtle.turtle.homie-full .homie-frame,
 #turtle.turtle.homie-full .homie-fx,
 #turtle.turtle.homie-full .homie-fx.active,
 #turtle.turtle.homie-full .homie-fx.active.shiver {
   position: absolute !important;
   inset: 0 !important;
+  left: 0 !important;
+  top: 0 !important;
   width: 100% !important;
   height: 100% !important;
   margin: 0 !important;
@@ -13958,97 +13982,122 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
   image-rendering: pixelated !important;
   pointer-events: none !important;
 }
-#turtle.turtle.homie-full .homie-frame { z-index: 3 !important; }
-#turtle.turtle.homie-full .homie-fx { z-index: 9 !important; }
 
-#turtle.turtle.homie-full.peek .homie-frame {
-  mix-blend-mode: screen !important;
+#turtle.turtle.homie-full .homie-frame {
+  z-index: 3 !important;
 }
 
+#turtle.turtle.homie-full .homie-fx {
+  z-index: 9 !important;
+}
+
+/* ---------------------------------------------------------
+   3. HASTE LINES: TRAIL HIM, DON'T GROW OUT OF HIS ASS.
+   The authored A/B/C/D canvases remain registered, but the
+   visible FX layer is shifted left to create a clean air gap.
+   --------------------------------------------------------- */
+#turtle.turtle.homie-full.escape.homie-sprint .homie-fx.active {
+  left: -34px !important;
+  width: 100% !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* ---------------------------------------------------------
+   4. THE DOOR: one small digital slit. Stationary shredder.
+   --------------------------------------------------------- */
 #homieDoor.homie-door {
   position: absolute !important;
   width: 3px !important;
   height: 0 !important;
   margin: 0 !important;
   padding: 0 !important;
-  background: var(--c17-loader-cream,#b8ad92) !important;
+  background: var(--c17-loader-cream, #b8ad92) !important;
   border: 0 !important;
   outline: 0 !important;
-  box-shadow: 0 0 5px rgba(184,173,146,.28) !important;
+  box-shadow: 0 0 4px rgba(184,173,146,.22) !important;
   opacity: 0 !important;
   visibility: hidden !important;
-  pointer-events: none !important;
   z-index: 180 !important;
-  transform-origin: top center !important;
+  pointer-events: none !important;
 }
+
 #loaderScene.loader-scene.portal-open #homieDoor.homie-door {
   opacity: 1 !important;
   visibility: visible !important;
-  animation: b17FinalDoorDown .58s steps(9,end) forwards !important;
+  animation: lhDoorCutDown .62s steps(10,end) forwards !important;
 }
+
 #loaderScene.loader-scene.portal-close #homieDoor.homie-door {
   opacity: 1 !important;
   visibility: visible !important;
-  height: var(--homie-door-height,78px) !important;
-  animation: b17FinalDoorUp .54s steps(9,end) forwards !important;
+  height: var(--homie-door-height,58px) !important;
+  animation: lhDoorRetract .48s steps(8,end) forwards !important;
 }
-@keyframes b17FinalDoorDown {
+
+@keyframes lhDoorCutDown {
   from { height: 0; }
-  to { height: var(--homie-door-height,78px); }
-}
-@keyframes b17FinalDoorUp {
-  from { height: var(--homie-door-height,78px); }
-  to { height: 0; }
+  to   { height: var(--homie-door-height,58px); }
 }
 
-#turtle.turtle.homie-full.lh-final-run {
+@keyframes lhDoorRetract {
+  from { height: var(--homie-door-height,58px); }
+  to   { height: 0; }
+}
+
+/* ---------------------------------------------------------
+   5. RUN → SHREDDER.
+   Homie physically travels to/through the fixed door.
+   Disintegration is a stepped mask tied to the final approach,
+   so it reads as pixels being eaten by the slit.
+   --------------------------------------------------------- */
+#turtle.turtle.homie-full.escape.homie-sprint {
   top: 184px !important;
-  width: var(--lh-w) !important;
-  height: var(--lh-h) !important;
   left: 49% !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  overflow: visible !important;
-  z-index: 160 !important;
-  animation: b17FinalRun 2.60s linear forwards !important;
-  will-change: left !important;
-}
-@keyframes b17FinalRun {
-  from { left: 49%; }
-  to { left: var(--lh-run-px); }
-}
-
-#turtle.turtle.homie-full.lh-final-run .homie-fx.active,
-#turtle.turtle.homie-full.lh-shredding .homie-fx.active {
-  left: -54px !important;
-  top: 0 !important;
-}
-
-#turtle.turtle.homie-full.lh-shredding {
-  top: 184px !important;
   width: var(--lh-w) !important;
   height: var(--lh-h) !important;
-  left: var(--lh-run-px) !important;
   opacity: 1 !important;
   visibility: visible !important;
-  overflow: visible !important;
   z-index: 160 !important;
-  animation: b17FinalShred 1.50s linear forwards !important;
-  will-change: left,clip-path !important;
+  overflow: visible !important;
+  animation: lhRunHome 3.8s linear forwards !important;
+  will-change: left, opacity, clip-path !important;
 }
-@keyframes b17FinalShred {
-  0%   { left: var(--lh-run-px); clip-path: inset(0 0 0 0); }
-  20%  { clip-path: inset(0 20% 0 0); }
-  40%  { clip-path: inset(0 40% 0 0); }
-  60%  { clip-path: inset(0 60% 0 0); }
-  80%  { clip-path: inset(0 80% 0 0); }
-  100% { left: var(--lh-shred-px); clip-path: inset(0 100% 0 0); }
+
+@keyframes lhRunHome {
+  0% {
+    left: 49%;
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+  66% {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+  72% { clip-path: inset(0 8% 0 0); }
+  77% { clip-path: inset(0 18% 0 0); }
+  82% { clip-path: inset(0 32% 0 0); }
+  87% { clip-path: inset(0 48% 0 0); }
+  91% { clip-path: inset(0 63% 0 0); }
+  95% { clip-path: inset(0 78% 0 0); }
+  98% { clip-path: inset(0 91% 0 0); }
+  100% {
+    left: var(--lh-run-end, 78%);
+    clip-path: inset(0 100% 0 0);
+    opacity: 0;
+  }
 }
+
 #turtle.turtle.homie-full.through-door {
   opacity: 0 !important;
   visibility: hidden !important;
 }
 
+/* ---------------------------------------------------------
+   6. FINAL RETIREMENT.
+   Homie gone -> haste gone -> door + flashing loader gone.
+   Symbol is outside this retirement set and is the survivor.
+   --------------------------------------------------------- */
 #loaderScene.loader-scene.finale-clear #loader.loader,
 #loaderScene.loader-scene.finale-clear #percent.percent,
 #loaderScene.loader-scene.finale-clear #turtleTrack.turtle-track,
@@ -14057,4 +14106,52 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
   visibility: hidden !important;
   pointer-events: none !important;
   animation: none !important;
+}
+
+/* No legacy scene pseudo-elements are allowed to impersonate a door/box. */
+#loaderScene.loader-scene::before,
+#loaderScene.loader-scene::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* =========================================================
+   BRICK 17 — BLACK BOX KILL SWITCH
+   FIRE 2026-09-22
+   The Homie PNG canvases are the only allowed visible pixels.
+   Structural wrappers and legacy pseudo-elements paint NOTHING.
+   ========================================================= */
+#loaderScene.loader-scene #turtleTrack.turtle-track,
+#loaderScene.loader-scene #turtle.turtle.homie-full {
+  background: none !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+#loaderScene.loader-scene #turtleTrack.turtle-track::before,
+#loaderScene.loader-scene #turtleTrack.turtle-track::after,
+#loaderScene.loader-scene #turtle.turtle.homie-full::before,
+#loaderScene.loader-scene #turtle.turtle.homie-full::after {
+  content: none !important;
+  display: none !important;
+  background: none !important;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Do NOT let generic image/background rules paint a canvas behind Homie. */
+#loaderScene.loader-scene #turtle.turtle.homie-full img,
+#loaderScene.loader-scene #turtle.turtle.homie-full .homie-frame,
+#loaderScene.loader-scene #turtle.turtle.homie-full .homie-fx {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
 }
