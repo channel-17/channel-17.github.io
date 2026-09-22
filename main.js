@@ -4598,33 +4598,35 @@ function completeSequence() {
     loaderScene.classList.add("portal-open");
   }, 5200);
 
-  // Door has fully established. THEN Homie reacts, but remains center-locked.
+  // FIRE PASS — door is established first. Homie gets a real courage beat.
   setTimeout(() => {
     turtle.classList.remove("full-head");
     turtle.classList.add("door-excited");
     setHomieFrame("LH.Walk.A.png");
   }, 6100);
 
-  // One human beat with body out before he bolts.
+  // Hold him there. He sees the way out, but does NOT instantly launch.
   setTimeout(() => {
     turtle.classList.add("door-ready");
-  }, 6800);
+  }, 7600);
 
-  // BREAK CHARACTER: feet tick at analog speed; whole registered canvas travels.
+  // NOW he commits. Feet cycle + panic strips begin together.
+  // The existing registered Homie canvas remains the moving body;
+  // the FX layer stays attached to that body so the strips travel behind his tail.
   setTimeout(() => {
     turtle.classList.remove("door-ready");
     turtle.classList.add("walk","lh-final-run");
     startHomieWalk();
     startPanicStrips();
-  }, 7450);
+  }, 8600);
 
-  // His nose reaches the stationary slit. Now the slit becomes the shred boundary.
+  // Give the run room to READ. Do not snap him into the slit.
   setTimeout(() => {
     turtle.classList.remove("lh-final-run");
     turtle.classList.add("lh-shredding");
-  }, 10050);
+  }, 12000);
 
-  // Last Homie pixel is home. Kill haste immediately.
+  // Last Homie pixel clears the doorway; kill the speed effect immediately.
   setTimeout(() => {
     stopHomieFx();
     if (homieWalkTimer) {
@@ -4633,21 +4635,21 @@ function completeSequence() {
     }
     turtle.classList.remove("walk","lh-shredding");
     turtle.classList.add("through-door");
-  }, 11550);
+  }, 13800);
 
-  // Brief empty-door beat, then seal it.
+  // Empty doorway gets one clean beat before it seals.
   setTimeout(() => {
     loaderScene.classList.remove("portal-open");
     loaderScene.classList.add("portal-close");
-  }, 11850);
+  }, 14200);
 
   // Door + flashing 100% loader retire together. Symbol survives alone.
   setTimeout(() => {
     loaderScene.classList.remove("portal-close");
     loaderScene.classList.add("finale-clear");
-  }, 12500);
+  }, 14900);
 
-  setTimeout(() => signalNode.classList.add("ready"), 12800);
+  setTimeout(() => signalNode.classList.add("ready"), 15200);
 }
 
 function openChannel() {
