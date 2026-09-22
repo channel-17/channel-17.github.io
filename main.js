@@ -4547,7 +4547,7 @@ function completeSequence() {
   setTimeout(() => stopAttack(), 450);
   setTimeout(() => loaderScene.classList.add("homie-stage-naked"), 1100);
 
-  // LOCKED: Peek is the protected handoff point.
+  // PROTECTED HANDOFF: nothing before Peek is changed.
   setTimeout(() => {
     turtle.classList.remove(
       "hide","notice","walk","escape","homie-sprint","through-door",
@@ -4559,99 +4559,139 @@ function completeSequence() {
     setHomieFrame("LH.Peek.png");
   }, 1850);
 
-  // POST-PEEK REBUILD STARTS HERE.
-  // Full head/neck replaces Peek at the exact same locked center.
+  // Peek -> full head/neck. Hold center and let the moment breathe.
   setTimeout(() => {
     turtle.classList.remove("peek");
     turtle.classList.add("full-head");
     setHomieFrame("LH.Shell.Head.png");
   }, 3450);
 
-  // Full head/neck BREATHES before the door exists.
-  setTimeout(() => {
+  let doorXTrack = null;
+  let startCenter = null;
+  let runCenter = null;
+
+  const drawDoor = () => {
     if (!homieDoor || !loaderScene || !turtleTrack) return;
 
     const sceneRect = loaderScene.getBoundingClientRect();
     const trackRect = turtleTrack.getBoundingClientRect();
+    const turtleRect = turtle.getBoundingClientRect();
 
-    // One small vertical computer slit on the right, aligned to Homie's ground zone.
     const doorXScene = Math.round(sceneRect.width * 0.765);
     const doorTopScene = 150;
     const doorHeight = 78;
 
-    homieDoor.style.left = `${doorXScene}px`;
-    homieDoor.style.top = `${doorTopScene}px`;
-    homieDoor.style.setProperty("--homie-door-height", `${doorHeight}px`);
+    doorXTrack = (sceneRect.left + doorXScene) - trackRect.left;
+    startCenter = (turtleRect.left + turtleRect.width / 2) - trackRect.left;
+    runCenter = doorXTrack - (turtleRect.width / 2);
 
-    // Convert the stationary door into turtleTrack coordinates once.
-    const doorXTrack = (sceneRect.left + doorXScene) - trackRect.left;
+    homieDoor.style.setProperty("left", `${doorXScene}px`, "important");
+    homieDoor.style.setProperty("top", `${doorTopScene}px`, "important");
+    homieDoor.style.setProperty("width", "3px", "important");
+    homieDoor.style.setProperty("height", "0px", "important");
+    homieDoor.style.setProperty("opacity", "1", "important");
+    homieDoor.style.setProperty("visibility", "visible", "important");
 
-    // Homie is 229px wide in the final state. Run until his right edge meets the slit.
-    const runCenter = doorXTrack - (229 / 2);
+    const born = performance.now();
+    const grow = (now) => {
+      const p = Math.min(1, (now - born) / 620);
+      homieDoor.style.setProperty("height", `${Math.round(doorHeight * p)}px`, "important");
+      if (p < 1) requestAnimationFrame(grow);
+    };
+    requestAnimationFrame(grow);
+  };
 
-    // Then continue exactly one Homie width through the stationary slit.
-    const shredCenter = doorXTrack + (229 / 2);
+  // Door visibly cuts DOWN first.
+  setTimeout(drawDoor, 5200);
 
-    turtle.style.setProperty("--lh-run-px", `${runCenter}px`);
-    turtle.style.setProperty("--lh-shred-px", `${shredCenter}px`);
-
-    loaderScene.classList.add("portal-open");
-  }, 5200);
-
-  // FIRE PASS — door is established first. Homie gets a real courage beat.
+  // Courage beat. Full body appears, but stays planted.
   setTimeout(() => {
     turtle.classList.remove("full-head");
     turtle.classList.add("door-excited");
     setHomieFrame("LH.Walk.A.png");
   }, 6100);
 
-  // Hold him there. He sees the way out, but does NOT instantly launch.
+  // Then he fucking GOES: frantic feet, tortoise travel.
   setTimeout(() => {
-    turtle.classList.add("door-ready");
-  }, 7600);
+    if (doorXTrack == null || startCenter == null || runCenter == null) drawDoor();
+    if (runCenter == null || startCenter == null) return;
 
-  // NOW he commits. Feet cycle + panic strips begin together.
-  // The existing registered Homie canvas remains the moving body;
-  // the FX layer stays attached to that body so the strips travel behind his tail.
-  setTimeout(() => {
-    turtle.classList.remove("door-ready");
-    turtle.classList.add("walk","lh-final-run");
+    turtle.classList.add("walk");
     startHomieWalk();
     startPanicStrips();
-  }, 8600);
 
-  // Give the run room to READ. Do not snap him into the slit.
-  setTimeout(() => {
-    turtle.classList.remove("lh-final-run");
-    turtle.classList.add("lh-shredding");
-  }, 12000);
-
-  // Last Homie pixel clears the doorway; kill the speed effect immediately.
-  setTimeout(() => {
-    stopHomieFx();
-    if (homieWalkTimer) {
-      clearInterval(homieWalkTimer);
-      homieWalkTimer = null;
+    // Trails belong to Homie. Small fixed pocket of black air behind his tail.
+    if (homieFx) {
+      homieFx.style.setProperty("left", "-14px", "important");
+      homieFx.style.setProperty("top", "0px", "important");
     }
-    turtle.classList.remove("walk","lh-shredding");
-    turtle.classList.add("through-door");
-  }, 13800);
 
-  // Empty doorway gets one clean beat before it seals.
-  setTimeout(() => {
-    loaderScene.classList.remove("portal-open");
-    loaderScene.classList.add("portal-close");
-  }, 14200);
+    const launched = performance.now();
+    const travelMs = 3600;
 
-  // Door + flashing 100% loader retire together. Symbol survives alone.
-  setTimeout(() => {
-    loaderScene.classList.remove("portal-close");
-    loaderScene.classList.add("finale-clear");
-  }, 14900);
+    const bolt = (now) => {
+      const p = Math.min(1, (now - launched) / travelMs);
+      // Smooth progress; no mechanical snapping between page coordinates.
+      const eased = p * p * (3 - 2 * p);
+      const x = startCenter + ((runCenter - startCenter) * eased);
+      turtle.style.setProperty("left", `${x}px`, "important");
 
-  setTimeout(() => signalNode.classList.add("ready"), 15200);
+      if (p < 1) {
+        requestAnimationFrame(bolt);
+        return;
+      }
+
+      // At the stationary slit: shred progressively INTO the computer.
+      const shredBorn = performance.now();
+      const shredMs = 1500;
+      const turtleWidth = turtle.getBoundingClientRect().width;
+
+      const shred = (t) => {
+        const q = Math.min(1, (t - shredBorn) / shredMs);
+        const x2 = runCenter + (turtleWidth * q);
+        turtle.style.setProperty("left", `${x2}px`, "important");
+        turtle.style.setProperty("clip-path", `inset(0 ${Math.round(q * 100)}% 0 0)`, "important");
+
+        if (q < 1) {
+          requestAnimationFrame(shred);
+          return;
+        }
+
+        stopHomieFx();
+        if (homieWalkTimer) {
+          clearInterval(homieWalkTimer);
+          homieWalkTimer = null;
+        }
+        turtle.classList.remove("walk");
+        turtle.classList.add("through-door");
+
+        // One empty-door beat, then the slit retracts upward.
+        setTimeout(() => {
+          const closeBorn = performance.now();
+          const close = (ct) => {
+            const r = Math.min(1, (ct - closeBorn) / 560);
+            homieDoor.style.setProperty("height", `${Math.round(78 * (1 - r))}px`, "important");
+            if (r < 1) {
+              requestAnimationFrame(close);
+            } else {
+              homieDoor.style.setProperty("opacity", "0", "important");
+              homieDoor.style.setProperty("visibility", "hidden", "important");
+
+              // Homie is home. Loader retires. Symbol is the survivor.
+              loaderScene.classList.add("finale-clear");
+              setTimeout(() => signalNode.classList.add("ready"), 300);
+            }
+          };
+          requestAnimationFrame(close);
+        }, 300);
+      };
+
+      requestAnimationFrame(shred);
+    };
+
+    requestAnimationFrame(bolt);
+  }, 7600);
 }
-
 function openChannel() {
   if (!signalNode.classList.contains("ready")) return;
   closeFounderWindow();
