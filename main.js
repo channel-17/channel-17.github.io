@@ -4547,136 +4547,138 @@ function completeSequence() {
   setTimeout(() => stopAttack(), 450);
   setTimeout(() => loaderScene.classList.add("homie-stage-naked"), 1100);
 
-  // PROTECTED: everything before the 100% ending remains untouched.
-  setTimeout(() => {
-    turtle.classList.remove(
-      "hide","notice","walk","escape","homie-sprint","through-door",
-      "door-excited","door-ready","full-head","lh-final-run","lh-shredding"
-    );
-    turtle.style.removeProperty("left");
-    turtle.style.removeProperty("clip-path");
-    turtle.classList.add("peek");
-    setHomieFrame("LH.Peek.png");
-  }, 1850);
+  // ============================================================
+  // LITTLE HOMIE FINALE STAGE
+  // Everything before Peek is protected.
+  // JS owns finale geometry. CSS is not allowed to reposition it.
+  // ============================================================
+  const finale = {
+    floorY: null,
+    startLeft: null,
+    doorX: null,
+    doorHeight: 40,
+    tailGap: 7,
+    runMs: 5200,
+    shredMs: 1450
+  };
 
-  // Peek -> full head/neck. Still planted. Let him realize the coast is clear.
-  setTimeout(() => {
-    turtle.classList.remove("peek");
-    turtle.classList.add("full-head");
-    setHomieFrame("LH.Shell.Head.png");
-  }, 3450);
+  const px = n => `${Math.round(n)}px`;
+  const sceneBox = () => loaderScene.getBoundingClientRect();
 
-  let floorY = null;
-  let doorX = null;
-  let runStartLeft = null;
-  let runEndLeft = null;
-  let doorHeight = null;
+  const lockFinaleStage = () => {
+    const scene = sceneBox();
+    const body = turtle.getBoundingClientRect();
 
-  const establishDoorFromHomie = () => {
-    if (!homieDoor || !loaderScene || !turtle) return false;
+    finale.startLeft = body.left - scene.left;
 
-    const sceneRect = loaderScene.getBoundingClientRect();
-    const turtleRect = turtle.getBoundingClientRect();
+    // PNG bottom is NOT his visible floor. Calibrate to the visible feet.
+    const visibleFootInset = Math.max(2, Math.round(body.height * 0.13));
+    finale.floorY = (body.bottom - scene.top) - visibleFootInset;
 
-    // ONE coordinate authority:
-    // Homie's CURRENT rendered position is the start.
-    // Homie's CURRENT visible standing line is the floor.
-    floorY = Math.round(turtleRect.bottom - sceneRect.top);
-    runStartLeft = turtleRect.left - sceneRect.left;
+    // Small doorway on the right.
+    finale.doorX = Math.round(scene.width * 0.765);
 
-    // Small doorway to his right. It ends exactly on HIS floor.
-    doorX = Math.round(sceneRect.width * 0.765);
-    doorHeight = Math.max(34, Math.min(46, Math.round(turtleRect.height * 0.40)));
-    const doorTop = floorY - doorHeight;
+    // Freeze the exact rendered position before any walk class can fight it.
+    turtle.style.setProperty("left", px(finale.startLeft), "important");
+    turtle.style.setProperty("right", "auto", "important");
+    turtle.style.setProperty("transform", "none", "important");
+    turtle.style.setProperty("clip-path", "none", "important");
+  };
 
-    // Stop with Homie's nose/body meeting the slit; no reset to 49%.
-    runEndLeft = doorX - Math.round(turtleRect.width * 0.78);
+  const drawFinaleDoor = () => {
+    if (finale.floorY == null) lockFinaleStage();
 
-    homieDoor.style.setProperty("left", `${doorX}px`, "important");
-    homieDoor.style.setProperty("top", `${doorTop}px`, "important");
+    const top = finale.floorY - finale.doorHeight;
+
+    homieDoor.style.setProperty("left", px(finale.doorX), "important");
+    homieDoor.style.setProperty("top", px(top), "important");
+    homieDoor.style.setProperty("bottom", "auto", "important");
     homieDoor.style.setProperty("width", "3px", "important");
     homieDoor.style.setProperty("height", "0px", "important");
     homieDoor.style.setProperty("opacity", "1", "important");
     homieDoor.style.setProperty("visibility", "visible", "important");
     homieDoor.style.setProperty("background", "#8fdcff", "important");
-    homieDoor.style.setProperty("box-shadow", "0 0 4px rgba(143,220,255,.55)", "important");
+    homieDoor.style.setProperty(
+      "box-shadow",
+      "0 0 3px rgba(143,220,255,.72), 0 0 7px rgba(143,220,255,.26)",
+      "important"
+    );
 
     const born = performance.now();
-    const cutDown = (now) => {
+
+    const cutDown = now => {
       const p = Math.min(1, (now - born) / 620);
-      homieDoor.style.setProperty("height", `${Math.round(doorHeight * p)}px`, "important");
+
+      // Top is fixed. The slit grows DOWN until bottom == Homie's floor.
+      homieDoor.style.setProperty(
+        "height",
+        px(finale.doorHeight * p),
+        "important"
+      );
+
       if (p < 1) requestAnimationFrame(cutDown);
     };
+
     requestAnimationFrame(cutDown);
-    return true;
   };
 
-  // The mighty symbol gives him the way home: slit cuts DOWN to his exact floor.
-  setTimeout(() => {
-    establishDoorFromHomie();
-  }, 5200);
+  const runHomieHome = () => {
+    const scene = sceneBox();
+    const body = turtle.getBoundingClientRect();
 
-  // Door exists. Full body comes out, but he STILL does not move.
-  setTimeout(() => {
-    turtle.classList.remove("full-head");
-    turtle.classList.add("door-excited");
-    setHomieFrame("LH.Walk.A.png");
-  }, 6100);
+    // Capture exact Walk-A position. This is THE run start.
+    finale.startLeft = body.left - scene.left;
 
-  // Courage beat, then frantic feet + hilariously slow actual travel.
-  setTimeout(() => {
-    // Re-read his exact current rendered left AFTER the body swap.
-    const sceneRect = loaderScene.getBoundingClientRect();
-    const turtleRect = turtle.getBoundingClientRect();
-    runStartLeft = turtleRect.left - sceneRect.left;
-
-    if (doorX == null) establishDoorFromHomie();
-    if (doorX == null) return;
-
-    runEndLeft = doorX - Math.round(turtleRect.width * 0.78);
-
-    // Freeze the inherited percentage positioning BEFORE adding walk.
-    // This prevents any class from snapping him backward.
-    turtle.style.setProperty("left", `${runStartLeft}px`, "important");
+    turtle.style.setProperty("left", px(finale.startLeft), "important");
+    turtle.style.setProperty("right", "auto", "important");
     turtle.style.setProperty("transform", "none", "important");
     turtle.style.setProperty("clip-path", "none", "important");
+
+    const visibleNoseInset = Math.round(body.width * 0.18);
+    const endLeft = finale.doorX - (body.width - visibleNoseInset);
+
+    // Rightward only. Negative/recoil travel is impossible.
+    const runDistance = Math.max(0, endLeft - finale.startLeft);
 
     turtle.classList.add("walk");
     startHomieWalk();
     startPanicStrips();
 
-    // Registered to Homie's moving body, tucked close to the visible tail.
-    // Positive correction compensates for empty space inside the authored FX canvas.
+    // Panic strips ride with Homie, tucked immediately behind the visible tail.
     if (homieFx) {
-      homieFx.style.setProperty("left", "24px", "important");
+      homieFx.style.setProperty("right", "auto", "important");
+      homieFx.style.setProperty("left", px(finale.tailGap), "important");
       homieFx.style.setProperty("top", "0px", "important");
+      homieFx.style.setProperty("transform", "translateX(-100%)", "important");
     }
 
     const launched = performance.now();
-    const travelMs = 5200; // frantic animation, unmistakably tortoise-speed travel
 
-    const walkHome = (now) => {
-      const p = Math.min(1, (now - launched) / travelMs);
+    const crawl = now => {
+      const p = Math.min(1, (now - launched) / finale.runMs);
 
-      // STRICTLY MONOTONIC. Current pixel -> door. Never backward.
-      const x = runStartLeft + ((runEndLeft - runStartLeft) * p);
-      turtle.style.setProperty("left", `${x}px`, "important");
+      // Deliberately linear and hilariously slow.
+      const x = finale.startLeft + (runDistance * p);
+      turtle.style.setProperty("left", px(x), "important");
 
       if (p < 1) {
-        requestAnimationFrame(walkHome);
+        requestAnimationFrame(crawl);
         return;
       }
 
-      // He has physically reached the slit. ONLY NOW does the computer eat him.
-      const shredBorn = performance.now();
-      const shredMs = 1500;
-      const turtleWidth = turtle.getBoundingClientRect().width;
+      // Contact with the slit. ONLY NOW does shredding begin.
+      const shredStart = performance.now();
+      const finalBody = turtle.getBoundingClientRect();
+      const shredTravel = finalBody.width * 0.82;
 
-      const shredHome = (t) => {
-        const q = Math.min(1, (t - shredBorn) / shredMs);
-        const x2 = runEndLeft + (turtleWidth * 0.78 * q);
+      const shred = t => {
+        const q = Math.min(1, (t - shredStart) / finale.shredMs);
 
-        turtle.style.setProperty("left", `${x2}px`, "important");
+        turtle.style.setProperty(
+          "left",
+          px(endLeft + (shredTravel * q)),
+          "important"
+        );
         turtle.style.setProperty(
           "clip-path",
           `inset(0 ${Math.round(q * 100)}% 0 0)`,
@@ -4684,11 +4686,12 @@ function completeSequence() {
         );
 
         if (q < 1) {
-          requestAnimationFrame(shredHome);
+          requestAnimationFrame(shred);
           return;
         }
 
         stopHomieFx();
+
         if (homieWalkTimer) {
           clearInterval(homieWalkTimer);
           homieWalkTimer = null;
@@ -4697,19 +4700,23 @@ function completeSequence() {
         turtle.classList.remove("walk");
         turtle.classList.add("through-door");
 
-        // Empty doorway beat, then retract UP from the same floor.
+        // Empty doorway beat, then retract upward from the SAME floor.
         setTimeout(() => {
-          const closeBorn = performance.now();
-          const retract = (ct) => {
-            const r = Math.min(1, (ct - closeBorn) / 560);
+          const closeStart = performance.now();
+
+          const retractUp = ct => {
+            const r = Math.min(1, (ct - closeStart) / 560);
+            const h = finale.doorHeight * (1 - r);
+
+            homieDoor.style.setProperty("height", px(h), "important");
             homieDoor.style.setProperty(
-              "height",
-              `${Math.round(doorHeight * (1 - r))}px`,
+              "top",
+              px(finale.floorY - h),
               "important"
             );
 
             if (r < 1) {
-              requestAnimationFrame(retract);
+              requestAnimationFrame(retractUp);
               return;
             }
 
@@ -4719,15 +4726,59 @@ function completeSequence() {
             loaderScene.classList.add("finale-clear");
             setTimeout(() => signalNode.classList.add("ready"), 300);
           };
-          requestAnimationFrame(retract);
+
+          requestAnimationFrame(retractUp);
         }, 300);
       };
 
-      requestAnimationFrame(shredHome);
+      requestAnimationFrame(shred);
     };
 
-    requestAnimationFrame(walkHome);
-  }, 7600);
+    requestAnimationFrame(crawl);
+  };
+
+  // 1) Peek. Chaos is gone.
+  setTimeout(() => {
+    turtle.classList.remove(
+      "hide","notice","walk","escape","homie-sprint","through-door",
+      "door-excited","door-ready","full-head","lh-final-run","lh-shredding"
+    );
+    turtle.style.removeProperty("left");
+    turtle.style.removeProperty("right");
+    turtle.style.removeProperty("transform");
+    turtle.style.removeProperty("clip-path");
+    turtle.classList.add("peek");
+    setHomieFrame("LH.Peek.png");
+  }, 1850);
+
+  // 2) Full head/neck. Look around. Breathe.
+  setTimeout(() => {
+    turtle.classList.remove("peek");
+    turtle.classList.add("full-head");
+    setHomieFrame("LH.Shell.Head.png");
+  }, 3450);
+
+  // 3) Full body appears but remains planted. Lock the finale stage HERE.
+  setTimeout(() => {
+    turtle.classList.remove("full-head");
+    turtle.classList.add("door-excited");
+    setHomieFrame("LH.Walk.A.png");
+
+    requestAnimationFrame(() => lockFinaleStage());
+  }, 5000);
+
+  // 4) Despair beat. Then the symbol bestows the doorway:
+  //    NORTH -> SOUTH, ending exactly at Homie's floor.
+  setTimeout(() => drawFinaleDoor(), 6250);
+
+  // 5) Let him understand what the doorway means.
+  setTimeout(() => turtle.classList.add("door-ready"), 7350);
+
+  // 6) BOLT: frantic animation, turtle-speed displacement.
+  setTimeout(() => {
+    turtle.classList.remove("door-ready");
+    runHomieHome();
+  }, 8350);
 }
 function openChannel() {
   if (!signalNode.classList.contains("ready")) return;
