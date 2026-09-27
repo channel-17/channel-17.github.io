@@ -3698,6 +3698,11 @@ function ensureTawnyaProfileOverlay() {
                   <div><b>J. Lewis <span class="c17-wall-tag">(slumlord cunt)</span></b><p>Hey… Friendly reminder your three days late on this month’s rent.</p></div>
                 </article>
 
+                <article class="c17-wall-comment c17-wall-comment-eugene">
+                  <img class="c17-wall-avatar" src="T.Friends.Eugene.PNG" alt="Eugene">
+                  <div><b>(Eww..)Gene</b><p>Hey Tawnya… did you get my SNAIL?</p></div>
+                </article>
+
                 <article class="c17-wall-comment c17-wall-comment-mark">
                   <img class="c17-wall-avatar" src="T.Friends.Mark.PNG" alt="Marky Mark">
                   <div>
@@ -3715,6 +3720,29 @@ function ensureTawnyaProfileOverlay() {
         friends: {
           label: "FRIENDS & FAMILY",
           html: `<div class="c17-dossier-kicker">SOCIAL CONNECTIONS</div><h2>Friends &amp; Family</h2><section class="c17-private-friends-page" aria-label="Friends list private"><div class="c17-private-friends-lock" aria-hidden="true">🔒</div><p>This user’s friends list is set to private.</p></section>`
+        },
+        email: {
+          label: "EMAILS & SUBSCRIPTIONS",
+          html: `
+            <div class="c17-dossier-kicker">PERSONAL ACCOUNTS // RECOVERED ACCESS INDEX</div>
+            <h2>Emails &amp; Subscriptions</h2>
+            <p class="c17-email-index-note">Three account records recovered. One live route remains exposed.</p>
+            <section class="c17-email-account-index" aria-label="Recovered email accounts">
+              <button class="c17-email-account c17-email-account-live" type="button" data-snail-open>
+                <img src="T.Snail.Emblem.PNG" alt="" aria-hidden="true">
+                <span><small>LIVE ACCOUNT // SNAIL</small><b>skatergirl89@Snail.com</b></span>
+                <em>OPEN ›</em>
+              </button>
+              <div class="c17-email-account c17-email-account-locked" aria-disabled="true">
+                <span><small>ACCOUNT RECORD // LOCKED</small><b>████████@████.███</b></span><em>LOCKED</em>
+              </div>
+              <div class="c17-email-account c17-email-account-locked" aria-disabled="true">
+                <span><small>ACCOUNT RECORD // LOCKED</small><b>██████████@████.███</b></span><em>LOCKED</em>
+              </div>
+            </section>
+            <section class="c17-subscription-index">
+              <span>SUBSCRIPTIONS</span><b>INDEX PRESENT // CONTENT NOT RECOVERED</b>
+            </section>`
         }
       }
     },
@@ -3847,6 +3875,11 @@ function ensureTawnyaProfileOverlay() {
     systemMark.setAttribute("aria-hidden", "true");
     systemMark.decoding = "async";
     documentPanel.appendChild(systemMark);
+
+    const snailOpen = documentPanel.querySelector("[data-snail-open]");
+    if (snailOpen) {
+      snailOpen.addEventListener("click", openTawnyaSnail);
+    }
 
     const mainPhoto = documentPanel.querySelector("[data-tawnya-main-photo]");
     if (mainPhoto) {
@@ -4262,6 +4295,75 @@ function retireTawnyaHeart() {
   tawnyaRevealNode.setAttribute("aria-label", "frozen cracked heart");
   tawnyaRevealNode.disabled = true;
   tawnyaRevealNode.style.setProperty("pointer-events", "none", "important");
+}
+
+function ensureTawnyaSnail() {
+  let snail = document.querySelector(".c17-snail-overlay");
+  if (snail) return snail;
+
+  snail = document.createElement("aside");
+  snail.className = "c17-snail-overlay";
+  snail.setAttribute("aria-hidden", "true");
+  snail.innerHTML = `
+    <section class="c17-snail-app" role="dialog" aria-modal="true" aria-label="Tawnya Grey SNAIL account">
+      <header class="c17-snail-head">
+        <button class="c17-snail-back" type="button" aria-label="Return to Tawnya dossier">‹</button>
+        <div class="c17-snail-brand"><img src="T.Snail.Emblem.PNG" alt=""><div><b>SNAIL</b><small>correspondence, eventually.</small></div></div>
+        <div class="c17-snail-user"><span>skatergirl89</span><i aria-hidden="true"></i></div>
+      </header>
+      <div class="c17-snail-body">
+        <nav class="c17-snail-nav" aria-label="SNAIL folders">
+          <button class="active" type="button">INBOX <span>1</span></button>
+          <button type="button" disabled>STARRED</button>
+          <button type="button" disabled>SENT</button>
+          <button type="button" disabled>TRASH</button>
+          <button type="button" disabled>SUBSCRIPTIONS</button>
+        </nav>
+        <main class="c17-snail-mailbox">
+          <div class="c17-snail-mailbox-title"><div><small>INBOX</small><b>skatergirl89@Snail.com</b></div><span>1 MESSAGE</span></div>
+          <button class="c17-snail-message" type="button" data-snail-eugene aria-expanded="false">
+            <img src="T.Eugene.Snail.PNG" alt="Eugene">
+            <span class="c17-snail-message-copy"><b>(Eww..)Gene</b><strong>hey...</strong><small>I know this is probably weird but I wanted to send you something.</small></span>
+            <time>NEW</time>
+          </button>
+          <article class="c17-snail-letter" data-snail-letter hidden>
+            <header><img src="T.Eugene.Snail.PNG" alt="Eugene"><div><b>(Eww..)Gene</b><small>to: skatergirl89@Snail.com</small></div><button type="button" data-snail-letter-close aria-label="Close message">×</button></header>
+            <div class="c17-snail-letter-paper">
+              <p>Hey Tawnya,</p>
+              <p class="c17-snail-draft-note">[EUGENE'S CONFESSION GOES HERE — CONTENT NOT LOCKED YET.]</p>
+              <p>— Eugene</p>
+            </div>
+          </article>
+          <div class="c17-snail-empty"><span>END OF RECOVERED MAIL</span><small>The rest of this inbox is intentionally empty.</small></div>
+        </main>
+      </div>
+    </section>`;
+  document.body.appendChild(snail);
+
+  const close = () => {
+    snail.classList.remove("open");
+    snail.setAttribute("aria-hidden", "true");
+  };
+  snail.querySelector(".c17-snail-back").addEventListener("click", close);
+  const msg = snail.querySelector("[data-snail-eugene]");
+  const letter = snail.querySelector("[data-snail-letter]");
+  msg.addEventListener("click", () => {
+    const opening = letter.hidden;
+    letter.hidden = !opening;
+    msg.setAttribute("aria-expanded", String(opening));
+    if (opening) letter.scrollIntoView({behavior:"smooth", block:"start"});
+  });
+  snail.querySelector("[data-snail-letter-close]").addEventListener("click", () => {
+    letter.hidden = true;
+    msg.setAttribute("aria-expanded", "false");
+  });
+  return snail;
+}
+
+function openTawnyaSnail() {
+  const snail = ensureTawnyaSnail();
+  snail.classList.add("open");
+  snail.setAttribute("aria-hidden", "false");
 }
 
 function closeTawnyaProfile() {
