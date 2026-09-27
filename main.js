@@ -4341,57 +4341,19 @@ function ensureTawnyaSnail() {
     inbox: [
       {id:"eugene", sender:"(Eww..)Gene", subject:"I think it's finally time", preview:"So I know this is probably going to come completely out of nowhere for you…", date:"SEP 27", avatar:"T.Eugene.Snail.PNG", unread:true, body:eugeneBody},
       {id:"mom", sender:"Mom", subject:"", preview:"", date:"SEP 24", unread:true, body:""},
-      {id:"bm-menu", sender:"GreenQueen1971", subject:"This week's garden 🌿", preview:"THE HERBOLOGIST — WEEKLY MENU", date:"SEP 22", unread:false, body:bigMamaBody},
-      {id:"deposit-sf", sender:"CHECKING •••• 4319", subject:"Deposit received — SimplyFans", preview:"Creator payout deposited to checking •••• 4319", date:"SEP 20", unread:false, body:"<p class='c17-snail-deposit'>+$3,417.82</p><p>Creator payout deposited to checking •••• 4319</p>"},
-      {id:"oda-rain", sender:"GooGooJuice", subject:"Don't answer it", preview:"Baby, if somebody knocks three times tonight, don't answer the door…", date:"SEP 18", unread:false, body:"<p>Baby, if somebody knocks three times tonight, don't answer the door.</p><p>Unless it's UPS. My package says delivered and I accidentally used your address again.</p><p>— Oda</p>"},
-      {id:"deposit-feet", sender:"CHECKING •••• 4319", subject:"Deposit received — TOE-TALLY", preview:"Creator payout deposited to checking •••• 4319", date:"SEP 15", unread:false, body:"<p class='c17-snail-deposit'>+$1,286.40</p><p>Creator payout deposited to checking •••• 4319</p>"},
-      {id:"someday", sender:"TICKET DESK", subject:"Your SOMEDⒶY tickets are confirmed", preview:"Your tickets are in. Keep this message for entry.", date:"SEP 12", unread:false, body:"<p>Your SOMEDⒶY tickets are confirmed.</p><p class='c17-snail-artifact-note'>[TICKET ARTIFACT RESERVED — DETAILS TO BE BUILT LATER.]</p>"},
-      {id:"subpoena", sender:"COURT NOTICE", subject:"NOTICE TO APPEAR — SUMMONS/SUBPOENA", preview:"Electronic notice available for review.", date:"SEP 08", unread:false, body:"<p class='c17-snail-artifact-note'>[COURT DOCUMENT RESERVED — CONTENT NOT YET WRITTEN.]</p>"},
-      {id:"enemy", sender:"UNKNOWN", subject:"YOU KNOW EXACTLY WHY I'M EMAILING YOU", preview:"Fuck you, Tawnya. Don't call me. Don't message me…", date:"SEP 04", unread:false, body:"<p>Fuck you, Tawnya.</p><p>Don't call me. Don't message me. Don't send Renee to talk to me either because I swear to God I'll tell her exactly what you did.</p><p>You wanna act like you don't know? Fine.</p><p>Keep acting stupid.</p><p>I'm coming to see you myself.</p><p>— [HER]</p>"}
+      {id:"bm-menu", sender:"GreenQueen1971", subject:"This week's garden 🌿", preview:"THE HERBOLOGIST — WEEKLY MENU", date:"SEP 22", body:bigMamaBody},
+      {id:"deposit-sf", sender:"CHECKING •••• 4319", subject:"Deposit received — SimplyFans", preview:"Creator payout deposited to checking •••• 4319", date:"SEP 20", body:"<p class='c17-snail-deposit'>+$3,417.82</p><p>Creator payout deposited to checking •••• 4319</p>"},
+      {id:"oda-rain", sender:"GooGooJuice", subject:"Don't answer it", preview:"Baby, if somebody knocks three times tonight, don't answer the door…", date:"SEP 18", body:"<p>Baby, if somebody knocks three times tonight, don't answer the door.</p><p>Unless it's UPS. My package says delivered and I accidentally used your address again.</p><p>— Oda</p>"},
+      {id:"deposit-feet", sender:"CHECKING •••• 4319", subject:"Deposit received — TOE-TALLY", preview:"Creator payout deposited to checking •••• 4319", date:"SEP 15", body:"<p class='c17-snail-deposit'>+$1,286.40</p><p>Creator payout deposited to checking •••• 4319</p>"},
+      {id:"someday", sender:"TICKET DESK", subject:"Your SOMEDⒶY tickets are confirmed", preview:"Your tickets are in. Keep this message for entry.", date:"SEP 12", body:"<p>Your SOMEDⒶY tickets are confirmed.</p><p class='c17-snail-artifact-note'>[TICKET ARTIFACT RESERVED — DETAILS TO BE BUILT LATER.]</p>"},
+      {id:"subpoena", sender:"COURT NOTICE", subject:"NOTICE TO APPEAR — SUMMONS/SUBPOENA", preview:"Electronic notice available for review.", date:"SEP 08", body:"<p class='c17-snail-artifact-note'>[COURT DOCUMENT RESERVED — CONTENT NOT YET WRITTEN.]</p>"},
+      {id:"enemy", sender:"UNKNOWN", subject:"YOU KNOW EXACTLY WHY I'M EMAILING YOU", preview:"Fuck you, Tawnya. Don't call me. Don't message me…", date:"SEP 04", body:"<p>Fuck you, Tawnya.</p><p>Don't call me. Don't message me. Don't send Renee to talk to me either because I swear to God I'll tell her exactly what you did.</p><p>You wanna act like you don't know? Fine.</p><p>Keep acting stupid.</p><p>I'm coming to see you myself.</p><p>— [HER]</p>"}
     ],
-    spam: [],
-    sent: [],
-    drafts: [],
-    trash: [
-      {id:"oda-lottery", sender:"GooGooJuice", subject:"stars be shinin", preview:"Girl them stars be shinin down on the games tonight…", date:"AUG 31", unread:false, body:odaLotteryBody}
-    ]
+    spam: [], sent: [], drafts: [],
+    trash: [{id:"oda-lottery", sender:"GooGooJuice", subject:"stars be shinin", preview:"Girl them stars be shinin down on the games tonight…", date:"AUG 31", body:odaLotteryBody}]
   };
 
-  snail = document.createElement("aside");
-  snail.className = "c17-snail-overlay";
-  snail.setAttribute("aria-hidden", "true");
-  snail.innerHTML = `
-    <section class="c17-snail-app" role="dialog" aria-modal="true" aria-label="Tawnya Grey SNAIL account">
-      <header class="c17-snail-head">
-        <button class="c17-snail-back" type="button" aria-label="Return to Tawnya dossier">‹</button>
-        <div class="c17-snail-brand"><img src="T.Snail.Emblem.PNG" alt=""><div><b>SNAIL</b><small>skatergirl89@Snail.com</small></div></div>
-        <div class="c17-snail-user"><span>skatergirl89</span><i aria-hidden="true"></i></div>
-      </header>
-      <div class="c17-snail-body">
-        <nav class="c17-snail-nav" aria-label="SNAIL folders">
-          <button class="active" type="button" data-snail-folder="inbox">INBOX <span>${folders.inbox.length}</span></button>
-          <button type="button" data-snail-folder="spam">SPAM <span>0</span></button>
-          <button type="button" data-snail-folder="sent">SENT <span>0</span></button>
-          <button type="button" data-snail-folder="drafts">DRAFTS <span>0</span></button>
-          <button type="button" data-snail-folder="trash">TRASH <span>${folders.trash.length}</span></button>
-        </nav>
-        <main class="c17-snail-mailbox">
-          <div class="c17-snail-mailbox-title"><div><small data-snail-folder-title>INBOX</small><b>skatergirl89@Snail.com</b></div><span data-snail-count></span></div>
-          <div class="c17-snail-list" data-snail-list></div>
-          <article class="c17-snail-letter" data-snail-letter hidden></article>
-        </main>
-      </div>
-    </section>`;
-  document.body.appendChild(snail);
-
-  const list = snail.querySelector("[data-snail-list]");
-  const letter = snail.querySelector("[data-snail-letter]");
-  const title = snail.querySelector("[data-snail-folder-title]");
-  const count = snail.querySelector("[data-snail-count]");
-  let activeFolder = "inbox";
-
-  const escapeHtml = (value) => String(value || "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
-
+  const escapeHtml = value => String(value || "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
   const emptyCopy = {
     inbox:["INBOX IS EMPTY","No recovered messages."],
     spam:["SPAM IS EMPTY","Nothing suspicious. Somehow."],
@@ -4400,12 +4362,78 @@ function ensureTawnyaSnail() {
     trash:["TRASH IS EMPTY","Your trash is empty."]
   };
 
+  snail = document.createElement("aside");
+  snail.className = "c17-snail-overlay c17-snail-v3";
+  snail.setAttribute("aria-hidden","true");
+  snail.innerHTML = `
+    <section class="c17-snail-app" role="dialog" aria-modal="true" aria-label="Tawnya Grey SNAIL account">
+      <header class="c17-snail-head">
+        <button class="c17-snail-exit" type="button" data-snail-action="exit" aria-label="Return to Tawnya dossier">‹</button>
+        <button class="c17-snail-menu" type="button" data-snail-action="drawer" aria-label="Open mail folders">☰</button>
+        <div class="c17-snail-brand"><img src="T.Snail.Emblem.PNG" alt=""><b>SNAIL</b></div>
+        <span class="c17-snail-account">skatergirl89@Snail.com</span>
+      </header>
+
+      <div class="c17-snail-stage">
+        <div class="c17-snail-drawer-shade" data-snail-action="drawer-close"></div>
+        <nav class="c17-snail-drawer" aria-label="SNAIL folders">
+          <div class="c17-snail-drawer-account">skatergirl89@Snail.com</div>
+          <button type="button" class="active" data-snail-folder="inbox"><b>INBOX</b><span>${folders.inbox.length}</span></button>
+          <button type="button" data-snail-folder="spam"><b>SPAM</b><span>0</span></button>
+          <button type="button" data-snail-folder="sent"><b>SENT</b><span>0</span></button>
+          <button type="button" data-snail-folder="drafts"><b>DRAFTS</b><span>0</span></button>
+          <button type="button" data-snail-folder="trash"><b>TRASH</b><span>${folders.trash.length}</span></button>
+        </nav>
+
+        <main class="c17-snail-screen">
+          <section class="c17-snail-inbox-view" data-snail-inbox-view>
+            <div class="c17-snail-mailbox-title">
+              <div><small data-snail-folder-title>INBOX</small><b>skatergirl89@Snail.com</b></div>
+              <span data-snail-count></span>
+            </div>
+            <div class="c17-snail-list" data-snail-list></div>
+          </section>
+
+          <article class="c17-snail-reader" data-snail-reader hidden>
+            <header class="c17-snail-reader-head">
+              <button type="button" data-snail-action="reader-back" aria-label="Back to mailbox">‹</button>
+              <div><small>MESSAGE</small><b data-snail-reader-subject></b></div>
+            </header>
+            <div class="c17-snail-reader-meta" data-snail-reader-meta></div>
+            <div class="c17-snail-reader-body" data-snail-reader-body></div>
+          </article>
+        </main>
+      </div>
+    </section>`;
+  document.body.appendChild(snail);
+
+  const list = snail.querySelector("[data-snail-list]");
+  const inboxView = snail.querySelector("[data-snail-inbox-view]");
+  const reader = snail.querySelector("[data-snail-reader]");
+  const readerSubject = snail.querySelector("[data-snail-reader-subject]");
+  const readerMeta = snail.querySelector("[data-snail-reader-meta]");
+  const readerBody = snail.querySelector("[data-snail-reader-body]");
+  const folderTitle = snail.querySelector("[data-snail-folder-title]");
+  const count = snail.querySelector("[data-snail-count]");
+  let activeFolder = "inbox";
+  let savedScroll = 0;
+
+  function avatarMarkup(message, cls="") {
+    return message.avatar
+      ? `<img class="${cls}" src="${escapeHtml(message.avatar)}" alt="">`
+      : `<span class="c17-snail-avatar-fallback ${cls}" aria-hidden="true">${escapeHtml((message.sender || "?").slice(0,1))}</span>`;
+  }
+
+  function closeDrawer() { snail.classList.remove("drawer-open"); }
+  function openDrawer() { snail.classList.add("drawer-open"); }
+
   function renderFolder(folder) {
     activeFolder = folder;
-    letter.hidden = true;
-    letter.innerHTML = "";
+    closeDrawer();
+    reader.hidden = true;
+    inboxView.hidden = false;
     const messages = folders[folder] || [];
-    title.textContent = folder.toUpperCase();
+    folderTitle.textContent = folder.toUpperCase();
     count.textContent = `${messages.length} MESSAGE${messages.length === 1 ? "" : "S"}`;
     snail.querySelectorAll("[data-snail-folder]").forEach(btn => btn.classList.toggle("active", btn.dataset.snailFolder === folder));
 
@@ -4415,50 +4443,70 @@ function ensureTawnyaSnail() {
       return;
     }
 
-    list.innerHTML = messages.map(m => `
-      <button class="c17-snail-message${m.unread ? " unread" : ""}" type="button" data-snail-id="${escapeHtml(m.id)}">
-        ${m.avatar ? `<img src="${escapeHtml(m.avatar)}" alt="">` : `<span class="c17-snail-avatar-fallback" aria-hidden="true">${escapeHtml((m.sender || "?").slice(0,1))}</span>`}
+    list.innerHTML = messages.map(message => `
+      <button class="c17-snail-message${message.unread ? " unread" : ""}" type="button" data-snail-message="${escapeHtml(message.id)}">
+        ${avatarMarkup(message)}
         <span class="c17-snail-message-copy">
-          <b>${escapeHtml(m.sender)}</b>
-          <strong>${escapeHtml(m.subject || "(no subject)")}</strong>
-          <small>${escapeHtml(m.preview || " ")}</small>
+          <b>${escapeHtml(message.sender)}</b>
+          <strong>${escapeHtml(message.subject || "(no subject)")}</strong>
+          <small>${escapeHtml(message.preview || " ")}</small>
         </span>
-        <time>${escapeHtml(m.date)}</time>
+        <time>${escapeHtml(message.date)}</time>
       </button>`).join("");
-
-    list.querySelectorAll("[data-snail-id]").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const message = messages.find(m => m.id === btn.dataset.snailId);
-        if (!message) return;
-        btn.classList.remove("unread");
-        letter.innerHTML = `
-          <header>
-            ${message.avatar ? `<img src="${escapeHtml(message.avatar)}" alt="">` : `<span class="c17-snail-avatar-fallback" aria-hidden="true">${escapeHtml((message.sender || "?").slice(0,1))}</span>`}
-            <div><b>${escapeHtml(message.sender)}</b><strong>${escapeHtml(message.subject || "(no subject)")}</strong><small>to: skatergirl89@Snail.com</small></div>
-            <button type="button" data-snail-letter-close aria-label="Back to ${escapeHtml(folder)}">×</button>
-          </header>
-          <div class="c17-snail-letter-paper">${message.body || ""}</div>`;
-        letter.hidden = false;
-        list.hidden = true;
-        letter.querySelector("[data-snail-letter-close]").addEventListener("click", () => {
-          letter.hidden = true;
-          list.hidden = false;
-          list.scrollTop = 0;
-        });
-      });
-    });
+    list.scrollTop = 0;
   }
 
-  snail.querySelector(".c17-snail-back").addEventListener("click", () => {
-    snail.classList.remove("open");
-    snail.setAttribute("aria-hidden", "true");
-  });
+  function openMessage(id) {
+    const messages = folders[activeFolder] || [];
+    const message = messages.find(item => item.id === id);
+    if (!message) return;
+    savedScroll = list.scrollTop;
+    const row = list.querySelector(`[data-snail-message="${CSS.escape(id)}"]`);
+    if (row) row.classList.remove("unread");
 
-  snail.querySelectorAll("[data-snail-folder]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      list.hidden = false;
-      renderFolder(btn.dataset.snailFolder);
-    });
+    readerSubject.textContent = message.subject || "(no subject)";
+    readerMeta.innerHTML = `
+      ${avatarMarkup(message,"reader-avatar")}
+      <div><b>${escapeHtml(message.sender)}</b><small>to skatergirl89@Snail.com</small></div>
+      <time>${escapeHtml(message.date)}</time>`;
+    readerBody.innerHTML = message.body || "";
+    inboxView.hidden = true;
+    reader.hidden = false;
+    reader.scrollTop = 0;
+  }
+
+  function closeReader() {
+    reader.hidden = true;
+    inboxView.hidden = false;
+    requestAnimationFrame(() => { list.scrollTop = savedScroll; });
+  }
+
+  snail.addEventListener("click", event => {
+    const action = event.target.closest("[data-snail-action]");
+    if (action) {
+      const type = action.dataset.snailAction;
+      if (type === "exit") {
+        closeDrawer();
+        snail.classList.remove("open");
+        snail.setAttribute("aria-hidden","true");
+      } else if (type === "drawer") {
+        snail.classList.contains("drawer-open") ? closeDrawer() : openDrawer();
+      } else if (type === "drawer-close") {
+        closeDrawer();
+      } else if (type === "reader-back") {
+        closeReader();
+      }
+      return;
+    }
+
+    const folder = event.target.closest("[data-snail-folder]");
+    if (folder) {
+      renderFolder(folder.dataset.snailFolder);
+      return;
+    }
+
+    const message = event.target.closest("[data-snail-message]");
+    if (message) openMessage(message.dataset.snailMessage);
   });
 
   renderFolder("inbox");
