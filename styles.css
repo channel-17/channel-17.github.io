@@ -14597,3 +14597,29 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
 .c17-email-account-live{position:relative!important;z-index:13!important;pointer-events:auto!important;touch-action:manipulation!important;-webkit-tap-highlight-color:rgba(139,216,255,.18)!important}
 .c17-email-account-live *{pointer-events:none!important}
 .c17-snail-v3 .c17-snail-reader-meta small{white-space:normal!important;overflow-wrap:anywhere!important}
+
+
+/* =========================================================
+   SNAIL V5 — LIVED-IN MAILBOX / MOBILE POLISH
+========================================================= */
+.c17-snail-v5 .c17-snail-brand>div{display:flex!important;flex-direction:column!important;min-width:0!important}
+.c17-snail-v5 .c17-snail-brand small{margin-top:4px!important;color:#07517b!important;font:800 .42rem/1 monospace!important;letter-spacing:.35px!important;white-space:nowrap!important}
+.c17-snail-v5 .c17-snail-search{flex:0 0 auto!important;display:grid!important;grid-template-columns:28px minmax(0,1fr)!important;align-items:center!important;margin:9px 10px!important;border:1px solid rgba(92,203,255,.38)!important;background:#04143b!important;color:#65c8f5!important}
+.c17-snail-v5 .c17-snail-search span{display:grid!important;place-items:center!important;font:900 18px/1 monospace!important}
+.c17-snail-v5 .c17-snail-search input{width:100%!important;min-width:0!important;padding:10px 8px!important;border:0!important;outline:0!important;background:transparent!important;color:#c9f3ff!important;font:700 .62rem/1 monospace!important;-webkit-appearance:none!important}
+.c17-snail-v5 .c17-snail-search input::placeholder{color:#427e9e!important}
+.c17-snail-v5 .c17-snail-drawer-account b,.c17-snail-v5 .c17-snail-drawer-account small{display:block!important}
+.c17-snail-v5 .c17-snail-drawer-account b{color:#c9f3ff!important;font:900 .72rem/1.2 monospace!important}
+.c17-snail-v5 .c17-snail-drawer-account small{margin-top:3px!important;color:#4c91b7!important;font:700 .55rem/1 monospace!important}
+.c17-snail-v5 .c17-snail-drawer-foot{position:absolute!important;left:18px!important;right:18px!important;bottom:20px!important;padding-top:12px!important;border-top:1px solid var(--s3-line)!important;color:#326985!important;font:700 .47rem/1.5 monospace!important}
+.c17-snail-v5 .c17-snail-official{margin:4px 0 18px!important;padding:18px 15px!important;border:2px solid #2c8fbd!important;background:#06163c!important;box-shadow:inset 0 0 0 4px #020a24!important}
+.c17-snail-v5 .c17-snail-official>b{display:block!important;padding-bottom:10px!important;border-bottom:1px solid #2c8fbd!important;letter-spacing:1px!important}
+.c17-snail-v5 .c17-snail-official strong{color:#e6fbff!important;font-size:1rem!important}
+.c17-snail-v5 .c17-snail-official small{display:block!important;margin-top:16px!important;color:#4d839d!important;font-size:.55rem!important}
+.c17-snail-v5.open{animation:c17SnailBoot .16s steps(2,end) both!important}
+@keyframes c17SnailBoot{from{opacity:.35;filter:brightness(1.7)}to{opacity:1;filter:none}}
+@media(max-width:560px){
+ .c17-snail-v5 .c17-snail-brand small{font-size:.36rem!important;max-width:155px!important;overflow:hidden!important;text-overflow:ellipsis!important}
+ .c17-snail-v5 .c17-snail-search{margin:7px 8px!important}
+ .c17-snail-v5 .c17-snail-search input{font-size:.58rem!important;padding:9px 6px!important}
+}
