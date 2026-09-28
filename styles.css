@@ -14587,3 +14587,13 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
   .c17-snail-v3 .c17-snail-message img,.c17-snail-v3 .c17-snail-avatar-fallback{width:43px!important;height:43px!important}
   .c17-snail-v3 .c17-snail-reader-body{padding:18px 14px 64px!important;font-size:.68rem!important;line-height:1.72!important}
 }
+
+
+/* =========================================================
+   SNAIL V4 — ROUTE + COMMITTED SENDER ASSETS
+   Stable dossier entry target; no overlay may steal the tap.
+========================================================= */
+.c17-email-account-index{position:relative!important;z-index:12!important}
+.c17-email-account-live{position:relative!important;z-index:13!important;pointer-events:auto!important;touch-action:manipulation!important;-webkit-tap-highlight-color:rgba(139,216,255,.18)!important}
+.c17-email-account-live *{pointer-events:none!important}
+.c17-snail-v3 .c17-snail-reader-meta small{white-space:normal!important;overflow-wrap:anywhere!important}
