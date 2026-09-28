@@ -3838,6 +3838,18 @@ function ensureTawnyaProfileOverlay() {
     openTawnyaSnail();
   });
 
+  // iOS insurance: open on pointer-up as well as click. The timestamp guard prevents a double-open.
+  let lastSnailOpen = 0;
+  tawnyaProfileOverlay.addEventListener("pointerup", event => {
+    const snailRoute = event.target.closest("[data-snail-open]");
+    if (!snailRoute) return;
+    const now = Date.now();
+    if (now - lastSnailOpen < 350) return;
+    lastSnailOpen = now;
+    event.preventDefault();
+    openTawnyaSnail();
+  });
+
   const topTabs = tawnyaProfileOverlay.querySelector(".c17-dossier-top-tabs");
   const sideTabs = tawnyaProfileOverlay.querySelector(".c17-dossier-side-tabs");
   const documentPanel = tawnyaProfileOverlay.querySelector(".c17-dossier-document");
@@ -4309,108 +4321,73 @@ function ensureTawnyaSnail() {
   let snail = document.querySelector(".c17-snail-overlay");
   if (snail) return snail;
 
-  const eugeneBody = `
-    <p>Hey Tawnya,</p>
-    <p>So I know this is probably going to come completely out of nowhere for you, but for me it actually goes back pretty far.</p>
-    <p>I've been in love with you since 10th grade.</p>
-    <p>I almost told you at Jessica Martin's Halloween party, but you were dating Kyle, and honestly I respected that. Then junior year I thought about saying something after chemistry, but you left before I could catch up with you. Senior year obviously wasn't the right time either.</p>
-    <p>After graduation I figured eventually there would just be a moment where we'd both know.</p>
-    <p>There hasn't been.</p>
-    <p>So I'm creating the moment.</p>
-    <p>Tawnya, I think you and I could actually be incredible together.</p>
-    <p>I know I'm probably not the kind of guy people picture you with. That's actually one of the reasons I think this could work. You've already tried the obvious choices.</p>
-    <p>I remember you telling me in 10th grade that my new glasses looked “way better.” I don't know if you remember saying that. I do.</p>
-    <p>I still have those glasses.</p>
-    <p>Anyway, I'm not trying to make this weird.</p>
-    <p>I just think I've waited long enough for the right time, and at some point a man has to make his own right time.</p>
-    <p>Dinner. Just you and me.</p>
-    <p>Think about it.</p>
-    <p>— Eugene</p>
-    <p>P.S. I'm off Tuesday and Thursday, but I can probably get Wednesday covered if Wednesday feels more natural for you.</p>`;
-
-  const bigMamaBody = `
-    <p class="c17-snail-menu-title">THE HERBOLOGIST — WEEKLY MENU</p>
-    <p>🌿 <b>Bayou Blessing</b> — 35<br><small>Soft, slow &amp; don't make no plans.</small></p>
-    <p>🍯 <b>Mama's Honey Jar</b> — 50<br><small>Sweet going in. Mind your business coming out.</small></p>
-    <p>🌙 <b>Midnight Moss</b> — 45<br><small>For after the children and respectable people have gone to bed.</small></p>
-    <p>🔥 <b>Devil's Houseplant</b> — 60<br><small>Don't call me tomorrow saying I didn't warn you.</small></p>
-    <p>🫙 <b>Sunday Preserves</b> — 75<br><small>Limited jars. No holds.</small></p>
-    <p><b>Cash keeps everybody honest.</b></p>
-    <p>— BM</p>`;
-
-  const odaLotteryBody = `
-    <p>Girl them stars be shinin down on the games tonight. Been hearin them crickets carryin on since sundown and they keep givin me <b>3, 24, 39, 61, 65… &amp; 9.</b></p>
-    <p>If I don't make it down to the market, one of us better play em. Don't much matter who buys the ticket. What's meant to find us gonna find us.</p>
-    <p>And don't you go fuckin with them numbers neither.</p>
-    <p><b>The crickets ain't been stutterin'. You know.</b></p>
-    <p>— Oda</p>`;
-
+  const p = (...lines) => lines.map(line => `<p>${line}</p>`).join("");
   const folders = {
     inbox: [
-      {id:"eugene", sender:"(Eww..)Gene", subject:"I think it's finally time", preview:"So I know this is probably going to come completely out of nowhere for you…", date:"SEP 27", avatar:"T.Eugene.Snail.PNG", unread:true, body:eugeneBody},
-      {id:"mom", sender:"Mom", subject:"", preview:"", date:"SEP 24", avatar:"T.Snail.Mom.PNG", unread:true, body:""},
-      {id:"bm-menu", sender:"GreenQueen1971", subject:"This week's garden 🌿", preview:"THE HERBOLOGIST — WEEKLY MENU", date:"SEP 22", body:bigMamaBody},
-      {id:"deposit-sf", sender:"CHECKING •••• 4319", subject:"Deposit received — SimplyFans", preview:"Creator payout deposited to checking •••• 4319", date:"SEP 20", body:"<p class='c17-snail-deposit'>+$3,417.82</p><p>Creator payout deposited to checking •••• 4319</p>"},
-      {id:"oda-rain", sender:"GooGooJuice", subject:"Don't answer it", preview:"Baby, if somebody knocks three times tonight, don't answer the door…", date:"SEP 18", body:"<p>Baby, if somebody knocks three times tonight, don't answer the door.</p><p>Unless it's UPS. My package says delivered and I accidentally used your address again.</p><p>— Oda</p>"},
-      {id:"deposit-feet", sender:"CHECKING •••• 4319", subject:"Deposit received — TOE-TALLY", preview:"Creator payout deposited to checking •••• 4319", date:"SEP 15", body:"<p class='c17-snail-deposit'>+$1,286.40</p><p>Creator payout deposited to checking •••• 4319</p>"},
-      {id:"someday", sender:"TICKET DESK", subject:"Your SOMEDⒶY tickets are confirmed", preview:"Your tickets are in. Keep this message for entry.", date:"SEP 12", body:"<p>Your SOMEDⒶY tickets are confirmed.</p><p class='c17-snail-artifact-note'>[TICKET ARTIFACT RESERVED — DETAILS TO BE BUILT LATER.]</p>"},
-      {id:"subpoena", sender:"COURT NOTICE", subject:"NOTICE TO APPEAR — SUMMONS/SUBPOENA", preview:"Electronic notice available for review.", date:"SEP 08", body:"<p class='c17-snail-artifact-note'>[COURT DOCUMENT RESERVED — CONTENT NOT YET WRITTEN.]</p>"},
-      {id:"enemy", sender:"UNKNOWN", subject:"YOU KNOW EXACTLY WHY I'M EMAILING YOU", preview:"Fuck you, Tawnya. Don't call me. Don't message me…", date:"SEP 04", body:"<p>Fuck you, Tawnya.</p><p>Don't call me. Don't message me. Don't send Renee to talk to me either because I swear to God I'll tell her exactly what you did.</p><p>You wanna act like you don't know? Fine.</p><p>Keep acting stupid.</p><p>I'm coming to see you myself.</p><p>— [HER]</p>"}
+      {id:"eugene", sender:"(Eww..)Gene", address:"eugene4real@Snail.com", subject:"I think it's finally time", preview:"So I know this is probably going to come completely out of nowhere for you…", date:"SEP 27", avatar:"T.Eugene.Snail.PNG", unread:true, body:p("Hey Tawnya,","So I know this is probably going to come completely out of nowhere for you, but for me it actually goes back pretty far.","I've been in love with you since 10th grade.","I almost told you at Jessica Martin's Halloween party, but you were dating Kyle, and honestly I respected that. Then junior year I thought about saying something after chemistry, but you left before I could catch up with you.","After graduation I figured eventually there would just be a moment where we'd both know.","There hasn't been.","So I'm creating the moment.","Dinner. Just you and me. Think about it.","— Eugene","P.S. I'm off Tuesday and Thursday, but I can probably get Wednesday covered if Wednesday feels more natural for you.")},
+      {id:"mom", sender:"Mom", address:"momma.grey@Snail.com", subject:"Call me when you wake up", preview:"And I mean actually call me, not one of your thumbs-up things.", date:"SEP 24", avatar:"T.Snail.Mom.PNG", unread:true, body:p("Tawnya —","Call me when you wake up. And I mean actually call me, not one of your thumbs-up things.","I found the blue casserole dish. It was in the cabinet you told me you checked twice.","Love you.","Mom")},
+      {id:"rmv", sender:"Massachusetts Registry of Motor Vehicles", address:"notice@mass-rmv.example", subject:"Registration canceled — insurance lapse", preview:"Your vehicle registration has been canceled following an insurance cancellation notice.", date:"SEP 23", unread:true, body:`<div class="c17-snail-official"><b>REGISTRATION STATUS NOTICE</b><p>Our records indicate that the insurance associated with your vehicle registration is no longer active.</p><p><strong>STATUS: CANCELED</strong></p><p>Do not operate the vehicle until insurance and registration requirements have been resolved.</p><small>Fictional Channel 17 document // Taxachusetts record mirror</small></div>`},
+      {id:"bm-menu", sender:"GreenQueen1971", address:"greenqueen1971@Snail.com", subject:"This week's garden 🌿", preview:"THE HERBOLOGIST — WEEKLY MENU", date:"SEP 22", body:`<p class="c17-snail-menu-title">THE HERBOLOGIST — WEEKLY MENU</p>${p("🌿 Bayou Blessing — 35 — Soft, slow & don't make no plans.","🍯 Mama's Honey Jar — 50 — Sweet going in. Mind your business coming out.","🌙 Midnight Moss — 45 — For after the children and respectable people have gone to bed.","🔥 Devil's Houseplant — 60 — Don't call me tomorrow saying I didn't warn you.","Cash keeps everybody honest. — BM")}`},
+      {id:"gregory", sender:"Gregory P.", address:"gregory.p83@Snail.com", subject:"RE: order #88104", preview:"These were advertised as USED. I am extremely disappointed.", date:"SEP 21", body:p("Hello,","I don't normally complain, but these were advertised as USED and what arrived was frankly nowhere near the condition I expected.","I paid extra for authenticity. These smell like laundry detergent.","I would like either a replacement with the advertised level of wear or a partial refund.","This is honestly about principle at this point.","Gregory P.")},
+      {id:"deposit-sf", sender:"CHECKING •••• 4319", address:"alerts@bank.example", subject:"Deposit received — SimplyFans", preview:"Creator payout deposited to checking •••• 4319", date:"SEP 20", body:"<p class='c17-snail-deposit'>+$3,417.82</p><p>Creator payout deposited to checking •••• 4319</p>"},
+      {id:"oda-rain", sender:"GooGooJuice", address:"googoojuice@Snail.com", subject:"Don't answer it", preview:"Baby, if somebody knocks three times tonight, don't answer the door…", date:"SEP 18", body:p("Baby, if somebody knocks three times tonight, don't answer the door.","Unless it's UPS. My package says delivered and I accidentally used your address again.","whispers in the rain.","— Oda")},
+      {id:"deposit-feet", sender:"CHECKING •••• 4319", address:"alerts@bank.example", subject:"Deposit received — TOE-TALLY", preview:"Creator payout deposited to checking •••• 4319", date:"SEP 15", body:"<p class='c17-snail-deposit'>+$1,286.40</p><p>Creator payout deposited to checking •••• 4319</p>"},
+      {id:"someday", sender:"TICKET DESK", address:"tickets@venue.example", subject:"Your SOMEDⒶY tickets are confirmed", preview:"Your tickets are in. Keep this message for entry.", date:"SEP 12", body:p("Your SOMEDⒶY tickets are confirmed.","Keep this message for entry. Doors and ticket details are attached to the recovered account record.")},
+      {id:"subpoena", sender:"COURT NOTICE", address:"efile@court.example", subject:"NOTICE TO APPEAR — SUMMONS/SUBPOENA", preview:"Electronic notice available for review.", date:"SEP 08", body:"<p class='c17-snail-artifact-note'>[COURT DOCUMENT RESERVED — CONTENT NOT YET WRITTEN.]</p>"},
+      {id:"enemy", sender:"UNKNOWN", address:"unknown", subject:"YOU KNOW EXACTLY WHY I'M EMAILING YOU", preview:"Fuck you, Tawnya. Don't call me. Don't message me…", date:"SEP 04", body:p("Fuck you, Tawnya.","Don't call me. Don't message me. Don't send Renee to talk to me either because I swear to God I'll tell her exactly what you did.","You wanna act like you don't know? Fine.","Keep acting stupid.","I'm coming to see you myself.","— [HER]")},
+      {id:"reset", sender:"SNAIL Security", address:"security@Snail.com", subject:"New sign-in to your account", preview:"A new device signed in near Worcester, MA.", date:"AUG 29", body:p("New sign-in detected.","Device: iPhone","Location estimate: Worcester, MA","If this was you, no action is required. If it wasn't, maybe stop using the same password everywhere.","— SNAIL Security")},
+      {id:"shipping", sender:"Parcel Possum", address:"tracking@parcelpossum.example", subject:"Your package is out for delivery", preview:"Driver has 47 stops before yours. Please stop refreshing.", date:"AUG 27", body:p("Your package is out for delivery.","Estimated arrival: eventually.","Driver has 47 stops before yours.","Please stop refreshing. It does not make the truck move faster.")}
     ],
-    spam: [],
+    spam: [
+      {id:"spam1", sender:"MYSTERY PRIZE CENTER", address:"winner@definitelyreal.example", subject:"TAWNYA YOU HAVE BEEN SELECTED!!!", preview:"Claim your $7,400 gift card before midnight.", date:"SEP 26", body:p("CONGRATULATIONS TAWNYA!!!","You have been selected from several billion extremely lucky people.","Reply with your mother's maiden name, first pet, and a photograph of both sides of your debit card.","This is definitely normal.")},
+      {id:"spam2", sender:"Local Singles Alert", address:"nearby@romance.example", subject:"17 men are waiting in Gardner", preview:"One of them owns a boat. Allegedly.", date:"SEP 19", body:p("17 men are waiting in your area.","One of them owns a boat.","We have not verified the boat.")},
+      {id:"spam3", sender:"Extended Warranty Department", address:"urgent@warranty.example", subject:"FINAL FINAL FINAL NOTICE", preview:"We have been trying to reach you since the invention of the automobile.", date:"SEP 10", body:p("This is your FINAL FINAL FINAL notice.","We have been trying to reach you about your vehicle's extended warranty since approximately the invention of the automobile.")}
+    ],
     sent: [
-      {id:"wink-sent", sender:"Tawnya Grey", displayName:"The Winkinator", recipient:"Walter “Wink” Winkler <Winkinator@Snail.com>", subject:"(no subject)", preview:"", date:"SEP 27", avatar:"T.Snail.Wink.PNG", body:""}
+      {id:"wink-sent", sender:"Tawnya Grey", displayName:"The Winkinator", recipient:"Walter “Wink” Winkler <Winkinator@Snail.com>", subject:"you left this here", preview:"Found your hoodie. Again.", date:"SEP 27", avatar:"T.Snail.Wink.PNG", body:p("Wink —","Found your hoodie. Again.","I'm putting it on the chair by the door because apparently my apartment is your lost and found now.","Also tell me why your contact photo still makes me laugh every single time.","— T")},
+      {id:"sent-oda", sender:"Tawnya Grey", displayName:"GooGooJuice", recipient:"Oda <GooGooJuice@Snail.com>", subject:"RE: Don't answer it", preview:"If it is a ghost I'm giving it your package.", date:"SEP 18", body:p("If it is a ghost I'm giving it your package.","And stop shipping things to my house.","Love you, swamp goblin.","— T")},
+      {id:"sent-greg", sender:"Tawnya Grey", displayName:"Gregory P.", recipient:"Gregory P. <gregory.p83@Snail.com>", subject:"RE: order #88104", preview:"Gregory, I don't know how to say this professionally…", date:"SEP 21", body:p("Gregory,","I don't know how to say this professionally, so I won't.","You ordered underwear from a stranger on the internet and you're emailing quality control because they smell too clean.","Refund issued. Please go outside.","— Tawnya")}
     ],
-    drafts: [],
-    trash: [{id:"oda-lottery", sender:"GooGooJuice", subject:"stars be shinin", preview:"Girl them stars be shinin down on the games tonight…", date:"AUG 31", body:odaLotteryBody}]
+    drafts: [
+      {id:"draft1", sender:"DRAFT", recipient:"Mom", subject:"RE: Call me when you wake up", preview:"I DID check that cabinet…", date:"SEP 24", body:p("I DID check that cabinet.","[draft not sent]")},
+      {id:"draft2", sender:"DRAFT", recipient:"UNKNOWN", subject:"You don't get to—", preview:"Actually no. Fuck this.", date:"SEP 05", body:p("You don't get to disappear for six months and then—","Actually no. Fuck this.","[draft not sent]")}
+    ],
+    trash: [
+      {id:"oda-lottery", sender:"GooGooJuice", address:"googoojuice@Snail.com", subject:"stars be shinin", preview:"Girl them stars be shinin down on the games tonight…", date:"AUG 31", body:p("Girl them stars be shinin down on the games tonight. Been hearin them crickets carryin on since sundown and they keep givin me 3, 24, 39, 61, 65… & 9.","If I don't make it down to the market, one of us better play em.","And don't you go fuckin with them numbers neither.","The crickets ain't been stutterin'. You know.","— Oda")},
+      {id:"trash2", sender:"SNAIL", address:"noreply@Snail.com", subject:"Storage almost full", preview:"You have used 96% of your recovered storage.", date:"AUG 17", body:p("Your SNAIL storage is almost full.","Maybe delete the 2,846 screenshots you swear you're going to look at later.")},
+      {id:"trash3", sender:"Pizza Palace", address:"coupons@pizza.example", subject:"We miss you, skatergirl89", preview:"It's been 9 days. This is getting weird for both of us.", date:"AUG 12", body:p("We miss you, skatergirl89.","It's been 9 days since your last order.","This is getting weird for both of us.")}
+    ]
   };
 
   const escapeHtml = value => String(value || "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
-  const emptyCopy = {
-    inbox:["INBOX IS EMPTY","No recovered messages."],
-    spam:["SPAM IS EMPTY","Nothing suspicious. Somehow."],
-    sent:["NO SENT MESSAGES","Nothing has been recovered here yet."],
-    drafts:["NO DRAFTS","Nothing unfinished."],
-    trash:["TRASH IS EMPTY","Your trash is empty."]
-  };
+  const labels = {inbox:"INBOX",spam:"SPAM",sent:"SENT",drafts:"DRAFTS",trash:"TRASH"};
 
   snail = document.createElement("aside");
-  snail.className = "c17-snail-overlay c17-snail-v3";
+  snail.className = "c17-snail-overlay c17-snail-v3 c17-snail-v5";
   snail.setAttribute("aria-hidden","true");
   snail.innerHTML = `
     <section class="c17-snail-app" role="dialog" aria-modal="true" aria-label="Tawnya Grey SNAIL account">
       <header class="c17-snail-head">
         <button class="c17-snail-exit" type="button" data-snail-action="exit" aria-label="Return to Tawnya dossier">‹</button>
         <button class="c17-snail-menu" type="button" data-snail-action="drawer" aria-label="Open mail folders">☰</button>
-        <div class="c17-snail-brand"><img src="T.Snail.Emblem.PNG" alt=""><b>SNAIL</b></div>
+        <div class="c17-snail-brand"><img src="T.Snail.Emblem.PNG" alt=""><div><b>SNAIL</b><small>life's an S — short, not serious</small></div></div>
         <span class="c17-snail-account">skatergirl89@Snail.com</span>
       </header>
-
       <div class="c17-snail-stage">
         <div class="c17-snail-drawer-shade" data-snail-action="drawer-close"></div>
         <nav class="c17-snail-drawer" aria-label="SNAIL folders">
-          <div class="c17-snail-drawer-account">skatergirl89@Snail.com</div>
-          <button type="button" class="active" data-snail-folder="inbox"><b>INBOX</b><span>${folders.inbox.length}</span></button>
-          <button type="button" data-snail-folder="spam"><b>SPAM</b><span>${folders.spam.length}</span></button>
-          <button type="button" data-snail-folder="sent"><b>SENT</b><span>${folders.sent.length}</span></button>
-          <button type="button" data-snail-folder="drafts"><b>DRAFTS</b><span>${folders.drafts.length}</span></button>
-          <button type="button" data-snail-folder="trash"><b>TRASH</b><span>${folders.trash.length}</span></button>
+          <div class="c17-snail-drawer-account"><b>skatergirl89</b><small>@Snail.com</small></div>
+          ${Object.keys(labels).map((key,i)=>`<button type="button"${i===0?' class="active"':''} data-snail-folder="${key}"><b>${labels[key]}</b><span>${folders[key].length}</span></button>`).join("")}
+          <div class="c17-snail-drawer-foot">SNAIL // RECOVERED ACCOUNT<br>last sync: 06:17</div>
         </nav>
-
         <main class="c17-snail-screen">
           <section class="c17-snail-inbox-view" data-snail-inbox-view>
-            <div class="c17-snail-mailbox-title">
-              <div><small data-snail-folder-title>INBOX</small><b>skatergirl89@Snail.com</b></div>
-              <span data-snail-count></span>
-            </div>
+            <div class="c17-snail-mailbox-title"><div><small data-snail-folder-title>INBOX</small><b>skatergirl89@Snail.com</b></div><span data-snail-count></span></div>
+            <label class="c17-snail-search"><span>⌕</span><input type="search" data-snail-search placeholder="Search this folder" autocomplete="off"></label>
             <div class="c17-snail-list" data-snail-list></div>
           </section>
-
           <article class="c17-snail-reader" data-snail-reader hidden>
-            <header class="c17-snail-reader-head">
-              <button type="button" data-snail-action="reader-back" aria-label="Back to mailbox">‹</button>
-              <div><small>MESSAGE</small><b data-snail-reader-subject></b></div>
-            </header>
+            <header class="c17-snail-reader-head"><button type="button" data-snail-action="reader-back" aria-label="Back to mailbox">‹</button><div><small>MESSAGE</small><b data-snail-reader-subject></b></div></header>
             <div class="c17-snail-reader-meta" data-snail-reader-meta></div>
             <div class="c17-snail-reader-body" data-snail-reader-body></div>
           </article>
@@ -4419,113 +4396,17 @@ function ensureTawnyaSnail() {
     </section>`;
   document.body.appendChild(snail);
 
-  const list = snail.querySelector("[data-snail-list]");
-  const inboxView = snail.querySelector("[data-snail-inbox-view]");
-  const reader = snail.querySelector("[data-snail-reader]");
-  const readerSubject = snail.querySelector("[data-snail-reader-subject]");
-  const readerMeta = snail.querySelector("[data-snail-reader-meta]");
-  const readerBody = snail.querySelector("[data-snail-reader-body]");
-  const folderTitle = snail.querySelector("[data-snail-folder-title]");
-  const count = snail.querySelector("[data-snail-count]");
-  let activeFolder = "inbox";
-  let savedScroll = 0;
-
-  function avatarMarkup(message, cls="") {
-    return message.avatar
-      ? `<img class="${cls}" src="${escapeHtml(message.avatar)}" alt="">`
-      : `<span class="c17-snail-avatar-fallback ${cls}" aria-hidden="true">${escapeHtml((message.sender || "?").slice(0,1))}</span>`;
-  }
-
-  function closeDrawer() { snail.classList.remove("drawer-open"); }
-  function openDrawer() { snail.classList.add("drawer-open"); }
-
-  function renderFolder(folder) {
-    activeFolder = folder;
-    closeDrawer();
-    reader.hidden = true;
-    inboxView.hidden = false;
-    const messages = folders[folder] || [];
-    folderTitle.textContent = folder.toUpperCase();
-    count.textContent = `${messages.length} MESSAGE${messages.length === 1 ? "" : "S"}`;
-    snail.querySelectorAll("[data-snail-folder]").forEach(btn => btn.classList.toggle("active", btn.dataset.snailFolder === folder));
-
-    if (!messages.length) {
-      const copy = emptyCopy[folder];
-      list.innerHTML = `<div class="c17-snail-empty"><span>${copy[0]}</span><small>${copy[1]}</small></div>`;
-      return;
-    }
-
-    list.innerHTML = messages.map(message => `
-      <button class="c17-snail-message${message.unread ? " unread" : ""}" type="button" data-snail-message="${escapeHtml(message.id)}">
-        ${avatarMarkup(message)}
-        <span class="c17-snail-message-copy">
-          <b>${escapeHtml(activeFolder === "sent" ? (message.displayName || message.recipient || message.sender) : message.sender)}</b>
-          <strong>${escapeHtml(message.subject || "(no subject)")}</strong>
-          <small>${escapeHtml(message.preview || " ")}</small>
-        </span>
-        <time>${escapeHtml(message.date)}</time>
-      </button>`).join("");
-    list.scrollTop = 0;
-  }
-
-  function openMessage(id) {
-    const messages = folders[activeFolder] || [];
-    const message = messages.find(item => item.id === id);
-    if (!message) return;
-    savedScroll = list.scrollTop;
-    const row = list.querySelector(`[data-snail-message="${CSS.escape(id)}"]`);
-    if (row) row.classList.remove("unread");
-
-    readerSubject.textContent = message.subject || "(no subject)";
-    const isSent = activeFolder === "sent";
-    const readerName = isSent ? (message.displayName || message.recipient || message.sender) : message.sender;
-    const routeLine = isSent
-      ? `from skatergirl89@Snail.com · to ${message.recipient || readerName}`
-      : "to skatergirl89@Snail.com";
-    readerMeta.innerHTML = `
-      ${avatarMarkup(message,"reader-avatar")}
-      <div><b>${escapeHtml(readerName)}</b><small>${escapeHtml(routeLine)}</small></div>
-      <time>${escapeHtml(message.date)}</time>`;
-    readerBody.innerHTML = message.body || "";
-    inboxView.hidden = true;
-    reader.hidden = false;
-    reader.scrollTop = 0;
-  }
-
-  function closeReader() {
-    reader.hidden = true;
-    inboxView.hidden = false;
-    requestAnimationFrame(() => { list.scrollTop = savedScroll; });
-  }
-
-  snail.addEventListener("click", event => {
-    const action = event.target.closest("[data-snail-action]");
-    if (action) {
-      const type = action.dataset.snailAction;
-      if (type === "exit") {
-        closeDrawer();
-        snail.classList.remove("open");
-        snail.setAttribute("aria-hidden","true");
-      } else if (type === "drawer") {
-        snail.classList.contains("drawer-open") ? closeDrawer() : openDrawer();
-      } else if (type === "drawer-close") {
-        closeDrawer();
-      } else if (type === "reader-back") {
-        closeReader();
-      }
-      return;
-    }
-
-    const folder = event.target.closest("[data-snail-folder]");
-    if (folder) {
-      renderFolder(folder.dataset.snailFolder);
-      return;
-    }
-
-    const message = event.target.closest("[data-snail-message]");
-    if (message) openMessage(message.dataset.snailMessage);
-  });
-
+  const list=snail.querySelector("[data-snail-list]"), inboxView=snail.querySelector("[data-snail-inbox-view]"), reader=snail.querySelector("[data-snail-reader]"), readerSubject=snail.querySelector("[data-snail-reader-subject]"), readerMeta=snail.querySelector("[data-snail-reader-meta]"), readerBody=snail.querySelector("[data-snail-reader-body]"), folderTitle=snail.querySelector("[data-snail-folder-title]"), count=snail.querySelector("[data-snail-count]"), search=snail.querySelector("[data-snail-search]");
+  let activeFolder="inbox", savedScroll=0;
+  function avatarMarkup(m,cls=""){return m.avatar?`<img class="${cls}" src="${escapeHtml(m.avatar)}" alt="">`:`<span class="c17-snail-avatar-fallback ${cls}" aria-hidden="true">${escapeHtml((m.sender||"?").slice(0,1))}</span>`;}
+  function closeDrawer(){snail.classList.remove("drawer-open");}
+  function visibleMessages(){const q=search.value.trim().toLowerCase(); const all=folders[activeFolder]||[]; return q?all.filter(m=>[m.sender,m.subject,m.preview,m.recipient].join(" ").toLowerCase().includes(q)):all;}
+  function renderList(){const messages=visibleMessages(); count.textContent=`${messages.length} MESSAGE${messages.length===1?"":"S"}`; if(!messages.length){list.innerHTML=`<div class="c17-snail-empty"><span>NOTHING HERE</span><small>${search.value?'Try a less suspicious search.':'No recovered messages.'}</small></div>`;return;} list.innerHTML=messages.map(m=>`<button class="c17-snail-message${m.unread?' unread':''}" type="button" data-snail-message="${escapeHtml(m.id)}">${avatarMarkup(m)}<span class="c17-snail-message-copy"><b>${escapeHtml(activeFolder==='sent'?(m.displayName||m.recipient||m.sender):m.sender)}</b><strong>${escapeHtml(m.subject||'(no subject)')}</strong><small>${escapeHtml(m.preview||' ')}</small></span><time>${escapeHtml(m.date)}</time></button>`).join("");}
+  function renderFolder(folder){activeFolder=folder;closeDrawer();reader.hidden=true;inboxView.hidden=false;search.value="";folderTitle.textContent=labels[folder]||folder.toUpperCase();snail.querySelectorAll("[data-snail-folder]").forEach(b=>b.classList.toggle("active",b.dataset.snailFolder===folder));renderList();list.scrollTop=0;}
+  function openMessage(id){const m=(folders[activeFolder]||[]).find(x=>x.id===id);if(!m)return;savedScroll=list.scrollTop;m.unread=false;readerSubject.textContent=m.subject||"(no subject)";const sent=activeFolder==='sent'||activeFolder==='drafts';const readerName=sent?(m.displayName||m.recipient||m.sender):m.sender;const route=sent?`from skatergirl89@Snail.com · to ${m.recipient||readerName}`:`${m.address||m.sender} · to skatergirl89@Snail.com`;readerMeta.innerHTML=`${avatarMarkup(m,'reader-avatar')}<div><b>${escapeHtml(readerName)}</b><small>${escapeHtml(route)}</small></div><time>${escapeHtml(m.date)}</time>`;readerBody.innerHTML=m.body||"<p class='c17-snail-artifact-note'>No message body recovered.</p>";inboxView.hidden=true;reader.hidden=false;reader.scrollTop=0;renderList();}
+  function closeReader(){reader.hidden=true;inboxView.hidden=false;requestAnimationFrame(()=>{list.scrollTop=savedScroll;});}
+  snail.addEventListener("click",event=>{const action=event.target.closest("[data-snail-action]");if(action){const t=action.dataset.snailAction;if(t==='exit'){closeDrawer();snail.classList.remove('open');snail.setAttribute('aria-hidden','true');}else if(t==='drawer'){snail.classList.toggle('drawer-open');}else if(t==='drawer-close'){closeDrawer();}else if(t==='reader-back'){closeReader();}return;}const folder=event.target.closest("[data-snail-folder]");if(folder){renderFolder(folder.dataset.snailFolder);return;}const msg=event.target.closest("[data-snail-message]");if(msg)openMessage(msg.dataset.snailMessage);});
+  search.addEventListener("input",renderList);
   renderFolder("inbox");
   return snail;
 }
@@ -4534,6 +4415,7 @@ function openTawnyaSnail() {
   const snail = ensureTawnyaSnail();
   snail.classList.add("open");
   snail.setAttribute("aria-hidden", "false");
+  requestAnimationFrame(() => snail.querySelector("[data-snail-list]")?.focus?.({preventScroll:true}));
 }
 
 function closeTawnyaProfile() {
