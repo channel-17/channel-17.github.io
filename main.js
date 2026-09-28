@@ -3698,10 +3698,6 @@ function ensureTawnyaProfileOverlay() {
                   <div><b>J. Lewis <span class="c17-wall-tag">(slumlord cunt)</span></b><p>Hey… Friendly reminder your three days late on this month’s rent.</p></div>
                 </article>
 
-                <article class="c17-wall-comment c17-wall-comment-eugene">
-                  <img class="c17-wall-avatar" src="T.Friends.Eugene.PNG" alt="Eugene">
-                  <div><b>(Eww..)Gene</b><p>Hey Tawnya… did you get my SNAIL?</p></div>
-                </article>
 
                 <article class="c17-wall-comment c17-wall-comment-mark">
                   <img class="c17-wall-avatar" src="T.Friends.Mark.PNG" alt="Marky Mark">
@@ -3825,6 +3821,15 @@ function ensureTawnyaProfileOverlay() {
 
   document.body.appendChild(tawnyaProfileOverlay);
 
+  // Stable delegated route: dossier pages rerender, but this listener survives.
+  tawnyaProfileOverlay.addEventListener("click", event => {
+    const snailRoute = event.target.closest("[data-snail-open]");
+    if (!snailRoute) return;
+    event.preventDefault();
+    event.stopPropagation();
+    openTawnyaSnail();
+  });
+
   const topTabs = tawnyaProfileOverlay.querySelector(".c17-dossier-top-tabs");
   const sideTabs = tawnyaProfileOverlay.querySelector(".c17-dossier-side-tabs");
   const documentPanel = tawnyaProfileOverlay.querySelector(".c17-dossier-document");
@@ -3875,11 +3880,6 @@ function ensureTawnyaProfileOverlay() {
     systemMark.setAttribute("aria-hidden", "true");
     systemMark.decoding = "async";
     documentPanel.appendChild(systemMark);
-
-    const snailOpen = documentPanel.querySelector("[data-snail-open]");
-    if (snailOpen) {
-      snailOpen.addEventListener("click", openTawnyaSnail);
-    }
 
     const mainPhoto = documentPanel.querySelector("[data-tawnya-main-photo]");
     if (mainPhoto) {
@@ -4340,7 +4340,7 @@ function ensureTawnyaSnail() {
   const folders = {
     inbox: [
       {id:"eugene", sender:"(Eww..)Gene", subject:"I think it's finally time", preview:"So I know this is probably going to come completely out of nowhere for you…", date:"SEP 27", avatar:"T.Eugene.Snail.PNG", unread:true, body:eugeneBody},
-      {id:"mom", sender:"Mom", subject:"", preview:"", date:"SEP 24", unread:true, body:""},
+      {id:"mom", sender:"Mom", subject:"", preview:"", date:"SEP 24", avatar:"T.Snail.Mom.PNG", unread:true, body:""},
       {id:"bm-menu", sender:"GreenQueen1971", subject:"This week's garden 🌿", preview:"THE HERBOLOGIST — WEEKLY MENU", date:"SEP 22", body:bigMamaBody},
       {id:"deposit-sf", sender:"CHECKING •••• 4319", subject:"Deposit received — SimplyFans", preview:"Creator payout deposited to checking •••• 4319", date:"SEP 20", body:"<p class='c17-snail-deposit'>+$3,417.82</p><p>Creator payout deposited to checking •••• 4319</p>"},
       {id:"oda-rain", sender:"GooGooJuice", subject:"Don't answer it", preview:"Baby, if somebody knocks three times tonight, don't answer the door…", date:"SEP 18", body:"<p>Baby, if somebody knocks three times tonight, don't answer the door.</p><p>Unless it's UPS. My package says delivered and I accidentally used your address again.</p><p>— Oda</p>"},
@@ -4349,7 +4349,11 @@ function ensureTawnyaSnail() {
       {id:"subpoena", sender:"COURT NOTICE", subject:"NOTICE TO APPEAR — SUMMONS/SUBPOENA", preview:"Electronic notice available for review.", date:"SEP 08", body:"<p class='c17-snail-artifact-note'>[COURT DOCUMENT RESERVED — CONTENT NOT YET WRITTEN.]</p>"},
       {id:"enemy", sender:"UNKNOWN", subject:"YOU KNOW EXACTLY WHY I'M EMAILING YOU", preview:"Fuck you, Tawnya. Don't call me. Don't message me…", date:"SEP 04", body:"<p>Fuck you, Tawnya.</p><p>Don't call me. Don't message me. Don't send Renee to talk to me either because I swear to God I'll tell her exactly what you did.</p><p>You wanna act like you don't know? Fine.</p><p>Keep acting stupid.</p><p>I'm coming to see you myself.</p><p>— [HER]</p>"}
     ],
-    spam: [], sent: [], drafts: [],
+    spam: [],
+    sent: [
+      {id:"wink-sent", sender:"Tawnya Grey", displayName:"The Winkinator", recipient:"Walter “Wink” Winkler <Winkinator@Snail.com>", subject:"(no subject)", preview:"", date:"SEP 27", avatar:"T.Snail.Wink.PNG", body:""}
+    ],
+    drafts: [],
     trash: [{id:"oda-lottery", sender:"GooGooJuice", subject:"stars be shinin", preview:"Girl them stars be shinin down on the games tonight…", date:"AUG 31", body:odaLotteryBody}]
   };
 
@@ -4379,9 +4383,9 @@ function ensureTawnyaSnail() {
         <nav class="c17-snail-drawer" aria-label="SNAIL folders">
           <div class="c17-snail-drawer-account">skatergirl89@Snail.com</div>
           <button type="button" class="active" data-snail-folder="inbox"><b>INBOX</b><span>${folders.inbox.length}</span></button>
-          <button type="button" data-snail-folder="spam"><b>SPAM</b><span>0</span></button>
-          <button type="button" data-snail-folder="sent"><b>SENT</b><span>0</span></button>
-          <button type="button" data-snail-folder="drafts"><b>DRAFTS</b><span>0</span></button>
+          <button type="button" data-snail-folder="spam"><b>SPAM</b><span>${folders.spam.length}</span></button>
+          <button type="button" data-snail-folder="sent"><b>SENT</b><span>${folders.sent.length}</span></button>
+          <button type="button" data-snail-folder="drafts"><b>DRAFTS</b><span>${folders.drafts.length}</span></button>
           <button type="button" data-snail-folder="trash"><b>TRASH</b><span>${folders.trash.length}</span></button>
         </nav>
 
@@ -4447,7 +4451,7 @@ function ensureTawnyaSnail() {
       <button class="c17-snail-message${message.unread ? " unread" : ""}" type="button" data-snail-message="${escapeHtml(message.id)}">
         ${avatarMarkup(message)}
         <span class="c17-snail-message-copy">
-          <b>${escapeHtml(message.sender)}</b>
+          <b>${escapeHtml(activeFolder === "sent" ? (message.displayName || message.recipient || message.sender) : message.sender)}</b>
           <strong>${escapeHtml(message.subject || "(no subject)")}</strong>
           <small>${escapeHtml(message.preview || " ")}</small>
         </span>
@@ -4465,9 +4469,14 @@ function ensureTawnyaSnail() {
     if (row) row.classList.remove("unread");
 
     readerSubject.textContent = message.subject || "(no subject)";
+    const isSent = activeFolder === "sent";
+    const readerName = isSent ? (message.displayName || message.recipient || message.sender) : message.sender;
+    const routeLine = isSent
+      ? `from skatergirl89@Snail.com · to ${message.recipient || readerName}`
+      : "to skatergirl89@Snail.com";
     readerMeta.innerHTML = `
       ${avatarMarkup(message,"reader-avatar")}
-      <div><b>${escapeHtml(message.sender)}</b><small>to skatergirl89@Snail.com</small></div>
+      <div><b>${escapeHtml(readerName)}</b><small>${escapeHtml(routeLine)}</small></div>
       <time>${escapeHtml(message.date)}</time>`;
     readerBody.innerHTML = message.body || "";
     inboxView.hidden = true;
