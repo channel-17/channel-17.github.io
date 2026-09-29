@@ -14623,3 +14623,21 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
  .c17-snail-v5 .c17-snail-search{margin:7px 8px!important}
  .c17-snail-v5 .c17-snail-search input{font-size:.58rem!important;padding:9px 6px!important}
 }
+
+
+/* =========================================================
+   SNAIL V6 — DOSSIER-CHILD LAYER AUTHORITY
+   SNAIL lives above Tawnya, never beside/behind her.
+========================================================= */
+.c17-tawnya-profile-overlay > .c17-snail-v5.c17-snail-overlay{
+  position:absolute!important;
+  inset:0!important;
+  z-index:2147483647!important;
+}
+.c17-tawnya-profile-overlay > .c17-snail-v5.c17-snail-overlay.open{
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  pointer-events:auto!important;
+}
+.c17-snail-v5 img[hidden]{display:none!important}
