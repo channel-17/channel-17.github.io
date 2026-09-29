@@ -14641,3 +14641,12 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
   pointer-events:auto!important;
 }
 .c17-snail-v5 img[hidden]{display:none!important}
+
+
+/* =========================================================
+   SNAIL 7 — MORTAR MIX FINAL CONTENT PASS
+========================================================= */
+.c17-snail-v5 .c17-snail-gov-letterhead{display:flex!important;justify-content:center!important;align-items:center!important;margin:-4px 0 14px!important;padding:8px 0 13px!important;border-bottom:1px solid rgba(92,203,255,.38)!important}
+.c17-snail-v5 .c17-snail-gov-letterhead img{display:block!important;width:min(132px,42vw)!important;height:auto!important;max-height:132px!important;object-fit:contain!important}
+.c17-snail-v5 .c17-snail-joe-bars p{margin:0 0 16px!important;line-height:1.72!important}
+.c17-snail-v5 .c17-snail-joe-bars p:last-child{margin-top:22px!important;font-weight:900!important}
