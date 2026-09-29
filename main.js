@@ -3702,8 +3702,8 @@ function ensureTawnyaProfileOverlay() {
                 <article class="c17-wall-comment c17-wall-comment-matty">
                   <img class="c17-wall-avatar" src="T.Friends.Matty.PNG" alt="Matty">
                   <div>
-                    <b>Matty</b>
-                    <p>BITCH <img class="c17-comment-emoji" src="T.Comment. Manicure.PNG" alt="manicure"> if either one of us wanted a man, we’d have stolen each other’s by now. Stop playing with these poor heterosexuals. They’re confused enough. <img class="c17-comment-emoji" src="T.Comment.Cryingface.PNG" alt="crying"><img class="c17-comment-emoji" src="T.Comment.Pride.PNG" alt="pride"><img class="c17-comment-emoji" src="T.Comment.Sparkles.PNG" alt="sparkles"></p>
+                    <b>Matty Conb</b>
+                    <p>BITCH <img class="c17-comment-emoji" src="T.Comment. Manicure.PNG" alt="manicure"> if either one of us wanted a man, we’d have stolen each other’s by now. Stop fucking with these broke-ass white boys. Your mail slot was made for bigger envelopes any fuckin’ way… okay! <img class="c17-comment-emoji" src="T.Comment.Cryingface.PNG" alt="crying"><img class="c17-comment-emoji" src="T.Comment.Pride.PNG" alt="pride"><img class="c17-comment-emoji" src="T.Comment.Sparkles.PNG" alt="sparkles"></p>
                   </div>
                 </article>
 
@@ -4394,7 +4394,8 @@ function ensureTawnyaSnail() {
         </main>
       </div>
     </section>`;
-  document.body.appendChild(snail);
+  (tawnyaProfileOverlay || document.body).appendChild(snail);
+  snail.addEventListener("error", event => { if (event.target && event.target.tagName === "IMG") event.target.hidden = true; }, true);
 
   const list=snail.querySelector("[data-snail-list]"), inboxView=snail.querySelector("[data-snail-inbox-view]"), reader=snail.querySelector("[data-snail-reader]"), readerSubject=snail.querySelector("[data-snail-reader-subject]"), readerMeta=snail.querySelector("[data-snail-reader-meta]"), readerBody=snail.querySelector("[data-snail-reader-body]"), folderTitle=snail.querySelector("[data-snail-folder-title]"), count=snail.querySelector("[data-snail-count]"), search=snail.querySelector("[data-snail-search]");
   let activeFolder="inbox", savedScroll=0;
