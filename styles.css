@@ -14650,3 +14650,74 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
 .c17-snail-v5 .c17-snail-gov-letterhead img{display:block!important;width:min(132px,42vw)!important;height:auto!important;max-height:132px!important;object-fit:contain!important}
 .c17-snail-v5 .c17-snail-joe-bars p{margin:0 0 16px!important;line-height:1.72!important}
 .c17-snail-v5 .c17-snail-joe-bars p:last-child{margin-top:22px!important;font-weight:900!important}
+
+
+/* =========================================================
+   GOLDEN ROACH — MAIN PAGE EASTER EGG
+========================================================= */
+.golden-roach-button{
+  position:absolute;
+  right:clamp(12px,4vw,34px);
+  bottom:clamp(12px,3.5vh,30px);
+  width:clamp(38px,9vw,58px);
+  height:clamp(38px,9vw,58px);
+  padding:0;
+  border:0;
+  background:transparent;
+  cursor:pointer;
+  opacity:.72;
+  z-index:9;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.golden-roach-button img{width:100%;height:100%;display:block;object-fit:contain;filter:drop-shadow(0 0 4px rgba(60,255,128,.22))}
+.golden-roach-button:active{transform:scale(.94);opacity:1}
+.golden-roach-overlay[hidden]{display:none!important}
+.golden-roach-overlay{
+  position:fixed;
+  inset:0;
+  z-index:2147483647;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  padding:max(8px,env(safe-area-inset-top)) max(8px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));
+  background:#000;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .16s linear;
+}
+.golden-roach-overlay.open{opacity:1;pointer-events:auto}
+.golden-roach-stage{position:relative;width:100%;height:100%;display:grid;place-items:center}
+.golden-roach-trophy{display:block;width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain;filter:drop-shadow(0 10px 24px rgba(0,0,0,.8))}
+.golden-roach-close{
+  position:absolute;
+  top:max(10px,env(safe-area-inset-top));
+  right:max(10px,env(safe-area-inset-right));
+  z-index:3;
+  width:44px;height:44px;
+  border:1px solid rgba(215,183,94,.55);
+  border-radius:50%;
+  background:rgba(0,0,0,.62);
+  color:#d7b75e;
+  font:300 30px/40px Arial,sans-serif;
+  text-align:center;
+  cursor:pointer;
+}
+.golden-roach-holder{
+  position:absolute;
+  left:50%;
+  top:72%;
+  transform:translate(-50%,-50%);
+  width:min(58%,520px);
+  color:#6d4b20;
+  text-align:center;
+  font:800 clamp(12px,2.6vw,26px)/1.1 Georgia,serif;
+  letter-spacing:.04em;
+  text-shadow:0 1px rgba(255,232,160,.35),0 -1px rgba(44,23,4,.55);
+  pointer-events:none;
+}
+html.golden-roach-open,html.golden-roach-open body{overflow:hidden!important}
+@media(max-width:560px){
+  .golden-roach-button{right:12px;bottom:12px;width:46px;height:46px}
+  .golden-roach-overlay{padding:4px}
+}
