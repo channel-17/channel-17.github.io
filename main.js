@@ -4363,7 +4363,7 @@ function ensureTawnyaSnail() {
       {id:"draft2", sender:"DRAFT", recipient:"UNKNOWN", subject:"You don't get to—", preview:"Actually no. Fuck this.", date:"SEP 05", body:p("You don't get to disappear for six months and then—","Actually no. Fuck this.","[draft not sent]")}
     ],
     trash: [
-      {id:"joe", sender:"Joe", address:"Jbruce17@snail.com", subject:"ONE MORE RIDE", preview:"Moon black, tents breathe, hear the dead call your name…", date:"SEP 29", body:`<div class="c17-snail-joe-bars"><p>Moon black, tents breathe, hear the dead call your name,<br>Grey walked through the midway and the midway fucking changed,<br>Six cards hit the dirt, every face turned away,<br>Every ride stopped dead when you stepped in my lane.</p><p>Now the wheel keeps turnin’ but it don't turn right,<br>Got the freaks in the back chanting “Grey” all night,<br>Hatchet moon swinging while the black candles drip,<br>And that wicked little grin still got the clown in its grip.</p><p>Calliope cough while the dead lights shake,<br>Faygo rain falling where the painted ones wake,<br>I ain't promising roses, ain't promising rings,<br>Just a moonlit reunion where the dead carousel sings.</p><p>So when six cards fall and that red sky shows,<br>Follow the midway lights where nobody goes,<br>You know which painted motherfucker still wants you—<br>Grey, quit fuckin’ around. You know what to do.</p><p>— Joe</p></div>`},
+      {id:"joe", sender:"Joe", address:"Jbruce17@snail.com", subject:"ONE MORE RIDE", preview:"Moon black, tents breathe, hear the dead call your name…", date:"SEP 29", avatar:"T.Snail.Joe.PNG", body:`<div class="c17-snail-joe-bars"><p>Moon black, tents breathe, hear the dead call your name,<br>Grey walked through the midway and the midway fucking changed,<br>Six cards hit the dirt, every face turned away,<br>Every ride stopped dead when you stepped in my lane.</p><p>Now the wheel keeps turnin’ but it don't turn right,<br>Got the freaks in the back chanting “Grey” all night,<br>Hatchet moon swinging while the black candles drip,<br>And that wicked little grin still got the clown in its grip.</p><p>Calliope cough while the dead lights shake,<br>Faygo rain falling where the painted ones wake,<br>I ain't promising roses, ain't promising rings,<br>Just a moonlit reunion where the dead carousel sings.</p><p>So when six cards fall and that red sky shows,<br>Follow the midway lights where nobody goes,<br>You know which painted motherfucker still wants you—<br>Grey, quit fuckin’ around. You know what to do.</p><p>— Joe</p></div>`},
       {id:"trey", sender:"Trey", subject:"Damn.. Sup girl!", preview:"Got yo info from Lesley…", date:"SEP 29", avatar:"T.Snail.Trey.PNG", body:p("Got yo info from Lesley…","HMB, fa’real fa’real.","…. Let’s introduce your stuff to my stuff…","Know what I’m sayin..")},
       {id:"oda-lottery", sender:"GooGooJuice", address:"googoojuice@Snail.com", subject:"stars be shinin", preview:"Girl them stars be shinin down on the games tonight…", date:"AUG 31", body:p("Girl them stars be shinin down on the games tonight. Been hearin them crickets carryin on since sundown and they keep givin me 3, 24, 39, 61, 65… & 9.","If I don't make it down to the market, one of us better play em.","And don't you go fuckin with them numbers neither.","The crickets ain't been stutterin'. You know.","— Oda")},
       {id:"trash2", sender:"SNAIL", address:"noreply@Snail.com", subject:"Storage almost full", preview:"You have used 96% of your recovered storage.", date:"AUG 17", body:p("Your SNAIL storage is almost full.","Maybe delete the 2,846 screenshots you swear you're going to look at later.")},
@@ -5169,3 +5169,41 @@ if (rejectionClose) rejectionClose.addEventListener("click", () => {
   laughingCarl.classList.add("open");
   laughingCarl.setAttribute("aria-hidden", "false");
 });
+
+
+/* =========================================================
+   GOLDEN ROACH — MAIN PAGE EASTER EGG
+   Roach.Button.PNG opens Trophy.PNG full-screen.
+   Holder text intentionally remains unset until a winner is locked.
+========================================================= */
+(() => {
+  const button = document.getElementById("goldenRoachButton");
+  const overlay = document.getElementById("goldenRoachOverlay");
+  const close = document.getElementById("goldenRoachClose");
+  if (!button || !overlay) return;
+
+  const openRoach = () => {
+    overlay.hidden = false;
+    overlay.setAttribute("aria-hidden", "false");
+    requestAnimationFrame(() => overlay.classList.add("open"));
+    document.documentElement.classList.add("golden-roach-open");
+  };
+
+  const closeRoach = () => {
+    overlay.classList.remove("open");
+    overlay.setAttribute("aria-hidden", "true");
+    document.documentElement.classList.remove("golden-roach-open");
+    window.setTimeout(() => {
+      if (!overlay.classList.contains("open")) overlay.hidden = true;
+    }, 180);
+  };
+
+  button.addEventListener("click", openRoach);
+  if (close) close.addEventListener("click", closeRoach);
+  overlay.addEventListener("click", event => {
+    if (event.target === overlay) closeRoach();
+  });
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && overlay.classList.contains("open")) closeRoach();
+  });
+})();
