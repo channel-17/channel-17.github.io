@@ -8,7 +8,7 @@
   <link rel="icon" href="Trust17.png?v=17">
   <link rel="shortcut icon" href="Trust17.png?v=17">
   <link rel="apple-touch-icon" sizes="180x180" href="Beacon17.png">
-  <link rel="stylesheet" href="styles.css?v=snail5" />
+  <link rel="stylesheet" href="styles.css?v=roach1" />
 </head>
 <body>
   <div class="screen" id="screen">
@@ -72,6 +72,9 @@
         </nav>
         <button class="survivor-chalk" id="survivorChalk" type="button" aria-label="survivor wall chalk">
           <span></span>
+        </button>
+        <button class="golden-roach-button" id="goldenRoachButton" type="button" aria-label="Golden Roach">
+          <img src="Roach.Button.PNG" alt="">
         </button>
       </div>
     </main>
@@ -457,12 +460,20 @@
       </aside>
     </section>
 
+    <aside class="golden-roach-overlay" id="goldenRoachOverlay" aria-hidden="true" hidden>
+      <button class="golden-roach-close" id="goldenRoachClose" type="button" aria-label="close Golden Roach">×</button>
+      <div class="golden-roach-stage" role="dialog" aria-modal="true" aria-label="Golden Roach trophy">
+        <img src="Trophy.PNG" class="golden-roach-trophy" alt="Golden Roach trophy">
+        <div class="golden-roach-holder" id="goldenRoachHolder" hidden aria-hidden="true"></div>
+      </div>
+    </aside>
+
     <aside class="jinx-card-overlay" id="jinxCardOverlay" aria-hidden="true" hidden>
       <button class="jinx-card-close" id="jinxCardClose" type="button" aria-label="close Jinx card">×</button>
       <img src="Jinx.card.web.jpg" alt="Jinx card">
     </aside>
 
   </div>
-  <script src="main.js?v=snail5"></script>
+  <script src="main.js?v=roach1"></script>
 </body>
 </html>
