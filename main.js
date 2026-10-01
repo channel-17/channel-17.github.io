@@ -3650,26 +3650,12 @@ function ensureTawnyaProfileOverlay() {
               <section class="c17-tawnya-wall">
                 <header><span>WALL</span><small>RECOVERED PROFILE ACTIVITY</small></header>
 
+                <div class="c17-wall-scroll">
+
                 <article class="c17-wall-comment">
                   <img class="c17-wall-avatar" src="T.Friends.Momma.PNG" alt="Big Momma">
                   <div><b>Big Momma</b><p>The garden hath spoken, baby girl <img class="c17-comment-emoji" src="T.Comment.Garden.PNG" alt="weed leaf"> Your little bag of happiness is fluffed, stuffed, blessed, and awaiting some green adoption papers!</p></div>
                 </article>
-
-                <article class="c17-wall-comment c17-wall-comment-pete">
-  <img class="c17-wall-avatar" src="T.Friends.Pete.PNG" alt="Pete S.">
-  <div>
-    <b>Pete S.</b>
-    <p>Let’s hit the skatepark today, homie!</p>
-
-    <div class="c17-wall-reply">
-      <img class="c17-wall-reply-avatar" src="T.friends.Comment.PNG" alt="Tawnya Grey">
-      <div>
-        <b>Tawnya Grey</b>
-        <p>Hell yeah! Miss you, PJ 💙 <img class="c17-comment-emoji c17-comment-emoji-fist" src="T.Comment.Longneck.PNG" alt="fist bump"></p>
-      </div>
-    </div>
-  </div>
-</article>
 
                 <article class="c17-wall-comment">
                   <img class="c17-wall-avatar" src="T.Friends.Panga.PNG" alt="Panga">
@@ -3679,6 +3665,15 @@ function ensureTawnyaProfileOverlay() {
                 <article class="c17-wall-comment">
                   <img class="c17-wall-avatar" src="T.Friends.Renee.PNG" alt="Renee">
                   <div><b>Renee</b><p>Bitch answer your phone. I know you’re awake.</p></div>
+                </article>
+
+
+                <article class="c17-wall-comment c17-wall-comment-matty">
+                  <img class="c17-wall-avatar" src="T.Friends.Matty.PNG" alt="Matty">
+                  <div>
+                    <b>Matty Conb</b>
+                    <p>BITCH <img class="c17-comment-emoji" src="T.Comment. Manicure.PNG" alt="manicure"> if either one of us wanted a man, we’d have stolen each other’s by now. Stop fucking with these broke-ass white boys. Your mail slot was made for bigger envelopes any fuckin’ way… okay! <img class="c17-comment-emoji" src="T.Comment.Cryingface.PNG" alt="crying"><img class="c17-comment-emoji" src="T.Comment.Pride.PNG" alt="pride"><img class="c17-comment-emoji" src="T.Comment.Sparkles.PNG" alt="sparkles"></p>
+                  </div>
                 </article>
 
                 <article class="c17-wall-comment c17-wall-comment-oda">
@@ -3698,23 +3693,6 @@ function ensureTawnyaProfileOverlay() {
                   <div><b>J. Lewis <span class="c17-wall-tag">(slumlord cunt)</span></b><p>Hey… Friendly reminder you’re three days late on this month’s lot fee.</p></div>
                 </article>
 
-
-                <article class="c17-wall-comment c17-wall-comment-matty">
-                  <img class="c17-wall-avatar" src="T.Friends.Matty.PNG" alt="Matty">
-                  <div>
-                    <b>Matty Conb</b>
-                    <p>BITCH <img class="c17-comment-emoji" src="T.Comment. Manicure.PNG" alt="manicure"> if either one of us wanted a man, we’d have stolen each other’s by now. Stop fucking with these broke-ass white boys. Your mail slot was made for bigger envelopes any fuckin’ way… okay! <img class="c17-comment-emoji" src="T.Comment.Cryingface.PNG" alt="crying"><img class="c17-comment-emoji" src="T.Comment.Pride.PNG" alt="pride"><img class="c17-comment-emoji" src="T.Comment.Sparkles.PNG" alt="sparkles"></p>
-                  </div>
-                </article>
-
-                <article class="c17-wall-comment c17-wall-comment-jessica">
-                  <img class="c17-wall-avatar" src="T.Friends.Jessica.PNG" alt="Jessica">
-                  <div>
-                    <b>Jessica <span class="c17-wall-tag">(Justin)</span></b>
-                    <p>This might be the month. I actually get my period… Ugh!</p>
-                  </div>
-                </article>
-
                 <article class="c17-wall-comment c17-wall-comment-mark">
                   <img class="c17-wall-avatar" src="T.Friends.Mark.PNG" alt="Marky Mark">
                   <div>
@@ -3726,6 +3704,30 @@ function ensureTawnyaProfileOverlay() {
                     </div>
                   </div>
                 </article>
+
+                <article class="c17-wall-comment c17-wall-comment-jessica">
+                  <img class="c17-wall-avatar" src="T.Friends.Jessica.PNG" alt="Jessica">
+                  <div>
+                    <b>Jessica <span class="c17-wall-tag">(Justin)</span></b>
+                    <p>This might be the month. I actually get my period… Ugh!</p>
+                  </div>
+                </article>
+
+                <article class="c17-wall-comment c17-wall-comment-pete">
+  <img class="c17-wall-avatar" src="T.Friends.Pete.PNG" alt="Pete S.">
+  <div>
+    <b>Pete S.</b>
+    <p>Let’s hit the skatepark today, homie!</p>
+
+    <div class="c17-wall-reply">
+      <img class="c17-wall-reply-avatar" src="T.friends.Comment.PNG" alt="Tawnya Grey">
+      <div>
+        <b>Tawnya Grey</b>
+        <p>Hell yeah! Miss you, PJ 💙 <img class="c17-comment-emoji c17-comment-emoji-fist" src="T.Comment.Longneck.PNG" alt="fist bump"></p>
+      </div>
+    </div>
+  </div>
+</article></div>
               </section>
             </section>`
         },
@@ -3741,19 +3743,18 @@ function ensureTawnyaProfileOverlay() {
             <p class="c17-email-index-note">Three account records recovered. One live route remains exposed.</p>
             <section class="c17-email-account-index" aria-label="Recovered email accounts">
               <button class="c17-email-account c17-email-account-live" type="button" data-snail-open>
-                <span><small>LIVE ACCOUNT // SNAIL</small><b>Skatergirl89@snail.com</b></span>
                 <img src="T.Snail.Emblem.PNG" alt="" aria-hidden="true">
+                <span><small>LIVE ACCOUNT // SNAIL</small><b>Skatergirl89@snail.com</b></span>
                 <em>OPEN ›</em>
               </button>
-              <div class="c17-email-account c17-email-account-locked" aria-disabled="true">
-                <span><small>ACCOUNT RECORD // INACTIVE</small><b>DesiredDischarge/Badkitty</b></span>
-                <img src="T.Snail.Discharge.PNG" alt="" aria-hidden="true">
-                <em>INACTIVE</em>
-              </div>
-              <div class="c17-email-account c17-email-account-locked" aria-disabled="true">
-                <span><small>ACCOUNT RECORD // INACTIVE</small><b>SoakedSocks89/Funkprincess27</b></span>
+              <div class="c17-email-account c17-email-account-dead" aria-disabled="true">
                 <img src="T.Snail.Socks.PNG" alt="" aria-hidden="true">
-                <em>INACTIVE</em>
+                <span><small>SoakedSocks89</small><b>Funkprincess27</b></span>
+              </div>
+              <div class="c17-email-account c17-email-account-dead c17-email-account-badkitty" aria-disabled="true">
+                <img src="T.Snail.Discharge.PNG" alt="" aria-hidden="true">
+                <span><small>DesiredDischarge</small><b>Badkitty</b></span>
+                <em class="c17-email-lock" aria-label="locked">🔒</em>
               </div>
             </section>
             <section class="c17-subscription-index">
@@ -4339,17 +4340,17 @@ function ensureTawnyaSnail() {
       {id:"scott-tripp", sender:"Scott Tripp", subject:"IT’S COMING…", preview:"Yo ninja… We Gathering this year?!?!", date:"SEP 29", avatar:"T.Snail.Scott.PNG", unread:true, body:p("Yo ninja…","We Gathering this year?!?!","Been too fuckin long. WHOOP WHOOP 🤡")},
       {id:"eugene", sender:"(Eww..)Gene", address:"eugene4real@Snail.com", subject:"I think it's finally time", preview:"So I know this is probably going to come completely out of nowhere for you…", date:"SEP 27", avatar:"T.Eugene.Snail.PNG", unread:true, body:p("Hey Tawnya,","So I know this is probably going to come completely out of nowhere for you, but for me it actually goes back pretty far.","I've been in love with you since 10th grade.","I almost told you at Jessica Martin's Halloween party, but you were dating Kyle, and honestly I respected that. Then junior year I thought about saying something after chemistry, but you left before I could catch up with you.","After graduation I figured eventually there would just be a moment where we'd both know.","There hasn't been.","So I'm creating the moment.","Dinner. Just you and me. Think about it.","— Eugene","P.S. I'm off Tuesday and Thursday, but I can probably get Wednesday covered if Wednesday feels more natural for you.")},
       {id:"mom", sender:"Mom", address:"momma.grey@Snail.com", subject:"Call me when you wake up", preview:"And I mean actually call me, not one of your thumbs-up things.", date:"SEP 24", avatar:"T.Snail.Mom.PNG", unread:true, body:p("Tawnya —","Call me when you wake up. And I mean actually call me, not one of your thumbs-up things.","I found the blue casserole dish. It was in the cabinet you told me you checked twice.","Love you.","Mom")},
-      {id:"rmv", sender:"Massachusetts Registry of Motor Vehicles", address:"notice@mass-rmv.example", subject:"Registration canceled — insurance lapse", preview:"Your vehicle registration has been canceled following an insurance cancellation notice.", date:"SEP 23", avatar:"T.Snail.Govseal.PNG", unread:true, body:`<div class="c17-snail-official"><div class="c17-snail-gov-letterhead"><img src="T.Snail.Govseal.PNG" alt=""></div><b>REGISTRATION STATUS NOTICE</b><p>Our records indicate that the insurance associated with your vehicle registration is no longer active.</p><p><strong>STATUS: CANCELED</strong></p><p>Do not operate the vehicle until insurance and registration requirements have been resolved.</p><small>Fictional Channel 17 document // Taxachusetts record mirror</small></div>`},
+      {id:"rmv", sender:"Massachusetts Registry of Motor Vehicles", avatar:"T.Snail.Govseal.PNG", address:"notice@mass-rmv.example", subject:"Registration canceled — insurance lapse", preview:"Your vehicle registration has been canceled following an insurance cancellation notice.", date:"SEP 23", unread:true, body:`<div class="c17-snail-official"><div class="c17-snail-gov-letterhead"><img src="T.Snail.Govseal.PNG" alt=""></div><b>REGISTRATION STATUS NOTICE</b><p>Our records indicate that the insurance associated with your vehicle registration is no longer active.</p><p><strong>STATUS: CANCELED</strong></p><p>Do not operate the vehicle until insurance and registration requirements have been resolved.</p><small>Fictional Channel 17 document // Taxachusetts record mirror</small></div>`},
       {id:"bm-menu", sender:"GreenQueen1971", address:"greenqueen1971@Snail.com", subject:"This week's garden 🌿", preview:"THE HERBOLOGIST — WEEKLY MENU", date:"SEP 22", body:`<p class="c17-snail-menu-title">THE HERBOLOGIST — WEEKLY MENU</p>${p("🌿 Bayou Blessing — 35 — Soft, slow & don't make no plans.","🍯 Mama's Honey Jar — 50 — Sweet going in. Mind your business coming out.","🌙 Midnight Moss — 45 — For after the children and respectable people have gone to bed.","🔥 Devil's Houseplant — 60 — Don't call me tomorrow saying I didn't warn you.","Cash keeps everybody honest. — BM")}`},
       {id:"gregory", sender:"Gregory P.", address:"gregory.p83@Snail.com", subject:"RE: order #88104", preview:"These were advertised as USED. I am extremely disappointed.", date:"SEP 21", body:p("Hello,","I don't normally complain, but these were advertised as USED and what arrived was frankly nowhere near the condition I expected.","I paid extra for authenticity. These smell like laundry detergent.","I would like either a replacement with the advertised level of wear or a partial refund.","This is honestly about principle at this point.","Gregory P.")},
-      {id:"deposit-sf", sender:"DesiredDischarge", address:"Badkitty", subject:"Deposit received — DesiredDischarge", preview:"Badkitty creator payout deposited to checking •••• 4319", date:"SEP 20", avatar:"T.Snail.Discharge.PNG", body:"<p class='c17-snail-deposit'>+$3,417.82</p><p>DesiredDischarge / Badkitty creator payout deposited to checking •••• 4319</p>"},
-      {id:"oda-rain", sender:"GooGooJuice", address:"googoojuice@Snail.com", subject:"Don't answer it", preview:"Baby, if somebody knocks three times tonight, don't answer the door…", date:"SEP 18", body:p("Baby, if somebody knocks three times tonight, don't answer the door.","Unless it's UPS. My package says delivered and I accidentally used your address again.","whispers in the rain.","— Oda")},
-      {id:"deposit-feet", sender:"SoakedSocks89", address:"Funkprincess27", subject:"Deposit received — SoakedSocks89", preview:"Funkprincess27 creator payout deposited to checking •••• 4319", date:"SEP 15", avatar:"T.Snail.Socks.PNG", body:"<p class='c17-snail-deposit'>+$1,286.40</p><p>SoakedSocks89 / Funkprincess27 creator payout deposited to checking •••• 4319</p>"},
+      {id:"deposit-sf", sender:"DesiredDischarge", address:"Badkitty", avatar:"T.Snail.Discharge.PNG", subject:"Deposit received — DesiredDischarge", preview:"Badkitty creator payout deposited to checking •••• 4319", date:"SEP 20", body:"<p class='c17-snail-deposit'>+$3,417.82</p><p>Creator payout deposited to checking •••• 4319</p>"},
+      {id:"oda-rain", sender:"GooGooJuice", avatar:"T.Friends.Oda.PNG", address:"googoojuice@Snail.com", subject:"Don't answer it", preview:"Baby, if somebody knocks three times tonight, don't answer the door…", date:"SEP 18", body:p("Baby, if somebody knocks three times tonight, don't answer the door.","Unless it's UPS. My package says delivered and I accidentally used your address again.","whispers in the rain.","— Oda")},
+      {id:"deposit-feet", sender:"SoakedSocks89", address:"Funkprincess27", avatar:"T.Snail.Socks.PNG", subject:"Deposit received — SoakedSocks89", preview:"Funkprincess27 creator payout deposited to checking •••• 4319", date:"SEP 15", body:"<p class='c17-snail-deposit'>+$1,286.40</p><p>Creator payout deposited to checking •••• 4319</p>"},
       {id:"someday", sender:"TICKET DESK", address:"tickets@venue.example", subject:"Your SOMEDⒶY tickets are confirmed", preview:"Your tickets are in. Keep this message for entry.", date:"SEP 12", body:p("Your SOMEDⒶY tickets are confirmed.","Keep this message for entry. Doors and ticket details are attached to the recovered account record.")},
       {id:"subpoena", sender:"COURT NOTICE", address:"efile@court.example", subject:"NOTICE TO APPEAR — SUMMONS/SUBPOENA", preview:"Electronic notice available for review.", date:"SEP 08", body:"<p class='c17-snail-artifact-note'>[COURT DOCUMENT RESERVED — CONTENT NOT YET WRITTEN.]</p>"},
       {id:"enemy", sender:"UNKNOWN", address:"unknown", subject:"YOU KNOW EXACTLY WHY I'M EMAILING YOU", preview:"Fuck you, Tawnya. Don't call me. Don't message me…", date:"SEP 04", body:p("Fuck you, Tawnya.","Don't call me. Don't message me. Don't send Renee to talk to me either because I swear to God I'll tell her exactly what you did.","You wanna act like you don't know? Fine.","Keep acting stupid.","I'm coming to see you myself.","— [HER]")},
-      {id:"reset", sender:"SNAIL Security", avatar:"T.Snail.Padlock.PNG", address:"security@Snail.com", subject:"New sign-in to your account", preview:"A new device signed in near Worcester, MA.", date:"AUG 29", body:p("New sign-in detected.","Device: iPhone","Location estimate: Worcester, MA","If this was you, no action is required. If it wasn't, maybe stop using the same password everywhere.","— SNAIL Security")},
-      {id:"shipping", sender:"Parcel Possum", address:"tracking@parcelpossum.example", subject:"Your package is out for delivery", preview:"Driver has 47 stops before yours. Please stop refreshing.", date:"AUG 27", body:p("Your package is out for delivery.","Estimated arrival: eventually.","Driver has 47 stops before yours.","Please stop refreshing. It does not make the truck move faster.")}
+      {id:"reset", sender:"SNAIL Security", avatar:"T.Snail.Privacy.PNG", address:"security@Snail.com", subject:"New sign-in to your account", preview:"A new device signed in near Worcester, MA.", date:"AUG 29", body:p("New sign-in detected.","Device: iPhone","Location estimate: Worcester, MA","If this was you, no action is required. If it wasn't, maybe stop using the same password everywhere.","— SNAIL Security")},
+      {id:"shipping", sender:"Parcel Possum", avatar:"T.Snail.Possum.PNG", address:"tracking@parcelpossum.example", subject:"Your package is out for delivery", preview:"Driver has 47 stops before yours. Please stop refreshing.", date:"AUG 27", body:p("Your package is out for delivery.","Estimated arrival: eventually.","Driver has 47 stops before yours.","Please stop refreshing. It does not make the truck move faster.")}
     ],
     spam: [
       {id:"pivs", sender:"Personal Information Verification Solutions, LLC", subject:"FINAL NOTICE — Sorry We Took So Long To Respond", preview:"Please provide all personal information so we can finish verifying you.", date:"SEP 29", unread:true, body:p("Hello Tawnya,","We sincerely apologize for taking so long to respond.","To complete your identity verification, please reply with your full legal name, date of birth, Social Security number, current and previous addresses, mother's maiden name, first pet, elementary school, banking institution, routing and account numbers, debit/credit card numbers with expiration dates and security codes, email username and password, photographs of the front and back of your ID, and a selfie holding that ID.","Please also include your normal work schedule and the hours your home is usually empty.","Failure to provide complete information may prevent us from successfully verifying and/or becoming you.","Thank you for choosing Personal Information Verification Solutions, LLC.","Securing You Through Information™")},
@@ -4370,8 +4371,8 @@ function ensureTawnyaSnail() {
       {id:"joe", sender:"Joe", address:"Jbruce17@snail.com", subject:"ONE MORE RIDE", preview:"Moon black, tents breathe, hear the dead call your name…", date:"SEP 29", avatar:"T.Snail.Joe.PNG", body:`<div class="c17-snail-joe-bars"><p>Moon black, tents breathe, hear the dead call your name,<br>Grey walked through the midway and the midway fucking changed,<br>Six cards hit the dirt, every face turned away,<br>Every ride stopped dead when you stepped in my lane.</p><p>Now the wheel keeps turnin’ but it don't turn right,<br>Got the freaks in the back chanting “Grey” all night,<br>Hatchet moon swinging while the black candles drip,<br>And that wicked little grin still got the clown in its grip.</p><p>Calliope cough while the dead lights shake,<br>Faygo rain falling where the painted ones wake,<br>I ain't promising roses, ain't promising rings,<br>Just a moonlit reunion where the dead carousel sings.</p><p>So when six cards fall and that red sky shows,<br>Follow the midway lights where nobody goes,<br>You know which painted motherfucker still wants you—<br>Grey, quit fuckin’ around. You know what to do.</p><p>— Joe</p></div>`},
       {id:"trey", sender:"Trey", subject:"Damn.. Sup girl!", preview:"Got yo info from Lesley…", date:"SEP 29", avatar:"T.Snail.Trey.PNG", body:p("Got yo info from Lesley…","HMB, fa’real fa’real.","…. Let’s introduce your stuff to my stuff…","Know what I’m sayin..")},
       {id:"oda-lottery", sender:"GooGooJuice", address:"googoojuice@Snail.com", subject:"stars be shinin", preview:"Girl them stars be shinin down on the games tonight…", date:"AUG 31", body:p("Girl them stars be shinin down on the games tonight. Been hearin them crickets carryin on since sundown and they keep givin me 3, 24, 39, 61, 65… & 9.","If I don't make it down to the market, one of us better play em.","And don't you go fuckin with them numbers neither.","The crickets ain't been stutterin'. You know.","— Oda")},
-      {id:"trash2", sender:"SNAIL", address:"noreply@Snail.com", avatar:"T.Snail.Padlock.PNG", subject:"Storage almost full", preview:"You have used 96% of your recovered storage.", date:"AUG 17", body:p("Your SNAIL storage is almost full.","Maybe delete the 2,846 screenshots you swear you're going to look at later.")},
-      {id:"trash3", sender:"Pizza Palace", address:"coupons@pizza.example", subject:"We miss you, skatergirl89", preview:"It's been 9 days. This is getting weird for both of us.", date:"AUG 12", body:p("We miss you, skatergirl89.","It's been 9 days since your last order.","This is getting weird for both of us.")}
+      {id:"trash2", sender:"SNAIL", avatar:"T.Snail.Privacy.PNG", address:"noreply@Snail.com", subject:"Storage almost full", preview:"You have used 96% of your recovered storage.", date:"AUG 17", body:p("Your SNAIL storage is almost full.","Maybe delete the 2,846 screenshots you swear you're going to look at later.")},
+      {id:"trash3", sender:"Pizza Palace", avatar:"T.Snail.Pizza.PNG", address:"coupons@pizza.example", subject:"We miss you, skatergirl89", preview:"It's been 9 days. This is getting weird for both of us.", date:"AUG 12", body:p("We miss you, skatergirl89.","It's been 9 days since your last order.","This is getting weird for both of us.")}
     ]
   };
 
