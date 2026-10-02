@@ -14736,19 +14736,26 @@ html.golden-roach-open,html.golden-roach-open body{overflow:hidden!important}
   -webkit-overflow-scrolling:touch!important;
   scrollbar-width:thin!important;
   scrollbar-color:rgba(114,199,255,.72) rgba(1,13,34,.28)!important;
+  border:1px solid rgba(74,169,224,.38)!important;
+  box-sizing:border-box!important;
 }
 .c17-tawnya-wall>.c17-wall-scroll::-webkit-scrollbar{width:5px!important}
 .c17-tawnya-wall>.c17-wall-scroll::-webkit-scrollbar-track{background:rgba(1,13,34,.28)!important}
 .c17-tawnya-wall>.c17-wall-scroll::-webkit-scrollbar-thumb{background:rgba(114,199,255,.72)!important;border-radius:8px!important}
 
-/* Dead joke accounts: artwork remains fully alive; only navigation is dead. */
-.c17-email-account-dead{pointer-events:none!important;cursor:default!important;opacity:1!important;filter:none!important}
+/* Recovered account states: electric-blue world, no gray disabled treatment. */
+.c17-email-account-live{color:#8bd8ff!important;border-color:#62cfff!important;box-shadow:0 0 12px rgba(80,201,255,.12)!important}
+.c17-email-account-live small,.c17-email-account-live b,.c17-email-account-live em{color:#8bd8ff!important;opacity:1!important}
+.c17-email-account-dead{pointer-events:none!important;cursor:default!important;opacity:1!important;filter:none!important;color:#164f85!important;border-color:#123f70!important;background:#031334!important}
 .c17-email-account-dead img{opacity:1!important;filter:none!important}
-.c17-email-account-dead span{opacity:.62!important}
-.c17-email-account-dead small,.c17-email-account-dead b{color:#60758b!important;text-decoration:none!important}
-.c17-email-account-dead .c17-email-lock{margin-left:auto!important;color:#72c7ff!important;font-style:normal!important;font-size:1rem!important;opacity:1!important}
+.c17-email-account-dead span{opacity:1!important}
+.c17-email-account-dead small,.c17-email-account-dead b{color:#1f5f9b!important;opacity:1!important;text-decoration:none!important}
+.c17-email-account-dead .c17-email-lock{margin-left:auto!important;display:grid!important;place-items:center!important;width:34px!important;height:34px!important;opacity:1!important}
+.c17-email-account-dead .c17-email-lock img{display:block!important;width:30px!important;height:30px!important;object-fit:contain!important}
 
 /* Center the wordmark directly over the motto; emblem remains beside it. */
 .c17-snail-v5 .c17-snail-brand{display:flex!important;align-items:center!important}
 .c17-snail-v5 .c17-snail-brand>div{display:flex!important;flex-direction:column!important;align-items:center!important;text-align:center!important;min-width:0!important}
 .c17-snail-v5 .c17-snail-brand b,.c17-snail-v5 .c17-snail-brand small{text-align:center!important;width:100%!important}
+.c17-snail-v5 .c17-snail-inline-emoji{display:inline-block!important;width:1.45em!important;height:1.45em!important;object-fit:contain!important;vertical-align:-.32em!important;margin-left:.15em!important}
+
