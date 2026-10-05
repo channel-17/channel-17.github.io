@@ -3933,8 +3933,8 @@ function ensureTawnyaProfileOverlay() {
     dossierShell.classList.toggle("c17-poth-watermark-page", showPoth);
     const alignPothMark = () => {
       const rect = systemMark.getBoundingClientRect();
-      pothAccount.style.setProperty("left", `${rect.left + rect.width / 2 - 21}px`, "important");
-      pothAccount.style.setProperty("top", `${rect.top + rect.height / 2 - 21}px`, "important");
+      pothAccount.style.setProperty("left", `${rect.left + rect.width / 2 - 16}px`, "important");
+      pothAccount.style.setProperty("top", `${rect.top + rect.height / 2 - 16}px`, "important");
     };
     if (!dossierShell.dataset.pothMarkTracking) {
       dossierShell.dataset.pothMarkTracking = "true";
@@ -3942,8 +3942,8 @@ function ensureTawnyaProfileOverlay() {
         const mark = documentPanel.querySelector(".c17-system-paper-mark");
         if (!mark) return;
         const rect = mark.getBoundingClientRect();
-        pothAccount.style.setProperty("left", `${rect.left + rect.width / 2 - 21}px`, "important");
-        pothAccount.style.setProperty("top", `${rect.top + rect.height / 2 - 21}px`, "important");
+        pothAccount.style.setProperty("left", `${rect.left + rect.width / 2 - 16}px`, "important");
+        pothAccount.style.setProperty("top", `${rect.top + rect.height / 2 - 16}px`, "important");
       };
       tawnyaProfileOverlay.addEventListener("scroll", trackPothMark, {passive:true});
       window.addEventListener("resize", trackPothMark, {passive:true});
