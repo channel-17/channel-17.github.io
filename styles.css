@@ -14759,3 +14759,20 @@ html.golden-roach-open,html.golden-roach-open body{overflow:hidden!important}
 .c17-snail-v5 .c17-snail-brand b,.c17-snail-v5 .c17-snail-brand small{text-align:center!important;width:100%!important}
 .c17-snail-v5 .c17-snail-inline-emoji{display:inline-block!important;width:1.45em!important;height:1.45em!important;object-fit:contain!important;vertical-align:-.32em!important;margin-left:.15em!important}
 
+
+/* Brick 19: sheet watermark and single-page operator entrance. */
+.c17-system-paper-mark { right:12px !important;bottom:22px !important; }
+.c17-poth-account { bottom:auto !important;right:auto !important;width:42px !important;height:42px !important; }
+.c17-poth-account-trigger { width:42px !important;height:42px !important;border:0 !important;background:transparent !important;opacity:.7 !important; }
+.c17-poth-account-trigger[hidden] { display:none !important; }
+.c17-poth-account-trigger img { object-fit:contain !important; }
+.c17-dossier-footer { padding-left:11px !important; }
+.c17-admin-finding section { margin:22px 0 !important;padding:16px !important;border:1px solid rgba(124,190,234,.23) !important;background:rgba(3,19,46,.45) !important; }
+.c17-admin-finding h3 { margin:0 0 12px !important;color:#91c8e8 !important;font:700 .78rem/1.4 "Courier New",monospace !important;letter-spacing:1px !important;text-transform:uppercase !important; }
+.c17-admin-finding p { color:#b7cddd !important;font-size:1rem !important;line-height:1.65 !important; }
+.c17-admin-finding blockquote { margin:0 !important;font-size:1rem !important;line-height:1.6 !important; }
+.c17-admin-addendum { font-family:"Courier New",monospace !important;font-size:.85rem !important; }
+.c17-supervisor-note p { color:#86b5ce !important;font-family:"Courier New",monospace !important;letter-spacing:.6px !important;overflow-wrap:anywhere !important; }
+/* Wren leaves no frozen representation. */
+html.frost-conquering .profile.wren,
+html.frost-dead-world .profile.wren { display:none !important; }
