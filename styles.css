@@ -14761,9 +14761,9 @@ html.golden-roach-open,html.golden-roach-open body{overflow:hidden!important}
 
 
 /* Brick 19: sheet watermark and single-page operator entrance. */
-.c17-system-paper-mark { right:12px !important;bottom:22px !important; }
-.c17-poth-account { bottom:auto !important;right:auto !important;width:42px !important;height:42px !important; }
-.c17-poth-account-trigger { width:42px !important;height:42px !important;border:0 !important;background:transparent !important;opacity:.7 !important; }
+.c17-system-paper-mark { right:0px !important;bottom:10px !important; }
+.c17-poth-account { bottom:auto !important;right:auto !important;width:32px !important;height:32px !important; }
+.c17-poth-account-trigger { width:32px !important;height:32px !important;border:0 !important;background:transparent !important;opacity:.7 !important; }
 .c17-poth-account-trigger[hidden] { display:none !important; }
 .c17-poth-account-trigger img { object-fit:contain !important; }
 .c17-dossier-footer { padding-left:11px !important; }
