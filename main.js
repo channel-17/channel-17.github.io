@@ -2460,7 +2460,11 @@ const FROZEN_SOCIAL_ASSET_MAP = new Map([
   ["😍", "Asset.hearteyes.frozen.PNG"],
   ["🥰", "Asset.3hearts.frozen.PNG"],
   ["🔥", "Asset.flame.frozen.PNG"],
-  ["👎", "Asset.thumbsdown.frozen.PNG"]
+  ["👎", "Asset.thumbsdown.frozen.PNG"],
+  ["👍", "Asset.thumbsdown.frozen.PNG"],
+  ["💯", "Asset.100.Frozen.PNG"],
+  ["🔔", "Asset.Bell.Frozen.PNG"],
+  ["▶️", "Asset.Subscribe.Frozen.PNG"]
 ]);
 
 let tawnyaRevealNode = null;
@@ -2499,7 +2503,7 @@ function snapshotFrostActors() {
   ];
 
   actors.forEach((actor, index) => {
-    if (!actor || !actor.isConnected) return;
+    if (!actor || !actor.isConnected || actor.classList.contains("wren")) return;
 
     const rect = actor.getBoundingClientRect();
     const style = getComputedStyle(actor);
@@ -2770,7 +2774,7 @@ function scheduleFrozenAssetSwaps(originX, originY, duration) {
   clearFrostSwapTimers();
 
   const candidates = [...document.querySelectorAll(".profile img")]
-    .filter(image => !image.classList.contains("c17-frozen-swap-layer"));
+    .filter(image => !image.classList.contains("c17-frozen-swap-layer") && !image.closest(".wren"));
 
   candidates.forEach(image => {
     const frozenName = FROZEN_ASSET_MAP.get(normalizeAssetName(image.getAttribute("src") || image.src));
@@ -3428,13 +3432,22 @@ function ensureTawnyaProfileOverlay() {
           label: "STATUS",
           html: `<div class="c17-dossier-kicker">INTERNAL USE ONLY</div><h2>Archive Status</h2><p class="c17-dossier-body"><b>Classification:</b> low strategic threat / high incident-generation potential.</p><p class="c17-dossier-body"><b>Reason retained:</b> recurrent presence across unrelated reports, unstable contact network, and anomalous frequency linkage.</p><div class="c17-incomplete-box"><b>FILE CORRUPTION DETECTED</b><br>Several sections remain incomplete.</div>`
         },
-        analyst: {
-          label: "ANALYST",
-          html: `<div class="c17-dossier-kicker">ANALYST COMMENTARY</div><h2>Analyst Note</h2><blockquote>I genuinely cannot determine whether Grey is a public nuisance, catastrophically unlucky, or the only honest person in the county.</blockquote>`
-        },
         redacted: {
           label: "REDACTED",
           html: `<div class="c17-dossier-kicker">ACCESS RESTRICTED</div><h2>████████</h2><p class="c17-dossier-body">████████████████████████████████</p><p class="c17-dossier-body">Subject connection to frozen asset event: <b>CONFIRMED</b>.</p><p class="c17-dossier-body">Recovery trigger: ████████████████████</p>`
+        },
+        admin: {
+          label: "ADMIN",
+          html: `<div class="c17-dossier-kicker">INTERNAL RECORD // ADMINISTRATIVE REVIEW</div><h2>Administrative Finding</h2>
+          <div class="c17-admin-finding">
+            <dl class="c17-fact-grid"><div><dt>SUBJECT</dt><dd>Tawnya Grey</dd></div><div><dt>REVIEW STATUS</dt><dd>Continued observation</dd></div></dl>
+            <section><h3>Presenting condition</h3><p>Subject presents with a continuous personal history, stable self-identification, and no reported awareness of her constructed origin. She describes her surroundings as ordinary. Distress is attributed to relationships, employment, money, and accumulated physical injury.</p></section>
+            <section><h3>Observed behavior</h3><p>Humor remains intact under stress. Attachment persists despite repeated disappointment. Subject continues to make plans for other people without a measurable advantage to herself. These actions are recorded as voluntary.</p></section>
+            <section><h3>Assessment</h3><p>Identity continuity is satisfactory. Subject does not require correction for believing her life is real; that belief is an intended condition of the file. No evidence indicates an attempt to displace, diminish, or imitate humanity.</p><p>Several responses remain inconsistent with the supplied behavioral model. The record describes them as attachment. The model describes them as error. I have retained the record.</p></section>
+            <section><h3>Administrative disposition</h3><p>Maintain the existing world and preserve continuity of contact. Do not revise her history to simplify an explanation. Further observation is required before any intervention affecting memory, relationships, or self-recognition.</p></section>
+            <section><h3>Analyst notation</h3><blockquote>I genuinely cannot determine whether Grey is a public nuisance, catastrophically unlucky, or the only honest person in the county.</blockquote><p class="c17-admin-addendum">Addendum: the subject was not informed of this review. She thanked someone today who was not scheduled to help her. No corresponding instruction was located.</p></section>
+            <section class="c17-supervisor-note"><h3>Supervisor Notes</h3><p lang="x-poth">Poth. Vel dra keth. Sha thavren un Grey’s veskar en draven morakh. Du venari en sha morakh shuun. Tha vesh thalen sha kadrin. Thar kelvar ath vesh korveth es nethari, va nar selith hes vorath. Kavren aneth ulvaren ves va thar valesh ven esh kalreth navor thar neth valkor. Vae kan relvek tha. Kareth eth.</p></section>
+          </div>`
         }
       }
     },
@@ -3591,7 +3604,7 @@ function ensureTawnyaProfileOverlay() {
             <section class="c17-tawnya-dating-card c17-tawnya-social-profile">
               <div class="c17-tawnya-hero-grid">
                 <figure class="c17-dating-main-figure">
-                  <img class="c17-dating-photo c17-tawnya-main-photo" src="Tawnya.profile.main" data-tawnya-main-photo alt="Tawnya Grey profile photo">
+                  <img class="c17-dating-photo c17-tawnya-main-photo" src="Tawnya.profile.main.PNG" data-tawnya-main-photo alt="Tawnya Grey profile photo">
                   <figcaption>still that bitch.</figcaption>
                 </figure>
 
@@ -3913,17 +3926,33 @@ function ensureTawnyaProfileOverlay() {
     systemMark.setAttribute("aria-hidden", "true");
     systemMark.decoding = "async";
     documentPanel.appendChild(systemMark);
+    const pothAccount = dossierShell.querySelector(".c17-poth-account");
+    const showPoth = activeCategory === "overview" && activePage === "identity";
+    const trigger = pothAccount.querySelector(".c17-poth-account-trigger");
+    trigger.hidden = !showPoth;
+    dossierShell.classList.toggle("c17-poth-watermark-page", showPoth);
+    const alignPothMark = () => {
+      const rect = systemMark.getBoundingClientRect();
+      pothAccount.style.setProperty("left", `${rect.left + rect.width / 2 - 21}px`, "important");
+      pothAccount.style.setProperty("top", `${rect.top + rect.height / 2 - 21}px`, "important");
+    };
+    if (!dossierShell.dataset.pothMarkTracking) {
+      dossierShell.dataset.pothMarkTracking = "true";
+      const trackPothMark = () => {
+        const mark = documentPanel.querySelector(".c17-system-paper-mark");
+        if (!mark) return;
+        const rect = mark.getBoundingClientRect();
+        pothAccount.style.setProperty("left", `${rect.left + rect.width / 2 - 21}px`, "important");
+        pothAccount.style.setProperty("top", `${rect.top + rect.height / 2 - 21}px`, "important");
+      };
+      tawnyaProfileOverlay.addEventListener("scroll", trackPothMark, {passive:true});
+      window.addEventListener("resize", trackPothMark, {passive:true});
+    }
+    requestAnimationFrame(alignPothMark);
 
     const mainPhoto = documentPanel.querySelector("[data-tawnya-main-photo]");
     if (mainPhoto) {
-      const candidates = [
-        "Tawnya.profile.main",
-        "Tawnya.profile.main.jpeg",
-        "Tawnya.profile.main.jpg",
-        "Tawnya.profile.main.JPG",
-        "Tawnya.profile.main.PNG",
-        "Tawnya.profile.main.png"
-      ];
+      const candidates = ["Tawnya.profile.main.PNG"];
       let candidateIndex = Math.max(0, candidates.indexOf(mainPhoto.getAttribute("src")));
       mainPhoto.addEventListener("error", () => {
         candidateIndex += 1;
