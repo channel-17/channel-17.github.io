@@ -14776,26 +14776,3 @@ html.golden-roach-open,html.golden-roach-open body{overflow:hidden!important}
 /* Wren leaves no frozen representation. */
 html.frost-conquering .profile.wren,
 html.frost-dead-world .profile.wren { display:none !important; }
-
-/* Keep uncustomized human heads in the shared frozen emoji family. */
-.c17-frozen-profile-overlay.c17-frozen-head-emoji {
-  display: grid !important;
-  place-items: center;
-  font-size: 64px;
-  line-height: 1;
-  background: transparent !important;
-  border: 0 !important;
-  pointer-events: none;
-}
-.c17-frozen-profile-overlay.c17-frozen-head-complete {
-  opacity: 1 !important;
-  clip-path: none !important;
-  transform: none !important;
-}
-
-.c17-frozen-profile-overlay.c17-frozen-head-complete {
-  -webkit-mask-image: none !important;
-  mask-image: none !important;
-  filter: none !important;
-  animation: none !important;
-}
