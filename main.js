@@ -2457,14 +2457,8 @@ const FROZEN_ASSET_MAP = new Map([
   ["blue.frank4.png", "Frank.Blue.Frozen.4.PNG"],
   ["blue.frank5.png", "Frank.Blue.Frozen.5.PNG"],
   ["blue.frank6.png", "Frank.Blue.Frozen.6.PNG"],
-
   ["femaleph1.png", "FemalePH1.frozen.PNG"],
   ["female.ph1.png", "FemalePH1.frozen.PNG"]
-]);
-
-// Human placeholder heads without existing custom frozen art.
-const FROZEN_HEAD_EMOJI_SOURCES = new Set([
-  "maleph1.png", "male.ph.2.png", "female.ph2.png", "female.ph.3.png"
 ]);
 
 const FROZEN_SOCIAL_ASSET_MAP = new Map([
@@ -3108,7 +3102,6 @@ function scheduleFrozenSymbolProfileLocks(originX, originY, duration) {
         ? normalizeAssetName(profile.dataset.frostFrankSource)
         : sourceName;
       const frozenName = FROZEN_ASSET_MAP.get(stoppedSource);
-      const useFrozenHead = FROZEN_HEAD_EMOJI_SOURCES.has(stoppedSource);
 
       let frozenOverlay = null;
 
@@ -3117,14 +3110,6 @@ function scheduleFrozenSymbolProfileLocks(originX, originY, duration) {
         frozenOverlay.alt = "";
         loadFrozenAssetClean(frozenOverlay, frozenName);
         frozenOverlay.className = "c17-frozen-profile-overlay";
-        frozenOverlay.setAttribute("aria-hidden", "true");
-        profile.appendChild(frozenOverlay);
-      }
-
-      if (sourceImage && useFrozenHead) {
-        frozenOverlay = document.createElement("span");
-        frozenOverlay.className = "c17-frozen-profile-overlay c17-frozen-head-emoji";
-        frozenOverlay.textContent = "🥶";
         frozenOverlay.setAttribute("aria-hidden", "true");
         profile.appendChild(frozenOverlay);
       }
@@ -3141,12 +3126,7 @@ function scheduleFrozenSymbolProfileLocks(originX, originY, duration) {
           loadFrozenAssetClean(sourceImage, frozenName);
         }
 
-        if (useFrozenHead && sourceImage) {
-          sourceImage.style.setProperty("visibility", "hidden", "important");
-          frozenOverlay.classList.add("c17-frozen-head-complete");
-        } else if (frozenOverlay) {
-          frozenOverlay.remove();
-        }
+        if (frozenOverlay) frozenOverlay.remove();
         pixelFront.remove();
 
         profile.classList.remove(
