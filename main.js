@@ -889,12 +889,11 @@ document.addEventListener("keydown", event => {
 
 
 const hiveAssets = [
-  "MalePH1.PNG",
-  "male.PH.2.PNG",
-  "femalePH1.PNG",
-  "Female.PH2.PNG",
-  "female.PH.3.PNG",
-  "female.PH1.PNG"
+  "Bot.Male.V1.PNG",
+  "Bot.Male.V2.PNG",
+  "Bot.Female.V1.PNG",
+  "Bot.Female.V2.PNG",
+  "Bot.Female.V3.PNG"
 ];
 
 const normalAssets = [
@@ -2457,8 +2456,11 @@ const FROZEN_ASSET_MAP = new Map([
   ["blue.frank4.png", "Frank.Blue.Frozen.4.PNG"],
   ["blue.frank5.png", "Frank.Blue.Frozen.5.PNG"],
   ["blue.frank6.png", "Frank.Blue.Frozen.6.PNG"],
-  ["femaleph1.png", "FemalePH1.frozen.PNG"],
-  ["female.ph1.png", "FemalePH1.frozen.PNG"]
+  ["bot.female.v1.png", "Bot.Female.V1.Frozen.PNG"],
+  ["bot.female.v2.png", "Bot.Female.V2.Frozen.PNG"],
+  ["bot.female.v3.png", "Bot.Female.V3.Frozen.PNG"],
+  ["bot.male.v1.png", "Bot.Male.V1.Frozen.PNG"],
+  ["bot.male.v2.png", "Bot.Male.V2.Frozen.PNG"]
 ]);
 
 const FROZEN_SOCIAL_ASSET_MAP = new Map([
@@ -4393,7 +4395,7 @@ function ensureTawnyaSnail() {
     spam: [
       {id:"pivs", sender:"Personal Information Verification Solutions, LLC", subject:"FINAL NOTICE — Sorry We Took So Long To Respond", preview:"Please provide all personal information so we can finish verifying you.", date:"SEP 29", unread:true, body:p("Hello Tawnya,","We sincerely apologize for taking so long to respond.","To complete your identity verification, please reply with your full legal name, date of birth, Social Security number, current and previous addresses, mother's maiden name, first pet, elementary school, banking institution, routing and account numbers, debit/credit card numbers with expiration dates and security codes, email username and password, photographs of the front and back of your ID, and a selfie holding that ID.","Please also include your normal work schedule and the hours your home is usually empty.","Failure to provide complete information may prevent us from successfully verifying and/or becoming you.","Thank you for choosing Personal Information Verification Solutions, LLC.","Securing You Through Information™")},
       {id:"spam1", sender:"MYSTERY PRIZE CENTER", address:"winner@definitelyreal.example", subject:"TAWNYA YOU HAVE BEEN SELECTED!!!", preview:"Claim your $7,400 gift card before midnight.", date:"SEP 26", body:p("CONGRATULATIONS TAWNYA!!!","You have been selected from several billion extremely lucky people.","Reply with your mother's maiden name, first pet, and a photograph of both sides of your debit card.","This is definitely normal.")},
-      {id:"spam2", sender:"Local Singles Alert", address:"nearby@romance.example", subject:"17 men are waiting in Gardner", preview:"One of them owns a boat. Allegedly.", date:"SEP 19", body:p("17 men are waiting in your area.","One of them owns a boat.","We have not verified the boat.")},
+      {id:"spam2", sender:"Local Singles Alert", address:"nearby@romance.example", subject:"8 local scumpas in Winchitucky — about nine-ish miles from you.", preview:"One of them owns a boat. Allegedly.", date:"SEP 19", body:p("8 local scumpas in Winchitucky — about nine-ish miles from you.","One of them owns a boat.","We have not verified the boat.")},
       {id:"spam3", sender:"Extended Warranty Department", address:"urgent@warranty.example", subject:"FINAL FINAL FINAL NOTICE", preview:"We have been trying to reach you since the invention of the automobile.", date:"SEP 10", body:p("This is your FINAL FINAL FINAL notice.","We have been trying to reach you about your vehicle's extended warranty since approximately the invention of the automobile.")}
     ],
     sent: [
