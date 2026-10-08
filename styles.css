@@ -14776,3 +14776,9 @@ html.golden-roach-open,html.golden-roach-open body{overflow:hidden!important}
 /* Wren leaves no frozen representation. */
 html.frost-conquering .profile.wren,
 html.frost-dead-world .profile.wren { display:none !important; }
+
+/* Keep the entry heart outside the open dossier. */
+html.tawnya-dossier-open body > .c17-tawnya-reveal { display:none !important; }
+.c17-tawnya-reveal { background:transparent !important;border:0 !important;box-shadow:none !important; }
+.c17-poth-account-trigger { display:grid !important;place-items:center !important;padding:0 !important;overflow:visible !important; }
+.c17-poth-account-trigger img { display:block !important;width:100% !important;height:100% !important;margin:0 !important;transform:none !important; }
