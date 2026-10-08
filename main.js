@@ -2378,7 +2378,7 @@ function playBlueFrankSequence() {
   const frameTimes = [0, 620, 1240, 1900, 2580, 3300];
   frameTimes.forEach((time, index) => {
     setTimeout(() => {
-      if (img && lead.parentNode) img.src = frankFrames[index];
+      if (!frostHolding && !frostLocked && img && lead.parentNode) img.src = frankFrames[index];
     }, time);
   });
 
@@ -2862,9 +2862,11 @@ function scheduleFrozenAssetSwaps(originX, originY, duration) {
 function loadFrozenAssetClean(image, assetName) {
   if (!image || !assetName) return;
 
+  image.dataset.c17RequestedAsset = assetName;
   const source = new Image();
   source.decoding = "sync";
   source.onload = () => {
+    if (image.dataset.c17RequestedAsset !== assetName) return;
     const canvas = document.createElement("canvas");
     canvas.width = source.naturalWidth || source.width;
     canvas.height = source.naturalHeight || source.height;
@@ -2905,7 +2907,7 @@ function loadFrozenAssetClean(image, assetName) {
       const spread = maximum - minimum;
 
       // Neutral white/gray backing only. Cyan and blue ice are protected.
-      return minimum >= 218 && spread <= 18;
+      return (minimum >= 218 && spread <= 18) || (assetName === TAWNYA_ASSET && maximum <= 24 && spread <= 8);
     };
 
     const enqueue = pixelIndex => {
@@ -2970,6 +2972,7 @@ function loadFrozenAssetClean(image, assetName) {
     image.dataset.c17CleanFrozenAsset = "true";
   };
   source.onerror = () => {
+    if (image.dataset.c17RequestedAsset !== assetName) return;
     image.src = assetName;
   };
   source.src = assetName;
@@ -3959,6 +3962,7 @@ function ensureTawnyaProfileOverlay() {
       window.addEventListener("resize", trackPothMark, {passive:true});
     }
     requestAnimationFrame(alignPothMark);
+    systemMark.addEventListener("load", alignPothMark, {once:true});
 
     const mainPhoto = documentPanel.querySelector("[data-tawnya-main-photo]");
     if (mainPhoto) {
@@ -4224,6 +4228,7 @@ function ensureTawnyaProfileOverlay() {
     pothAdmin.hidden = true;
     pothTrigger.setAttribute("aria-expanded", "false");
     dossierShell.classList.remove("poth-admin-open");
+    requestAnimationFrame(() => window.dispatchEvent(new Event("resize")));
   };
 
   const openPothAdmin = () => {
@@ -4348,6 +4353,8 @@ function retireTawnyaHeart() {
     // LMT is already a transparent PNG, so assign it directly instead of
     // routing the return state through a canvas conversion that can briefly
     // expose a broken-image box on mobile Safari.
+    image.dataset.c17RequestedAsset = FROZEN_STORY_HEART_ASSET;
+    image.onerror = () => { image.onerror = null; image.src = "heart.grey.PNG"; };
     image.src = FROZEN_STORY_HEART_ASSET;
     image.removeAttribute("srcset");
     image.alt = "";
@@ -4395,7 +4402,7 @@ function ensureTawnyaSnail() {
     spam: [
       {id:"pivs", sender:"Personal Information Verification Solutions, LLC", subject:"FINAL NOTICE — Sorry We Took So Long To Respond", preview:"Please provide all personal information so we can finish verifying you.", date:"SEP 29", unread:true, body:p("Hello Tawnya,","We sincerely apologize for taking so long to respond.","To complete your identity verification, please reply with your full legal name, date of birth, Social Security number, current and previous addresses, mother's maiden name, first pet, elementary school, banking institution, routing and account numbers, debit/credit card numbers with expiration dates and security codes, email username and password, photographs of the front and back of your ID, and a selfie holding that ID.","Please also include your normal work schedule and the hours your home is usually empty.","Failure to provide complete information may prevent us from successfully verifying and/or becoming you.","Thank you for choosing Personal Information Verification Solutions, LLC.","Securing You Through Information™")},
       {id:"spam1", sender:"MYSTERY PRIZE CENTER", address:"winner@definitelyreal.example", subject:"TAWNYA YOU HAVE BEEN SELECTED!!!", preview:"Claim your $7,400 gift card before midnight.", date:"SEP 26", body:p("CONGRATULATIONS TAWNYA!!!","You have been selected from several billion extremely lucky people.","Reply with your mother's maiden name, first pet, and a photograph of both sides of your debit card.","This is definitely normal.")},
-      {id:"spam2", sender:"Local Singles Alert", address:"nearby@romance.example", subject:"8 local scumpas in Winchitucky — about nine-ish miles from you.", preview:"One of them owns a boat. Allegedly.", date:"SEP 19", body:p("8 local scumpas in Winchitucky — about nine-ish miles from you.","One of them owns a boat.","We have not verified the boat.")},
+      {id:"spam2", sender:"Local Singles Alert", address:"localsingles/phishing.net:/sCam@snail.com", subject:"Local Singles - Your box is stuffed!!", subjectIcon:"T.Snail.Localsingles.PNG", preview:"One of them claims to own a boat!", date:"SEP 19", body:p("Hey Skatergirl89@snail.com,","There are about 10 new scumpas showing up in Winchetucky, only 34 miles from your current location. One of them claims to own a boat!","<em>Our people have not verified the legitimacy of this claim</em>")},
       {id:"spam3", sender:"Extended Warranty Department", address:"urgent@warranty.example", subject:"FINAL FINAL FINAL NOTICE", preview:"We have been trying to reach you since the invention of the automobile.", date:"SEP 10", body:p("This is your FINAL FINAL FINAL notice.","We have been trying to reach you about your vehicle's extended warranty since approximately the invention of the automobile.")}
     ],
     sent: [
@@ -4462,7 +4469,7 @@ function ensureTawnyaSnail() {
   function visibleMessages(){const q=search.value.trim().toLowerCase(); const all=folders[activeFolder]||[]; return q?all.filter(m=>[m.sender,m.subject,m.preview,m.recipient].join(" ").toLowerCase().includes(q)):all;}
   function renderList(){const messages=visibleMessages(); count.textContent=`${messages.length} MESSAGE${messages.length===1?"":"S"}`; if(!messages.length){list.innerHTML=`<div class="c17-snail-empty"><span>NOTHING HERE</span><small>${search.value?'Try a less suspicious search.':'No recovered messages.'}</small></div>`;return;} list.innerHTML=messages.map(m=>`<button class="c17-snail-message${m.unread?' unread':''}" type="button" data-snail-message="${escapeHtml(m.id)}">${avatarMarkup(m)}<span class="c17-snail-message-copy"><b>${escapeHtml(activeFolder==='sent'?(m.displayName||m.recipient||m.sender):m.sender)}</b><strong>${escapeHtml(m.subject||'(no subject)')}</strong><small>${escapeHtml(m.preview||' ')}</small></span><time>${escapeHtml(m.date)}</time></button>`).join("");}
   function renderFolder(folder){activeFolder=folder;closeDrawer();reader.hidden=true;inboxView.hidden=false;search.value="";folderTitle.textContent=labels[folder]||folder.toUpperCase();snail.querySelectorAll("[data-snail-folder]").forEach(b=>b.classList.toggle("active",b.dataset.snailFolder===folder));renderList();list.scrollTop=0;}
-  function openMessage(id){const m=(folders[activeFolder]||[]).find(x=>x.id===id);if(!m)return;savedScroll=list.scrollTop;m.unread=false;readerSubject.textContent=m.subject||"(no subject)";const sent=activeFolder==='sent'||activeFolder==='drafts';const readerName=sent?(m.displayName||m.recipient||m.sender):m.sender;const route=sent?`from Skatergirl89@snail.com · to ${m.recipient||readerName}`:`${m.address||m.sender} · to Skatergirl89@snail.com`;readerMeta.innerHTML=`${avatarMarkup(m,'reader-avatar')}<div><b>${escapeHtml(readerName)}</b><small>${escapeHtml(route)}</small></div><time>${escapeHtml(m.date)}</time>`;readerBody.innerHTML=m.body||"<p class='c17-snail-artifact-note'>No message body recovered.</p>";inboxView.hidden=true;reader.hidden=false;reader.scrollTop=0;renderList();}
+  function openMessage(id){const m=(folders[activeFolder]||[]).find(x=>x.id===id);if(!m)return;savedScroll=list.scrollTop;m.unread=false;readerSubject.textContent=m.subject||"(no subject)";if(m.subjectIcon){const icon=document.createElement("img");icon.src=m.subjectIcon;icon.alt="";icon.style.cssText="width:1.5em;height:1.2em;object-fit:contain;vertical-align:middle;margin-right:.4em";readerSubject.prepend(icon);}const sent=activeFolder==='sent'||activeFolder==='drafts';const readerName=sent?(m.displayName||m.recipient||m.sender):m.sender;const route=sent?`from Skatergirl89@snail.com · to ${m.recipient||readerName}`:`${m.address||m.sender} · to Skatergirl89@snail.com`;readerMeta.innerHTML=`${avatarMarkup(m,'reader-avatar')}<div><b>${escapeHtml(readerName)}</b><small>${escapeHtml(route)}</small></div><time>${escapeHtml(m.date)}</time>`;readerBody.innerHTML=m.body||"<p class='c17-snail-artifact-note'>No message body recovered.</p>";inboxView.hidden=true;reader.hidden=false;reader.scrollTop=0;renderList();}
   function closeReader(){reader.hidden=true;inboxView.hidden=false;requestAnimationFrame(()=>{list.scrollTop=savedScroll;});}
   snail.addEventListener("click",event=>{const action=event.target.closest("[data-snail-action]");if(action){const t=action.dataset.snailAction;if(t==='exit'){closeDrawer();snail.classList.remove('open');snail.setAttribute('aria-hidden','true');}else if(t==='drawer'){snail.classList.toggle('drawer-open');}else if(t==='drawer-close'){closeDrawer();}else if(t==='reader-back'){closeReader();}return;}const folder=event.target.closest("[data-snail-folder]");if(folder){renderFolder(folder.dataset.snailFolder);return;}const msg=event.target.closest("[data-snail-message]");if(msg)openMessage(msg.dataset.snailMessage);});
   search.addEventListener("input",renderList);
