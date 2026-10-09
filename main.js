@@ -1516,7 +1516,7 @@ function spawnProfile(side, delay = 0, opts = {}) {
     spawnSlash(side);
 
     if (target.zone === "symbol") {
-      setTimeout(() => revealHive(profile), 220 + Math.random() * 260);
+      setTimeout(() => revealHive(profile), 650);
     }
 
     if (!opts.noAutoRemove) {
@@ -1530,41 +1530,88 @@ function spawnProfile(side, delay = 0, opts = {}) {
 }
 
 function revealHive(profile) {
-  if (!profile || !profile.parentNode) return;
-  if (profile.classList.contains("wren")) return;
-  if (profile.classList.contains("frank")) return;
-  if (profile.dataset.zone !== "symbol") return;
-
-  profile.classList.add("mask-dropping");
-
-  setTimeout(() => {
-    if (!profile || !profile.parentNode) return;
-
-    const image = profile.querySelector("img");
-    if (image) {
-      const asset = hiveAssets[profileCount % hiveAssets.length];
-      image.src = asset;
+  if (!profile?.isConnected || profile.dataset.zone !== "symbol" ||
+      profile.classList.contains("wren") || profile.classList.contains("frank") ||
+      profile.dataset.paperBurnStarted) return;
+  profile.dataset.paperBurnStarted = "true";
+  profile.classList.add("c17-paper-bot");
+  const image = profile.querySelector("img");
+  if (!image) return;
+  const size = 112;
+  const canvas = document.createElement("canvas");
+  canvas.width = canvas.height = size;
+  canvas.className = "c17-paper-burn-canvas";
+  canvas.setAttribute("aria-hidden", "true");
+  const ctx = canvas.getContext("2d", {willReadFrequently:true});
+  if (!ctx) return;
+  const art = document.createElement("canvas");
+  art.width = art.height = size;
+  const ac = art.getContext("2d", {willReadFrequently:true});
+  let pixels, field, elapsed = 0, last = 0;
+  const prepare = () => {
+    if (!profile.isConnected || !image.naturalWidth) return;
+    ac.save(); ac.beginPath(); ac.arc(56,56,55,0,Math.PI*2); ac.clip();
+    ac.drawImage(image,0,0,size,size); ac.restore();
+    ac.strokeStyle="#e8e5d8"; ac.lineWidth=1.6;
+    ac.beginPath(); ac.arc(56,56,54.7,0,Math.PI*2); ac.stroke();
+    try { pixels=ac.getImageData(0,0,size,size); } catch (_) { return; }
+    const seeds=[];
+    const rect=profile.getBoundingClientRect();
+    const sample=document.createElement("canvas");sample.width=sample.height=size;
+    const sc=sample.getContext("2d",{willReadFrequently:true});
+    const symbol=document.querySelector("#signalGhost .ghost-inner-symbol");
+    if(symbol?.complete && symbol.naturalWidth){
+      const sr=symbol.getBoundingClientRect();
+      sc.drawImage(symbol,(sr.left-rect.left)*size/rect.width,(sr.top-rect.top)*size/rect.height,sr.width*size/rect.width,sr.height*size/rect.height);
+      try {
+        const sd=sc.getImageData(0,0,size,size).data;
+        for(let y=18;y<94;y+=4)for(let x=18;x<94;x+=4){
+          const i=(y*size+x)*4;
+          if(sd[i+3]>70 && Math.max(sd[i],sd[i+1],sd[i+2])>65 && Math.hypot(x-56,y-56)<34)seeds.push([x,y]);
+        }
+      }catch(_){}
     }
-
-    profile.classList.add("hive-reveal", "has-hive-asset", "signal-burn-contact");
-
-    // Hot metal / paper contact: readable blue, then the contact point eats outward fast.
-    setTimeout(() => {
-      if (profile && profile.parentNode) profile.classList.add("signal-burn-spread");
-    }, 360);
-
-    setTimeout(() => {
-      if (profile && profile.parentNode) profile.classList.add("signal-burn-deep");
-    }, 760);
-
-    setTimeout(() => {
-      if (profile && profile.parentNode) profile.classList.add("signal-burn-consumed", "pixel-deteriorate");
-    }, 1180);
-
-    setTimeout(() => {
-      if (profile && profile.parentNode) profile.remove();
-    }, 2550);
-  }, 230);
+    if(!seeds.length)seeds.push([56,56]);
+    field=new Float32Array(size*size);
+    for(let y=0;y<size;y++)for(let x=0;x<size;x++){
+      let d=Infinity;
+      for(const [sx,sy] of seeds)d=Math.min(d,Math.hypot(x-sx,y-sy));
+      const noise=2.5*Math.sin(x*.47+y*.31)+1.8*Math.sin(x*.91-y*.68);
+      field[y*size+x]=Math.max(0,d+noise+Math.hypot(x-56,y-56)*.12);
+    }
+    profile.appendChild(canvas);profile.classList.add("c17-paper-ready");
+    ctx.putImageData(pixels,0,0);
+    requestAnimationFrame(frame);
+  };
+  const frame = now => {
+    if(!profile.isConnected)return;
+    const dt=last?Math.min(64,now-last):0;last=now;
+    if(frostHolding || frostLocked){requestAnimationFrame(frame);return;}
+    elapsed+=dt;
+    // One intact beat, one warm beat, then a visible outward burn.
+    const heat=Math.max(0,Math.min(1,(elapsed-1000)/1000));
+    const progress=Math.max(0,Math.min(1,(elapsed-2000)/2800));
+    const threshold=progress*100;
+    const out=new ImageData(new Uint8ClampedArray(pixels.data),size,size);
+    for(let i=0;i<field.length;i++){
+      const k=i*4;if(!out.data[k+3])continue;
+      const edge=field[i]-threshold;
+      if(progress>0 && edge<0){out.data[k+3]=0;continue;}
+      if(progress>0 && edge<3.2){
+        const hot=1-edge/3.2;
+        out.data[k]=255;out.data[k+1]=Math.round(75+145*hot);out.data[k+2]=Math.round(10+55*hot);
+      }else if(heat>0){
+        const warmth=heat*.18*Math.max(0,1-Math.hypot(i%size-56,Math.floor(i/size)-56)/65);
+        out.data[k]=Math.min(255,out.data[k]+warmth*180);
+        out.data[k+1]=Math.min(255,out.data[k+1]+warmth*45);
+      }
+    }
+    ctx.putImageData(out,0,0);
+    if(progress>=1){profile.remove();return;}
+    requestAnimationFrame(frame);
+  };
+  if(image.complete && image.naturalWidth)prepare();
+  else image.addEventListener("load",prepare,{once:true});
 }
 
 function beginHiveWave() {
@@ -2530,6 +2577,10 @@ function snapshotFrostActors() {
     }
 
     const snapshot = actor.cloneNode(true);
+    const originalCanvases = actor.querySelectorAll("canvas");
+    snapshot.querySelectorAll("canvas").forEach((copy, i) => {
+      if (originalCanvases[i]) copy.getContext("2d")?.drawImage(originalCanvases[i], 0, 0);
+    });
     snapshot.removeAttribute("id");
     snapshot.classList.remove(
       "heart-fade-black",
@@ -4415,12 +4466,12 @@ function ensureTawnyaSnail() {
       {id:"draft2", sender:"DRAFT", recipient:"UNKNOWN", subject:"You don't get to—", preview:"Actually no. Fuck this.", date:"SEP 05", body:p("You don't get to disappear for six months and then—","Actually no. Fuck this.","[draft not sent]")}
     ],
     trash: [
-      {id:"braidyn-p", sender:"Braidyn P.", address:"UzlesspHatfuk0@Snail.com", subject:"yo u still got the hookup", preview:"yo tawnya i just got outta juvie dont ask what happened…", date:"OCT 03", avatar:"T.Snail.OBCD.PNG", unread:true, body:p("yo tawnya i just got outta juvie dont ask what happened its all bullshit anyway","listen i know its been a minute but u still doing that fall off the truck special","i need like 4 boxes of twinkies and them ho hos bad","not the little packs either i mean the BOXES","they barely gave us shit in there and i been thinking about them cream filled ones for like three weeks straight","i got 11 dollars right now but my aunt said i can probably get another 6 when she gets paid unless she remembers i owe her money","please dont tax me either tawnya im literally fresh out","if u got zebra cakes too throw them in and ill owe u","dont tell nobody im back yet","your favorite")},
-      {id:"trey", sender:"Trey", subject:"Damn.. Sup girl!", preview:"Got yo info from Lesley…", date:"SEP 29", avatar:"T.Snail.Trey.PNG", body:p("Got yo info from Lesley…","HMB, fa’real fa’real.","…. Let’s introduce your stuff to my stuff…","Know what I’m sayin..")},
-      {id:"oda-lottery", sender:"GooGooJuice", address:"googoojuice@Snail.com", subject:"stars be shinin", preview:"Girl them stars be shinin down on the games tonight…", date:"AUG 31", body:p("Girl them stars be shinin down on the games tonight. Been hearin them crickets carryin on since sundown and they keep givin me 3, 24, 39, 61, 65… & 9.","If I don't make it down to the market, one of us better play em.","And don't you go fuckin with them numbers neither.","The crickets ain't been stutterin'. You know.","— Oda")},
-      {id:"trash2", sender:"SNAIL", avatar:"T.Snail.Privacy.PNG", address:"noreply@Snail.com", subject:"Storage almost full", preview:"You have used 96% of your recovered storage.", date:"AUG 17", body:p("Your SNAIL storage is almost full.","Maybe delete the 2,846 screenshots you swear you're going to look at later.")},
-      {id:"trash3", sender:"Pizza Palace", avatar:"T.Snail.Pizza.PNG", address:"coupons@pizza.example", subject:"We miss you, skatergirl89", preview:"It's been 9 days. This is getting weird for both of us.", date:"AUG 12", body:p("We miss you, skatergirl89.","It's been 9 days since your last order.","This is getting weird for both of us.")},
-      {id:"joe", sender:"Joe", address:"Jbruce17@snail.com", subject:"ONE MORE RIDE", preview:"Black moon, back room, hatchet in the rafters…", date:"SEP 29", avatar:"T.Snail.Joe.PNG", body:`<div class="c17-snail-joe-bars"><p>Black moon, back room, hatchet in the rafters,<br>Mad clown, face down, choking on the laughter.<br>Graveyard Grey got the dead boys twitchin’,<br>Neden-lovin’ heathen with a cauldron in the kitchen.</p><p>Big-top temptress, wicked little sinner,<br>I brought dead flowers and a corpse home for dinner.<br>Juggle them jugs—<strong>JUGGALO JUGULAR JIVE</strong>,<br>Three freaks died laughing and the fourth came alive.</p><p>Creepin’ through the carnival, horny and possessed,<br>Tombstone cologne and my Sunday clown best.<br>Wanna crawl in them big-top folds, hide from the sun,<br>Pitch my little tent—<strong>OH SHIT, WRONG ONE.</strong></p><p>Hatchet in the moonlight, Faygo in the crypt,<br>Dead bitch winked, so I politely fucking dipped.<br>Grey, when the circus comes creeping into view,<br>Save a seat beneath the big top—I’m coming for you.</p><p>— Joe</p></div>`}
+      {id:"braidyn-p", sender:"Braidyn P.", address:"UzlesspHatfuk0@Snail.com", subject:"yo u still got the hookup", preview:"yo tawnya i just got outta juvie dont ask what happened…", date:"OCT 13", avatar:"T.Snail.OBCD.PNG", unread:true, body:p("yo tawnya i just got outta juvie dont ask what happened its all bullshit anyway","listen i know its been a minute but u still doing that fall off the truck special","i need like 4 boxes of twinkies and them ho hos bad","not the little packs either i mean the BOXES","they barely gave us shit in there and i been thinking about them cream filled ones for like three weeks straight","i got 11 dollars right now but my aunt said i can probably get another 6 when she gets paid unless she remembers i owe her money","please dont tax me either tawnya im literally fresh out","if u got zebra cakes too throw them in and ill owe u","dont tell nobody im back yet","your favorite")},
+      {id:"trey", sender:"Trey", subject:"Damn.. Sup girl!", preview:"Got yo info from Lesley…", date:"SEP 21", avatar:"T.Snail.Trey.PNG", body:p("Got yo info from Lesley…","HMB, fa’real fa’real.","…. Let’s introduce your stuff to my stuff…","Know what I’m sayin..")},
+      {id:"oda-lottery", sender:"GooGooJuice", address:"googoojuice@Snail.com", subject:"stars be shinin", preview:"Girl them stars be shinin down on the games tonight…", date:"SEP 17", body:p("Girl them stars be shinin down on the games tonight. Been hearin them crickets carryin on since sundown and they keep givin me 3, 24, 39, 61, 65… & 9.","If I don't make it down to the market, one of us better play em.","And don't you go fuckin with them numbers neither.","The crickets ain't been stutterin'. You know.","— Oda")},
+      {id:"trash2", sender:"SNAIL", avatar:"T.Snail.Privacy.PNG", address:"noreply@Snail.com", subject:"Storage almost full", preview:"You have used 96% of your recovered storage.", date:"SEP 03", body:p("Your SNAIL storage is almost full.","Maybe delete the 2,846 screenshots you swear you're going to look at later.")},
+      {id:"trash3", sender:"Pizza Palace", avatar:"T.Snail.Pizza.PNG", address:"coupons@pizza.example", subject:"We miss you, skatergirl89", preview:"It's been 9 days. This is getting weird for both of us.", date:"AUG 28", body:p("We miss you, skatergirl89.","It's been 9 days since your last order.","This is getting weird for both of us.")},
+      {id:"joe", sender:"Joe", address:"Jbruce17@snail.com", subject:"ONE MORE RIDE", preview:"Black moon, back room, hatchet in the rafters…", date:"AUG 27", avatar:"T.Snail.Joe.PNG", body:`<div class="c17-snail-joe-bars"><p>Black moon, back room, hatchet in the rafters,<br>Mad clown, face down, choking on the laughter.<br>Graveyard Grey got the dead boys twitchin’,<br>Neden-lovin’ heathen with a cauldron in the kitchen.</p><p>Big-top temptress, wicked little sinner,<br>I brought dead flowers and a corpse home for dinner.<br>Juggle them jugs—<strong>JUGGALO JUGULAR JIVE</strong>,<br>Three freaks died laughing and the fourth came alive.</p><p>Creepin’ through the carnival, horny and possessed,<br>Tombstone cologne and my Sunday clown best.<br>Wanna crawl in them big-top folds, hide from the sun,<br>Pitch my little tent—<strong>OH SHIT, WRONG ONE.</strong></p><p>Hatchet in the moonlight, Faygo in the crypt,<br>Dead bitch winked, so I politely fucking dipped.<br>Grey, when the circus comes creeping into view,<br>Save a seat beneath the big top—I’m coming for you.</p><p>— Joe</p></div>`}
     ]
   };
 
@@ -4711,6 +4762,12 @@ function revealTawnyaFromGreyHeart(heart, direction = "from-left") {
 }
 
 function stopAttack() {
+  if (!frostHolding && !frostLocked && profileField.querySelector(".c17-paper-bot")) {
+    clearInterval(profileTimer);
+    profileTimer = null;
+    window.setTimeout(stopAttack, 100);
+    return;
+  }
   const rrodTimeRemaining =
     carlRrodActiveUntil - performance.now();
 
