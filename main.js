@@ -1100,7 +1100,7 @@ const loading = setInterval(() => {
   if (progress >= 76 && !burning) {
     burning = true;
     signalGhost.classList.add("burning");
-    startBurnPulse();
+    // Heat is confined to the landed paper avatars.
   }
     if (progress >= 80 && !generals) {
     generals = true;
@@ -1534,6 +1534,8 @@ function revealHive(profile) {
       profile.classList.contains("wren") || profile.classList.contains("frank") ||
       profile.dataset.paperBurnStarted) return;
   profile.dataset.paperBurnStarted = "true";
+  // Preserve the landed position before removing the entrance animation.
+  profile.style.setProperty("transform", getComputedStyle(profile).transform, "important");
   profile.classList.add("c17-paper-bot");
   const image = profile.querySelector("img");
   if (!image) return;
@@ -1555,29 +1557,11 @@ function revealHive(profile) {
     ac.strokeStyle="#e8e5d8"; ac.lineWidth=1.6;
     ac.beginPath(); ac.arc(56,56,54.7,0,Math.PI*2); ac.stroke();
     try { pixels=ac.getImageData(0,0,size,size); } catch (_) { return; }
-    const seeds=[];
-    const rect=profile.getBoundingClientRect();
-    const sample=document.createElement("canvas");sample.width=sample.height=size;
-    const sc=sample.getContext("2d",{willReadFrequently:true});
-    const symbol=document.querySelector("#signalGhost .ghost-inner-symbol");
-    if(symbol?.complete && symbol.naturalWidth){
-      const sr=symbol.getBoundingClientRect();
-      sc.drawImage(symbol,(sr.left-rect.left)*size/rect.width,(sr.top-rect.top)*size/rect.height,sr.width*size/rect.width,sr.height*size/rect.height);
-      try {
-        const sd=sc.getImageData(0,0,size,size).data;
-        for(let y=18;y<94;y+=4)for(let x=18;x<94;x+=4){
-          const i=(y*size+x)*4;
-          if(sd[i+3]>70 && Math.max(sd[i],sd[i+1],sd[i+2])>65 && Math.hypot(x-56,y-56)<34)seeds.push([x,y]);
-        }
-      }catch(_){}
-    }
-    if(!seeds.length)seeds.push([56,56]);
     field=new Float32Array(size*size);
     for(let y=0;y<size;y++)for(let x=0;x<size;x++){
-      let d=Infinity;
-      for(const [sx,sy] of seeds)d=Math.min(d,Math.hypot(x-sx,y-sy));
-      const noise=2.5*Math.sin(x*.47+y*.31)+1.8*Math.sin(x*.91-y*.68);
-      field[y*size+x]=Math.max(0,d+noise+Math.hypot(x-56,y-56)*.12);
+      const radius=Math.hypot(x-56,y-56);
+      const noise=1.7*Math.sin(x*.47+y*.31)+1.1*Math.sin(x*.91-y*.68);
+      field[y*size+x]=Math.max(0,radius+noise);
     }
     profile.appendChild(canvas);profile.classList.add("c17-paper-ready");
     ctx.putImageData(pixels,0,0);
@@ -1589,21 +1573,26 @@ function revealHive(profile) {
     if(frostHolding || frostLocked){requestAnimationFrame(frame);return;}
     elapsed+=dt;
     // One intact beat, one warm beat, then a visible outward burn.
-    const heat=Math.max(0,Math.min(1,(elapsed-1000)/1000));
-    const progress=Math.max(0,Math.min(1,(elapsed-2000)/2800));
-    const threshold=progress*100;
+    const heat=Math.max(0,Math.min(1,(elapsed-1200)/1200));
+    const progress=Math.max(0,Math.min(1,(elapsed-2400)/3400));
+    const threshold=progress*82;
     const out=new ImageData(new Uint8ClampedArray(pixels.data),size,size);
     for(let i=0;i<field.length;i++){
       const k=i*4;if(!out.data[k+3])continue;
       const edge=field[i]-threshold;
       if(progress>0 && edge<0){out.data[k+3]=0;continue;}
-      if(progress>0 && edge<3.2){
-        const hot=1-edge/3.2;
-        out.data[k]=255;out.data[k+1]=Math.round(75+145*hot);out.data[k+2]=Math.round(10+55*hot);
+      if(progress>0 && edge<4.5){
+        const hot=Math.max(0,1-edge/4.5);
+        out.data[k]=Math.round(95+160*hot);
+        out.data[k+1]=Math.round(24+135*hot);
+        out.data[k+2]=Math.round(8+25*hot);
       }else if(heat>0){
-        const warmth=heat*.18*Math.max(0,1-Math.hypot(i%size-56,Math.floor(i/size)-56)/65);
-        out.data[k]=Math.min(255,out.data[k]+warmth*180);
-        out.data[k+1]=Math.min(255,out.data[k+1]+warmth*45);
+        const radius=Math.hypot(i%size-56,Math.floor(i/size)-56);
+        const warmth=heat*Math.exp(-radius*radius/450);
+        const mix=warmth*.88;
+        out.data[k]=out.data[k]*(1-mix)+255*mix;
+        out.data[k+1]=out.data[k+1]*(1-mix)+116*mix;
+        out.data[k+2]=out.data[k+2]*(1-mix)+22*mix;
       }
     }
     ctx.putImageData(out,0,0);
@@ -4762,7 +4751,9 @@ function revealTawnyaFromGreyHeart(heart, direction = "from-left") {
 }
 
 function stopAttack() {
-  if (!frostHolding && !frostLocked && profileField.querySelector(".c17-paper-bot")) {
+  const now = performance.now();
+  if (!stopAttack.burnDeadline) stopAttack.burnDeadline = now + 7000;
+  if (now < stopAttack.burnDeadline && !frostHolding && !frostLocked && profileField.querySelector(".c17-paper-bot")) {
     clearInterval(profileTimer);
     profileTimer = null;
     window.setTimeout(stopAttack, 100);
