@@ -7238,13 +7238,12 @@ body {
   filter: brightness(1.36) contrast(1.2) saturate(.88) sepia(.22) hue-rotate(-10deg) !important;
 }
 
-/* Hidden frequency click after Wren/Jinx card: black echo with barely visible white ghost. */
+/* Recovered gold/cream symbol treatment. */
 #signalNode.signal-node.ready {
-  opacity: .46 !important;
+  opacity: 1 !important;
   filter:
-    grayscale(1) brightness(.08) contrast(1.5)
-    drop-shadow(0 0 5px rgba(255,255,255,.34))
-    drop-shadow(0 0 16px rgba(255,255,255,.12)) !important;
+    drop-shadow(0 0 10px rgba(255,206,90,.34))
+    drop-shadow(0 0 24px rgba(255,96,22,.22)) !important;
 }
 #signalNode.signal-node.ready::before {
   inset: -18px !important;
@@ -7254,8 +7253,8 @@ body {
 }
 #signalNode.signal-node.ready .outer-symbol,
 #signalNode.signal-node.ready .inner-symbol {
-  opacity: .72 !important;
-  filter: grayscale(1) brightness(.05) contrast(2.1) drop-shadow(0 0 3px rgba(255,255,255,.28)) !important;
+  opacity: 1 !important;
+  filter: brightness(1.28) contrast(1.14) saturate(.92) sepia(.18) !important;
 }
 @keyframes c17BlackEcho {
   0%, 100% { opacity: .32; transform: scale(.96); }
@@ -14782,3 +14781,26 @@ html.tawnya-dossier-open body > .c17-tawnya-reveal { display:none !important; }
 .c17-tawnya-reveal { background:transparent !important;border:0 !important;box-shadow:none !important; }
 .c17-poth-account-trigger { display:grid !important;place-items:center !important;padding:0 !important;overflow:visible !important; }
 .c17-poth-account-trigger img { display:block !important;width:100% !important;height:100% !important;margin:0 !important;transform:none !important; }
+
+/* Preserve the recovered warm treatment across the intro and station. */
+#signalGhost.signal-ghost.waking,
+#signalGhost.signal-ghost.burning {
+  filter:drop-shadow(0 0 10px rgba(255,206,90,.34)) drop-shadow(0 0 24px rgba(255,96,22,.22)) !important;
+}
+#signalGhost.signal-ghost.waking .ghost-inner-symbol,
+#signalGhost.signal-ghost.waking .ghost-outer-symbol,
+#home.home.open .home-symbol {
+  filter:brightness(1.28) contrast(1.14) saturate(.92) sepia(.18) !important;
+}
+#signalGhost.signal-ghost.burning .ghost-inner-symbol,
+#signalGhost.signal-ghost.burning .ghost-outer-symbol {
+  filter:brightness(1.36) contrast(1.2) saturate(.88) sepia(.22) hue-rotate(-10deg) !important;
+}
+
+/* Paper burn belongs only to normal-load symbol bots. */
+.profile.c17-paper-bot { animation:none !important;opacity:1 !important;filter:none !important;background:transparent !important;border:0 !important;box-shadow:none !important; }
+.profile.c17-paper-bot::before,.profile.c17-paper-bot::after { display:none !important; }
+.profile.c17-paper-ready > img { visibility:hidden !important; }
+.c17-paper-burn-canvas { position:absolute !important;inset:0 !important;width:100% !important;height:100% !important;pointer-events:none !important; }
+.c17-frost-profile-snapshot.c17-symbol-profile-frozen .c17-paper-burn-canvas { display:none !important; }
+.c17-frost-profile-snapshot.c17-symbol-profile-frozen > img { visibility:visible !important; }
