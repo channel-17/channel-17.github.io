@@ -1211,8 +1211,8 @@ function startAttack() {
 function startSymbolBattle() {
   if (symbolBattleStarted) return;
   symbolBattleStarted = true;
-  // First cover is readable; reinforcements arrive after its heat takes hold.
-  const hits = [0, 3600, 4800, 6000, 8500, 9800];
+  // A readable first cover, then accelerating reinforcements and a final panic burst.
+  const hits = [0, 3600, 5100, 6200, 7000, 7550, 7950, 8250, 8470, 8640];
   hits.forEach((delay, i) => {
     setTimeout(() => {
       if (completed || frostHolding || frostLocked) return;
