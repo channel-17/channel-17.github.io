@@ -1209,18 +1209,18 @@ function startAttack() {
 }
 
 function startSymbolBattle() {
-  // SYMBOL: fewer blue avatars, harder readable impacts, faster hot-steel consumption.
   if (symbolBattleStarted) return;
   symbolBattleStarted = true;
-
-  const attackCount = 12;
-  for (let i = 0; i < attackCount; i++) {
+  // First cover is readable; reinforcements arrive after its heat takes hold.
+  const hits = [0, 3600, 4800, 6000, 8500, 9800];
+  hits.forEach((delay, i) => {
     setTimeout(() => {
-      if (completed) return;
+      if (completed || frostHolding || frostLocked) return;
       const target = symbolTargets[i % symbolTargets.length];
-      spawnProfile(["top", "left", "right", "bottom"][i % 4], 0, { force: target, symbolProbe: true });
-    }, i * 620);
-  }
+      spawnProfile(["top", "left", "right", "bottom"][i % 4], 0,
+        { force: target, symbolProbe: true });
+    }, delay);
+  });
 }
 
 function randomSide() {
@@ -1557,12 +1557,41 @@ function revealHive(profile) {
     ac.strokeStyle="#e8e5d8"; ac.lineWidth=1.6;
     ac.beginPath(); ac.arc(56,56,54.7,0,Math.PI*2); ac.stroke();
     try { pixels=ac.getImageData(0,0,size,size); } catch (_) { return; }
+    // Project actual metal artwork into the landed bot's coordinate space.
+    // Include nearby strokes outside its rim so edge contacts have a real origin.
+    const sample=document.createElement("canvas");
+    sample.width=sample.height=size*3;
+    const sc=sample.getContext("2d",{willReadFrequently:true});
+    const rect=profile.getBoundingClientRect();
+    const seeds=[];
+    document.querySelectorAll("#signalGhost .ghost-inner-symbol, #signalGhost .ghost-outer-symbol").forEach(symbol=>{
+      if(!symbol.complete || !symbol.naturalWidth)return;
+      const sr=symbol.getBoundingClientRect();
+      const fit=Math.min(sr.width/symbol.naturalWidth,sr.height/symbol.naturalHeight);
+      const w=symbol.naturalWidth*fit,h=symbol.naturalHeight*fit;
+      const left=sr.left+(sr.width-w)/2,top=sr.top+(sr.height-h)/2;
+      sc.drawImage(symbol,size+(left-rect.left)*size/rect.width,
+        size+(top-rect.top)*size/rect.height,w*size/rect.width,h*size/rect.height);
+    });
+    try{
+      const metal=sc.getImageData(0,0,size*3,size*3).data;
+      for(let y=0;y<size*3;y+=3)for(let x=0;x<size*3;x+=3){
+        const k=(y*size*3+x)*4;
+        if(metal[k+3]>100 && Math.max(metal[k],metal[k+1],metal[k+2])>55)
+          seeds.push([x-size,y-size]);
+      }
+    }catch(_){profile.classList.remove("c17-paper-bot");return;}
+    if(!seeds.length){profile.classList.remove("c17-paper-bot");return;}
     field=new Float32Array(size*size);
+    let maxDistance=0;
     for(let y=0;y<size;y++)for(let x=0;x<size;x++){
-      const radius=Math.hypot(x-56,y-56);
+      let distance=Infinity;
+      for(const [sx,sy] of seeds)distance=Math.min(distance,Math.hypot(x-sx,y-sy));
       const noise=1.7*Math.sin(x*.47+y*.31)+1.1*Math.sin(x*.91-y*.68);
-      field[y*size+x]=Math.max(0,radius+noise);
+      field[y*size+x]=Math.max(0,distance+noise);
+      maxDistance=Math.max(maxDistance,field[y*size+x]);
     }
+    profile.dataset.burnExtent=String(maxDistance+5);
     profile.appendChild(canvas);profile.classList.add("c17-paper-ready");
     ctx.putImageData(pixels,0,0);
     requestAnimationFrame(frame);
@@ -1575,7 +1604,7 @@ function revealHive(profile) {
     // One intact beat, one warm beat, then a visible outward burn.
     const heat=Math.max(0,Math.min(1,(elapsed-1200)/1200));
     const progress=Math.max(0,Math.min(1,(elapsed-2400)/3400));
-    const threshold=progress*82;
+    const threshold=progress*Number(profile.dataset.burnExtent);
     const out=new ImageData(new Uint8ClampedArray(pixels.data),size,size);
     for(let i=0;i<field.length;i++){
       const k=i*4;if(!out.data[k+3])continue;
@@ -1587,8 +1616,8 @@ function revealHive(profile) {
         out.data[k+1]=Math.round(24+135*hot);
         out.data[k+2]=Math.round(8+25*hot);
       }else if(heat>0){
-        const radius=Math.hypot(i%size-56,Math.floor(i/size)-56);
-        const warmth=heat*Math.exp(-radius*radius/450);
+        const contactDistance=field[i];
+        const warmth=heat*Math.exp(-contactDistance*contactDistance/130);
         const mix=warmth*.88;
         out.data[k]=out.data[k]*(1-mix)+255*mix;
         out.data[k+1]=out.data[k+1]*(1-mix)+116*mix;
