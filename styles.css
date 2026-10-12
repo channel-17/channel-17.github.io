@@ -14804,3 +14804,17 @@ html.tawnya-dossier-open body > .c17-tawnya-reveal { display:none !important; }
 .c17-paper-burn-canvas { position:absolute !important;inset:0 !important;width:100% !important;height:100% !important;pointer-events:none !important; }
 .c17-frost-profile-snapshot.c17-symbol-profile-frozen .c17-paper-burn-canvas { display:none !important; }
 .c17-frost-profile-snapshot.c17-symbol-profile-frozen > img { visibility:visible !important; }
+
+/* Symbol covers arrive and burn at one fixed size. */
+.profile.symbol-touch {
+  width:58px !important;
+  height:58px !important;
+  border:0 !important;
+  animation:c17FixedSymbolLanding .30s cubic-bezier(.07,.88,.1,1) forwards !important;
+}
+@keyframes c17FixedSymbolLanding {
+  0% {opacity:0;transform:translate(var(--sx),var(--sy)) scale(1);}
+  62% {opacity:1;transform:translate(0,0) scale(1);}
+  100% {opacity:1;transform:translate(0,0) scale(1);}
+}
+.profile.symbol-touch.c17-paper-bot {animation:none !important;}
