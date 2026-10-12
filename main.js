@@ -1211,9 +1211,9 @@ function startAttack() {
 function startSymbolBattle() {
   if (symbolBattleStarted) return;
   symbolBattleStarted = true;
-  // One readable cover, then three faster reinforcements at distinct metal contacts.
-  const hits = [0, 3600, 6000, 7800];
-  const contacts = [[.30,.55], [.70,.72], [.48,.22], [.25,.84]];
+  // The first burn establishes the scene; connected reinforcements accelerate.
+  const hits = [0, 3300, 4550, 5500, 6250];
+  const contacts = [[.30,.55], [.70,.72], [.48,.22], [.25,.84], [.74,.48]];
   hits.forEach((delay, i) => {
     setTimeout(() => {
       if (completed || frostHolding || frostLocked) return;
@@ -1236,6 +1236,17 @@ function startSymbolBattle() {
       }
       spawnProfile(["top", "left", "right", "bottom"][i % 4], 0,
         { force: target, symbolProbe: true });
+      if (i === hits.length - 1) {
+        // Retreat follows the last consumed cover, instead of a long idle tail.
+        const finishBattle = () => {
+          if (frostHolding || frostLocked || profileField.querySelector(".profile.symbol-touch")) {
+            setTimeout(finishBattle, 100);
+            return;
+          }
+          stopAttack();
+        };
+        setTimeout(finishBattle, 700);
+      }
     }, delay);
   });
 }
@@ -4797,6 +4808,7 @@ function revealTawnyaFromGreyHeart(heart, direction = "from-left") {
 }
 
 function stopAttack() {
+  if (stopAttack.retreatStarted) return;
   const now = performance.now();
   if (!stopAttack.burnDeadline) stopAttack.burnDeadline = now + 7000;
   if (now < stopAttack.burnDeadline && !frostHolding && !frostLocked && profileField.querySelector(".c17-paper-bot")) {
@@ -4824,6 +4836,7 @@ function stopAttack() {
   engageTimer = null;
   slashTimer = null;
 
+  stopAttack.retreatStarted = true;
   virusLayer.classList.add("retreat");
 
   window.setTimeout(() => {
