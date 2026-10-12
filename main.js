@@ -1211,12 +1211,29 @@ function startAttack() {
 function startSymbolBattle() {
   if (symbolBattleStarted) return;
   symbolBattleStarted = true;
-  // A readable first cover, then accelerating reinforcements and a final panic burst.
-  const hits = [0, 3600, 5100, 6200, 7000, 7550, 7950, 8250, 8470, 8640];
+  // One readable cover, then three faster reinforcements at distinct metal contacts.
+  const hits = [0, 3600, 6000, 7800];
+  const contacts = [[.30,.55], [.70,.72], [.48,.22], [.25,.84]];
   hits.forEach((delay, i) => {
     setTimeout(() => {
       if (completed || frostHolding || frostLocked) return;
-      const target = symbolTargets[i % symbolTargets.length];
+      let target = symbolTargets[i % symbolTargets.length];
+      // Keep the approved opening. Spread later hits over the rendered symbol.
+      if (i > 0) {
+        const symbol = document.querySelector("#signalGhost .ghost-inner-symbol");
+        const sr = symbol?.getBoundingClientRect();
+        const fr = profileField.getBoundingClientRect();
+        if (sr?.width && sr.height && fr.width && fr.height && symbol.naturalWidth) {
+          const fit = Math.min(sr.width / symbol.naturalWidth, sr.height / symbol.naturalHeight);
+          const width = symbol.naturalWidth * fit, height = symbol.naturalHeight * fit;
+          const [cx, cy] = contacts[i];
+          target = {
+            x: 100 * (sr.left + (sr.width-width)/2 + cx*width - fr.left) / fr.width,
+            y: 100 * (sr.top + (sr.height-height)/2 + cy*height - fr.top) / fr.height,
+            zone: "symbol"
+          };
+        }
+      }
       spawnProfile(["top", "left", "right", "bottom"][i % 4], 0,
         { force: target, symbolProbe: true });
     }, delay);
