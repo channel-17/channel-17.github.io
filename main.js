@@ -1212,7 +1212,7 @@ function startSymbolBattle() {
   if (symbolBattleStarted) return;
   symbolBattleStarted = true;
   // The first burn establishes the scene; connected reinforcements accelerate.
-  const hits = [0, 3300, 4550, 5500, 6250];
+  const hits = [0, 3100, 4200, 5050, 5700];
   const contacts = [[.30,.55], [.70,.72], [.48,.22], [.25,.84], [.74,.48]];
   hits.forEach((delay, i) => {
     setTimeout(() => {
@@ -1580,10 +1580,9 @@ function revealHive(profile) {
   let pixels, field, elapsed = 0, last = 0;
   const prepare = () => {
     if (!profile.isConnected || !image.naturalWidth) return;
-    ac.save(); ac.beginPath(); ac.arc(56,56,55,0,Math.PI*2); ac.clip();
-    ac.drawImage(image,0,0,size,size); ac.restore();
-    ac.strokeStyle="#e8e5d8"; ac.lineWidth=1.6;
-    ac.beginPath(); ac.arc(56,56,54.7,0,Math.PI*2); ac.stroke();
+    // Match the arrival image exactly: full-size artwork and its own rim.
+    // The enclosing profile supplies the same circular clipping in both phases.
+    ac.drawImage(image,0,0,size,size);
     try { pixels=ac.getImageData(0,0,size,size); } catch (_) { return; }
     // Project actual metal artwork into the landed bot's coordinate space.
     // Include nearby strokes outside its rim so edge contacts have a real origin.
@@ -1652,6 +1651,7 @@ function revealHive(profile) {
         out.data[k+2]=out.data[k+2]*(1-mix)+22*mix;
       }
     }
+    canvas.dataset.hasHeat = heat > 0 ? "true" : "false";
     ctx.putImageData(out,0,0);
     if(progress>=1){profile.remove();return;}
     requestAnimationFrame(frame);
@@ -3190,6 +3190,26 @@ function scheduleFrozenSymbolProfileLocks(originX, originY, duration) {
     const timer = setTimeout(() => {
       if (!profile.isConnected || !frostLocked) return;
 
+      const burningCanvas = profile.querySelector(".c17-paper-burn-canvas");
+      if (burningCanvas && burningCanvas.dataset.hasHeat === "true") {
+        // Frost cools the stopped molten frame; it never restores burned paper.
+        const context = burningCanvas.getContext("2d", {willReadFrequently:true});
+        try {
+          const frame = context.getImageData(0,0,burningCanvas.width,burningCanvas.height);
+          for (let k=0;k<frame.data.length;k+=4) {
+            const r=frame.data[k],g=frame.data[k+1],b=frame.data[k+2];
+            if (frame.data[k+3] && r>g*1.15 && r>b*1.3) {
+              frame.data[k]=Math.round(70+r*.35);
+              frame.data[k+1]=Math.min(255,140+Math.round(g*.45));
+              frame.data[k+2]=255;
+            }
+          }
+          context.putImageData(frame,0,0);
+        } catch (_) {}
+        profile.classList.add("c17-iced-burn", "c17-symbol-profile-frozen");
+        return;
+      }
+
       profile.style.setProperty("--c17-object-freeze-ms", `${PROFILE_FREEZE_MS}ms`);
       profile.classList.add(
         "c17-symbol-profile-freezing",
@@ -4491,7 +4511,7 @@ function ensureTawnyaSnail() {
       {id:"someday", sender:"TICKET DESK", address:"tickets@venue.example", subject:"Your SOMEDⒶY tickets are confirmed", preview:"Your tickets are in. Keep this message for entry.", date:"SEP 12", body:p("Your SOMEDⒶY tickets are confirmed.","Keep this message for entry. Doors and ticket details are attached to the recovered account record.")},
       {id:"subpoena", sender:"COURT NOTICE", address:"efile@court.example", subject:"NOTICE TO APPEAR — SUMMONS/SUBPOENA", preview:"Electronic notice available for review.", date:"SEP 08", body:"<p class='c17-snail-artifact-note'>[COURT DOCUMENT RESERVED — CONTENT NOT YET WRITTEN.]</p>"},
       {id:"enemy", sender:"UNKNOWN", address:"unknown", subject:"YOU KNOW EXACTLY WHY I'M EMAILING YOU", preview:"Fuck you, Tawnya. Don't call me. Don't message me…", date:"SEP 04", body:p("Fuck you, Tawnya.","Don't call me. Don't message me. Don't send Renee to talk to me either because I swear to God I'll tell her exactly what you did.","You wanna act like you don't know? Fine.","Keep acting stupid.","I'm coming to see you myself.","— [HER]")},
-      {id:"mom", sender:"Mom", address:"momma.grey@Snail.com", subject:"Call me when you wake up", preview:"And I mean actually call me, not one of your thumbs-up things.", date:"SEP 24", avatar:"T.Snail.Mom.PNG", unread:true, body:p("Tawnya —","Call me when you wake up. And I mean actually call me, not one of your thumbs-up things.","I found the blue casserole dish. It was in the cabinet you told me you checked twice.","Love you.","Mom")},
+      {id:"mom", sender:"Mom", address:"momma.grey@Snail.com", subject:"NEVER AGAIN", preview:"What the HELL was in that gummy?!", date:"SEP 24", avatar:"T.Snail.Mom.PNG", unread:true, body:p("Tawnya,","What the HELL was in that gummy?!","ONE. I took ONE because you said it would help me sleep.","My shoe dropped and woke me up, and I had NO IDEA where I was. I thought I was in a hotel. I couldn’t figure out whether I rented the room or if I had SNUCK INTO THE DAMN PLACE.","There were people in the hallway. I didn’t know if they were coming in. The room wouldn’t stop spinning, and at one point I thought I was going to go THROUGH THE FLOOR.","And I couldn’t figure out how to get my shoe so I could get the hell OUT.","I WAS IN MY OWN BED, TAWNYA.","You gave me a bedtime gummy and I spent the night wondering if I was trespassing.","NEVER. AGAIN.","— Mom")},
       {id:"reset", sender:"SNAIL Security", avatar:"T.Snail.Privacy.PNG", address:"security@Snail.com", subject:"New sign-in to your account", preview:"A new device signed in near Worcester, MA.", date:"AUG 29", body:p("New sign-in detected.","Device: iPhone","Location estimate: Worcester, MA","If this was you, no action is required. If it wasn't, maybe stop using the same password everywhere.","— SNAIL Security")},
       {id:"scott-tripp", sender:"Scott Tripp", subject:"IT’S COMING…", preview:"Yo ninja… We Gathering this year?!?!", date:"SEP 29", avatar:"T.Snail.Scott.PNG", unread:true, body:p("Yo ninja…","We Gathering this year?!?!","Been too fuckin long. WHOOP WHOOP <img class='c17-snail-inline-emoji' src='T.Snail.Clown.PNG' alt='clown'>")},
       {id:"shipping", sender:"Parcel Possum", avatar:"T.Snail.Possum.PNG", address:"tracking@parcelpossum.example", subject:"Your package is out for delivery", preview:"Driver has 47 stops before yours. Please stop refreshing.", date:"AUG 27", body:p("Your package is out for delivery.","Estimated arrival: eventually.","Driver has 47 stops before yours.","Please stop refreshing. It does not make the truck move faster.")}
@@ -5091,28 +5111,63 @@ function completeSequence() {
   }, 8350);
 }
 function openChannel() {
-  if (!signalNode.classList.contains("ready")) return;
+  if (!signalNode.classList.contains("ready") || signalNode.dataset.trusting === "true") return;
+  signalNode.dataset.trusting = "true";
   closeFounderWindow();
-
   signalNode.style.pointerEvents = "none";
   if (navigator.vibrate) navigator.vibrate(34);
 
-  signalNode.classList.add("pressed");
-  outerSymbol.classList.add("dissolve");
-  innerSymbol.classList.add("alive");
+  const start = innerSymbol.getBoundingClientRect();
+  const outerRect = outerSymbol.getBoundingClientRect();
+  const traveler = innerSymbol.cloneNode(false);
+  traveler.removeAttribute("id");
+  traveler.className = "c17-trust-traveler";
+  Object.assign(traveler.style, {left:`${start.left}px`,top:`${start.top}px`,width:`${start.width}px`,height:`${start.height}px`});
+  document.body.appendChild(traveler);
 
-  // Surgical restore: the wall breaks with green maze pulses, then the station settles in.
-  maze.classList.add("active");
+  const walls = document.createElement("canvas");
+  walls.className = "c17-trust-walls";
+  walls.width = walls.height = 240;
+  Object.assign(walls.style,{left:`${outerRect.left}px`,top:`${outerRect.top}px`,width:`${outerRect.width}px`,height:`${outerRect.height}px`});
+  document.body.appendChild(walls);
+  const wc = walls.getContext("2d");
+  const wallArt = document.createElement("canvas");
+  wallArt.width=wallArt.height=240;
+  wallArt.getContext("2d").drawImage(outerSymbol,0,0,240,240);
+  wc.drawImage(wallArt,0,0);
 
-  // SYMBOL CONTINUITY LOCK:
-  // Do not fade the interactive symbol away before the station exists.
-  // The station opens underneath the same protected symbol, and its permanent
-  // home-symbol takes ownership without a black gap or missing-symbol beat.
-  setTimeout(() => {
-    maze.classList.remove("active");
-    home.classList.add("open");
-    idleMaze.classList.add("active");
-  }, 1500);
+  document.documentElement.classList.add("c17-trust-transition");
+  signalNode.classList.add("c17-trusting");
+  maze.classList.remove("active");
+  idleMaze.classList.remove("active");
+  home.classList.add("open");
+  const destination = home.querySelector(".home-inner");
+  const end = destination.getBoundingClientRect();
+  const move = traveler.animate([
+    {transform:"translate(0,0) scale(1,1)"},
+    {transform:`translate(${end.left-start.left}px,${end.top-start.top}px) scale(${end.width/start.width},${end.height/start.height})`}
+  ],{duration:1100,easing:"cubic-bezier(.25,.1,.25,1)",fill:"forwards"});
+  const tiles=[];
+  for(let y=0;y<240;y+=8)for(let x=0;x<240;x+=8)
+    tiles.push({x,y,at:(y/240)*.4+Math.random()*.55});
+  const began=performance.now();
+  const consume=now=>{
+    const progress=Math.min(1,(now-began)/900);
+    wc.clearRect(0,0,240,240);
+    for(const tile of tiles){
+      if(progress<tile.at)wc.drawImage(wallArt,tile.x,tile.y,8,8,tile.x,tile.y,8,8);
+    }
+    if(progress<1)requestAnimationFrame(consume);
+    else walls.remove();
+  };
+  requestAnimationFrame(consume);
+  move.finished.then(()=>{
+    signalNode.style.setProperty("display","none","important");
+    signalGhost.style.setProperty("display","none","important");
+    document.documentElement.classList.remove("c17-trust-transition");
+    document.documentElement.classList.add("c17-trust-entered");
+    traveler.remove();
+  });
 }
 
 signalNode.addEventListener("click", openChannel);
