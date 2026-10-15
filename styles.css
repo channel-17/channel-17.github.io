@@ -14892,3 +14892,22 @@ html.c17-trust-transition #home .nodes {animation:c17StationArrival 1.1s ease bo
 .profile.c17-frost-burn-source-hidden * {
   visibility:hidden !important;
 }
+
+/* Native dossier zoom: allow the gesture through the frozen-page ancestors. */
+html.tawnya-dossier-open,
+html.tawnya-dossier-open body,
+html.frost-dead-world.tawnya-dossier-open body,
+html.tawnya-dossier-open .c17-dossier-overlay,
+html.tawnya-dossier-open .c17-dossier-overlay * {
+  touch-action:pan-x pan-y pinch-zoom !important;
+}
+/* Avoid magnifying a full-screen live backdrop filter on mobile Safari. */
+html.tawnya-dossier-open .c17-tawnya-profile-overlay {
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+}
+/* The separate photo viewer keeps its existing custom image controls. */
+html.tawnya-dossier-open .c17-tawnya-photo-stage,
+html.tawnya-dossier-open .c17-tawnya-photo-stage * {
+  touch-action:none !important;
+}
