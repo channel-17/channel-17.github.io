@@ -4463,15 +4463,14 @@ function ensureTawnyaProfileOverlay() {
 
 function syncTawnyaDossierToVisibleScreen() {
   if (!tawnyaProfileOverlay || !tawnyaProfileOverlay.isConnected) return;
-
   const viewport = window.visualViewport;
-  const width = viewport ? viewport.width : window.innerWidth;
+  // Native pinch magnifies a stable document. Do not resize/reflow the
+  // dossier into the shrinking visual viewport or chase its pan offsets.
+  if (viewport && Math.abs(viewport.scale - 1) > 0.01) return;
+  const width = document.documentElement.clientWidth || window.innerWidth;
   const height = viewport ? viewport.height : window.innerHeight;
-  const left = viewport ? viewport.offsetLeft : 0;
-  const top = viewport ? viewport.offsetTop : 0;
-
-  tawnyaProfileOverlay.style.setProperty("left", `${left}px`, "important");
-  tawnyaProfileOverlay.style.setProperty("top", `${top}px`, "important");
+  tawnyaProfileOverlay.style.setProperty("left", "0px", "important");
+  tawnyaProfileOverlay.style.setProperty("top", "0px", "important");
   tawnyaProfileOverlay.style.setProperty("right", "auto", "important");
   tawnyaProfileOverlay.style.setProperty("bottom", "auto", "important");
   tawnyaProfileOverlay.style.setProperty("width", `${width}px`, "important");
@@ -4493,7 +4492,6 @@ function openTawnyaProfile() {
     window.addEventListener("orientationchange", syncTawnyaDossierToVisibleScreen, { passive: true });
     if (window.visualViewport) {
       window.visualViewport.addEventListener("resize", syncTawnyaDossierToVisibleScreen, { passive: true });
-      window.visualViewport.addEventListener("scroll", syncTawnyaDossierToVisibleScreen, { passive: true });
     }
   }
 }
