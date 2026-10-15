@@ -14861,3 +14861,34 @@ html.c17-trust-transition #home .nodes {animation:c17StationArrival 1.1s ease bo
 .c17-trust-traveler,.c17-trust-walls {position:fixed !important;z-index:100000;pointer-events:none;object-fit:contain;transform-origin:top left;filter:brightness(1.28) contrast(1.14) saturate(.92) sepia(.18);}
 
 #signalNode {overflow:visible !important;}
+
+/* Preserve the captured burn silhouette throughout frost. */
+.c17-frost-profile-snapshot.c17-iced-burn {
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+  filter:none !important;
+}
+.c17-frost-profile-snapshot.c17-iced-burn > img,
+.c17-frost-profile-snapshot.c17-iced-burn .c17-frozen-profile-overlay,
+.c17-frost-profile-snapshot.c17-iced-burn .c17-freeze-pixel-front {
+  display:none !important;
+  visibility:hidden !important;
+}
+.c17-frost-profile-snapshot.c17-iced-burn .c17-paper-burn-canvas {
+  display:block !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  filter:none !important;
+}
+.c17-wall-comment-simmons .c17-wall-avatar {
+  border:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+
+/* A stopped burn snapshot is the sole visible copy until thaw. */
+.profile.c17-frost-burn-source-hidden,
+.profile.c17-frost-burn-source-hidden * {
+  visibility:hidden !important;
+}
