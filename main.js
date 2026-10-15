@@ -2578,6 +2578,7 @@ let frostActorSnapshots = [];
 
 function clearFrostActorSnapshots() {
   frostActorSnapshots.forEach(snapshot => {
+    if (snapshot?._frostBurnSource) snapshot._frostBurnSource.classList.remove("c17-frost-burn-source-hidden");
     if (snapshot && snapshot.isConnected) snapshot.remove();
   });
   frostActorSnapshots = [];
@@ -2671,6 +2672,8 @@ function snapshotFrostActors() {
     } else if (actor.classList.contains("profile")) {
       snapshot.classList.add("c17-frost-profile-snapshot");
       snapshot.dataset.frostSymbolProfile = "true";
+      const source = actor.querySelector("img");
+      snapshot.dataset.frostOriginalAsset = source ? normalizeAssetName(source.getAttribute("src") || source.src) : "";
     } else {
       snapshot.classList.add("c17-frost-social-snapshot");
     }
@@ -2690,6 +2693,10 @@ function snapshotFrostActors() {
 
     document.body.appendChild(snapshot);
     frostActorSnapshots.push(snapshot);
+    if (actor.querySelector(".c17-paper-burn-canvas")) {
+      snapshot._frostBurnSource = actor;
+      actor.classList.add("c17-frost-burn-source-hidden");
+    }
 
     /*
       Leave the paused live actor in place beneath its snapshot. The snapshot
@@ -2880,7 +2887,7 @@ function scheduleFrozenAssetSwaps(originX, originY, duration) {
   clearFrostSwapTimers();
 
   const candidates = [...document.querySelectorAll(".profile img")]
-    .filter(image => !image.classList.contains("c17-frozen-swap-layer") && !image.closest(".wren"));
+    .filter(image => !image.classList.contains("c17-frozen-swap-layer") && !image.closest(".wren, .c17-frost-actor-snapshot"));
 
   candidates.forEach(image => {
     const frozenName = FROZEN_ASSET_MAP.get(normalizeAssetName(image.getAttribute("src") || image.src));
@@ -3170,6 +3177,50 @@ function scheduleFrozenSocialSwaps(originX, originY, duration) {
 
 
 
+function composeFrozenBurnFrame(stopped, frozen) {
+  const result = new Uint8ClampedArray(stopped.length);
+  for (let k = 0; k < stopped.length; k += 4) {
+    const alpha = stopped[k + 3];
+    if (!alpha) continue;
+    const r = stopped[k], g = stopped[k + 1], b = stopped[k + 2];
+    const molten = r > g * 1.15 && r > b * 1.3;
+    result[k] = molten ? 18 : frozen[k];
+    result[k + 1] = molten ? 65 : frozen[k + 1];
+    result[k + 2] = molten ? 125 : frozen[k + 2];
+    // The stopped burn owns coverage: a frozen PNG cannot refill a hole.
+    result[k + 3] = alpha;
+  }
+  return result;
+}
+
+function freezeBurnedSymbolPixels(profile, canvas) {
+  const context = canvas.getContext("2d", {willReadFrequently:true});
+  if (!context) return;
+  let stopped;
+  try { stopped = context.getImageData(0, 0, canvas.width, canvas.height); }
+  catch (_) { return; }
+  profile.classList.add("c17-iced-burn", "c17-symbol-profile-frozen");
+  const sourceName = profile.dataset.frostOriginalAsset || "";
+  const frozenName = FROZEN_ASSET_MAP.get(sourceName);
+  // Cool the molten pixels immediately, even while the frozen PNG loads.
+  context.putImageData(new ImageData(composeFrozenBurnFrame(stopped.data, stopped.data), canvas.width, canvas.height), 0, 0);
+  if (!frozenName) return;
+  const frozen = new Image();
+  frozen.onload = () => {
+    if (!profile.isConnected || !frostLocked) return;
+    const art = document.createElement("canvas");
+    art.width = canvas.width; art.height = canvas.height;
+    const ac = art.getContext("2d", {willReadFrequently:true});
+    if (!ac) return;
+    try {
+      ac.drawImage(frozen, 0, 0, art.width, art.height);
+      const texture = ac.getImageData(0, 0, art.width, art.height);
+      context.putImageData(new ImageData(composeFrozenBurnFrame(stopped.data, texture.data), canvas.width, canvas.height), 0, 0);
+    } catch (_) { /* The immediately cooled captured frame remains visible. */ }
+  };
+  frozen.src = frozenName;
+}
+
 function scheduleFrozenSymbolProfileLocks(originX, originY, duration) {
   const profiles = [
     ...document.querySelectorAll(".c17-frost-profile-snapshot")
@@ -3191,22 +3242,8 @@ function scheduleFrozenSymbolProfileLocks(originX, originY, duration) {
       if (!profile.isConnected || !frostLocked) return;
 
       const burningCanvas = profile.querySelector(".c17-paper-burn-canvas");
-      if (burningCanvas && burningCanvas.dataset.hasHeat === "true") {
-        // Frost cools the stopped molten frame; it never restores burned paper.
-        const context = burningCanvas.getContext("2d", {willReadFrequently:true});
-        try {
-          const frame = context.getImageData(0,0,burningCanvas.width,burningCanvas.height);
-          for (let k=0;k<frame.data.length;k+=4) {
-            const r=frame.data[k],g=frame.data[k+1],b=frame.data[k+2];
-            if (frame.data[k+3] && r>g*1.15 && r>b*1.3) {
-              frame.data[k]=Math.round(70+r*.35);
-              frame.data[k+1]=Math.min(255,140+Math.round(g*.45));
-              frame.data[k+2]=255;
-            }
-          }
-          context.putImageData(frame,0,0);
-        } catch (_) {}
-        profile.classList.add("c17-iced-burn", "c17-symbol-profile-frozen");
+      if (burningCanvas) {
+        freezeBurnedSymbolPixels(profile, burningCanvas);
         return;
       }
 
@@ -3810,6 +3847,11 @@ function ensureTawnyaProfileOverlay() {
                   <div><b>Renee</b><p>Bitch answer your phone. I know you’re awake.</p></div>
                 </article>
 
+
+                <article class="c17-wall-comment c17-wall-comment-simmons">
+                  <img class="c17-wall-avatar" src="T.Friends.Simmons.PNG" alt="Master Simmons’s blue ghost">
+                  <div><b>Master Simmons <span class="c17-wall-tag">(Spiritual Guru)</span></b><p>Work it. WORK IT! Keep those limbs loose—you got it, baby! Unclench those cheeks! That’s a hip, not a fucking parking brake! I did NOT claw my way back from the afterlife to watch you stretch like a lawn chair.</p></div>
+                </article>
 
                 <article class="c17-wall-comment c17-wall-comment-matty">
                   <img class="c17-wall-avatar" src="T.Friends.Matty.PNG" alt="Matty">
@@ -4615,8 +4657,8 @@ function revealTawnyaFromGreyHeart(heart, direction = "from-left") {
   tawnyaRetired = false;
 
   const rect = heart.getBoundingClientRect();
-  const centerX = Math.max(44, Math.min(window.innerWidth - 44, rect.left + rect.width / 2));
-  const centerY = Math.max(44, Math.min(window.innerHeight - 44, rect.top + rect.height / 2));
+  const centerX = rect.left + rect.width / 2;
+  const centerY = rect.top + rect.height / 2;
   const tawnya = document.createElement("button");
   tawnya.type = "button";
   tawnya.className = `c17-tawnya-reveal ${direction}`;
@@ -4625,6 +4667,9 @@ function revealTawnyaFromGreyHeart(heart, direction = "from-left") {
   tawnya.style.setProperty("top", `${centerY}px`, "important");
   tawnya.style.setProperty("width", `${rect.width}px`, "important");
   tawnya.style.setProperty("height", `${rect.height}px`, "important");
+  for (const key of ["min-width", "max-width"]) tawnya.style.setProperty(key, `${rect.width}px`, "important");
+  for (const key of ["min-height", "max-height"]) tawnya.style.setProperty(key, `${rect.height}px`, "important");
+  tawnya.style.setProperty("transform", "translate(-50%, -50%)", "important");
   tawnya.style.setProperty("z-index", "2147483645", "important");
   tawnya.style.setProperty("display", "grid", "important");
   tawnya.style.setProperty("opacity", "1", "important");
@@ -4724,12 +4769,12 @@ function revealTawnyaFromGreyHeart(heart, direction = "from-left") {
 
   heart.animate(
     [
-      { opacity: 1, transform: "scale(1)", filter: "none" },
-      { opacity: 1, transform: "scale(1)", filter: "brightness(1.04)", offset: .36 },
-      { opacity: .92, transform: "scale(.96)", filter: "brightness(.98)", offset: .58 },
-      { opacity: .66, transform: "scale(.78)", filter: "blur(.8px) brightness(.88)", offset: .76 },
-      { opacity: .30, transform: "scale(.50)", filter: "blur(2px) brightness(.72)", offset: .91 },
-      { opacity: 0, transform: "scale(.22)", filter: "blur(4px) brightness(.58)" }
+      { opacity: 1, filter: "none" },
+      { opacity: 1, filter: "brightness(1.04)", offset: .36 },
+      { opacity: .92, filter: "brightness(.98)", offset: .58 },
+      { opacity: .66, filter: "blur(.8px) brightness(.88)", offset: .76 },
+      { opacity: .30, filter: "blur(2px) brightness(.72)", offset: .91 },
+      { opacity: 0, filter: "blur(4px) brightness(.58)" }
     ],
     {
       duration: TAWNYA_TRANSFORM_MS,
