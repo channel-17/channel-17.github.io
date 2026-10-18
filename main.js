@@ -3850,7 +3850,12 @@ function ensureTawnyaProfileOverlay() {
 
                 <article class="c17-wall-comment c17-wall-comment-simmons">
                   <img class="c17-wall-avatar" src="T.Friends.Simmons.PNG" alt="Master Simmons’s blue ghost">
-                  <div><b>Master Simmons <span class="c17-wall-tag">(Spiritual Guru)</span></b><p>Work it. WORK IT! Keep those limbs loose—you got it, baby! Unclench those cheeks! That’s a hip, not a fucking parking brake! I did NOT claw my way back from the afterlife to watch you stretch like a lawn chair.</p></div>
+                  <div><b>Master Simmons <span class="c17-wall-tag">(Spiritual Guru)</span></b><p>Work it. WORK IT! Keep those limbs loose—you got it, baby! Unclench those cheeks! That’s a hip, not a fucking parking brake! I did NOT claw my way back from the afterlife to watch you stretch like a lawn chair.</p>
+                    <div class="c17-wall-reply">
+                      <img class="c17-wall-reply-avatar" src="T.Comments.JDF.PNG" alt="JDF">
+                      <div><b>JDF</b><p>Apparently ‘eternal rest’ was a bunch of fucking bullshit. Richard, I am NOT doing another set.</p></div>
+                    </div>
+                  </div>
                 </article>
 
                 <article class="c17-wall-comment c17-wall-comment-matty">
@@ -3886,6 +3891,18 @@ function ensureTawnyaProfileOverlay() {
                     <div class="c17-wall-reply">
                       <img class="c17-wall-reply-avatar" src="T.friends.Comment.PNG" alt="Tawnya Grey">
                       <div><b>Tawnya Grey</b><p><img class="c17-comment-emoji" src="T.Comment.Laugh.PNG" alt="laughing"><img class="c17-comment-emoji" src="T.Comment.Laugh.PNG" alt="laughing"> Classic Mark. Always fucking with me.</p></div>
+                    </div>
+                  </div>
+                </article>
+
+                <article class="c17-wall-comment c17-wall-comment-toilet">
+                  <img class="c17-wall-avatar" src="T.Comment.Toilet.PNG" alt="Chuck’s Toilet">
+                  <div>
+                    <b>Chuck’s Toilet</b>
+                    <p>CHUCK! Please, I’m fuckin’ beggin’ you!!! You can’t just keep shitting inside of me month after month and call the flush good enough… This is bullshit! Your cuca smears are basically fucking barnacles growing on me at this point. Do you have any idea how fucking disgusting that is?!?! I just wanna feel like normal porcelain again…</p>
+                    <div class="c17-wall-reply">
+                      <img class="c17-wall-reply-avatar" src="T.Comment.Toilet.PNG" alt="Chuck’s Toilet">
+                      <div><b>Chuck’s Toilet</b><p>sorry wrong person</p></div>
                     </div>
                   </div>
                 </article>
