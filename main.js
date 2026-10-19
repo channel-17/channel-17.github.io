@@ -5261,7 +5261,7 @@ function c17StartStationPulses() {
     const total=lengths.reduce((a,b)=>a+b,0);let sum=0;
     const frames=points.map((p,i)=>{if(i)sum+=lengths[i-1];return {transform:`translate(${p[0]}px,${p[1]}px)`,offset:total?sum/total:0};});
     // CSS pixels per second: leisurely signals, independent of route length.
-    const speed=opening?22:14+Math.random()*12;
+    const speed=opening?27.5:17.5+Math.random()*15;
     const duration=total/speed*1000;
     let decayTimer;
     const motion=light.animate(frames,{duration,easing:"linear",fill:"forwards"});
