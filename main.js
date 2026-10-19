@@ -4485,7 +4485,7 @@ function syncTawnyaDossierToVisibleScreen() {
   // dossier into the shrinking visual viewport or chase its pan offsets.
   if (viewport && Math.abs(viewport.scale - 1) > 0.01) return;
   const width = document.documentElement.clientWidth || window.innerWidth;
-  const height = viewport ? viewport.height : window.innerHeight;
+  const height = window.innerHeight;
   tawnyaProfileOverlay.style.setProperty("left", "0px", "important");
   tawnyaProfileOverlay.style.setProperty("top", "0px", "important");
   tawnyaProfileOverlay.style.setProperty("right", "auto", "important");
@@ -4507,9 +4507,7 @@ function openTawnyaProfile() {
     overlay.dataset.viewportSyncBound = "true";
     window.addEventListener("resize", syncTawnyaDossierToVisibleScreen, { passive: true });
     window.addEventListener("orientationchange", syncTawnyaDossierToVisibleScreen, { passive: true });
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener("resize", syncTawnyaDossierToVisibleScreen, { passive: true });
-    }
+
   }
 }
 
@@ -5175,64 +5173,91 @@ function openChannel() {
   signalNode.dataset.trusting = "true";
   closeFounderWindow();
   signalNode.style.pointerEvents = "none";
-  if (navigator.vibrate) navigator.vibrate(34);
-
   const start = innerSymbol.getBoundingClientRect();
-  const outerRect = outerSymbol.getBoundingClientRect();
   const traveler = innerSymbol.cloneNode(false);
   traveler.removeAttribute("id");
   traveler.className = "c17-trust-traveler";
-  Object.assign(traveler.style, {left:`${start.left}px`,top:`${start.top}px`,width:`${start.width}px`,height:`${start.height}px`});
+  Object.assign(traveler.style,{left:`${start.left}px`,top:`${start.top}px`,width:`${start.width}px`,height:`${start.height}px`});
   document.body.appendChild(traveler);
-
-  const walls = document.createElement("canvas");
-  walls.className = "c17-trust-walls";
-  walls.width = walls.height = 240;
-  Object.assign(walls.style,{left:`${outerRect.left}px`,top:`${outerRect.top}px`,width:`${outerRect.width}px`,height:`${outerRect.height}px`});
-  document.body.appendChild(walls);
-  const wc = walls.getContext("2d");
-  const wallArt = document.createElement("canvas");
-  wallArt.width=wallArt.height=240;
-  wallArt.getContext("2d").drawImage(outerSymbol,0,0,240,240);
-  wc.drawImage(wallArt,0,0);
-
   document.documentElement.classList.add("c17-trust-transition");
   signalNode.classList.add("c17-trusting");
   maze.classList.remove("active");
   idleMaze.classList.remove("active");
   home.classList.add("open");
-  const destination = home.querySelector(".home-inner");
-  const end = destination.getBoundingClientRect();
+  const end = home.querySelector(".home-inner").getBoundingClientRect();
   const move = traveler.animate([
     {transform:"translate(0,0) scale(1,1)"},
     {transform:`translate(${end.left-start.left}px,${end.top-start.top}px) scale(${end.width/start.width},${end.height/start.height})`}
-  ],{duration:1100,easing:"cubic-bezier(.25,.1,.25,1)",fill:"forwards"});
-  const tiles=[];
-  for(let y=0;y<240;y+=8)for(let x=0;x<240;x+=8)
-    tiles.push({x,y,at:(y/240)*.4+Math.random()*.55});
-  const began=performance.now();
-  const consume=now=>{
-    const progress=Math.min(1,(now-began)/900);
-    wc.clearRect(0,0,240,240);
-    for(const tile of tiles){
-      if(progress<tile.at)wc.drawImage(wallArt,tile.x,tile.y,8,8,tile.x,tile.y,8,8);
-    }
-    if(progress<1)requestAnimationFrame(consume);
-    else walls.remove();
-  };
-  requestAnimationFrame(consume);
-  move.finished.then(()=>{
+  ],{duration:900,easing:"ease-in-out",fill:"forwards"});
+  move.finished.finally(()=>{
     signalNode.style.setProperty("display","none","important");
     signalGhost.style.setProperty("display","none","important");
     document.documentElement.classList.remove("c17-trust-transition");
     document.documentElement.classList.add("c17-trust-entered");
     traveler.remove();
   });
+  c17PlaceRoach();
+  c17StartStationPulses();
+}
+
+function c17PlaceRoach() {
+  if(window.visualViewport && Math.abs(window.visualViewport.scale-1)>.01) return;
+  const core=home.querySelector(".home-core");
+  const last=home.querySelector(".nodes .node:last-child");
+  if(!core || !last) return;
+  core.style.setProperty("--c17-roach-y",`${last.getBoundingClientRect().bottom-core.getBoundingClientRect().top+52}px`);
+}
+window.addEventListener("resize",()=>{if(home.classList.contains("open")) c17PlaceRoach();},{passive:true});
+
+// Two tiny moving lights, no rendered paths or stationary pellets.
+function c17StartStationPulses() {
+  if (home.dataset.pulsesStarted) return;
+  home.dataset.pulsesStarted = "true";
+  const active = new Set();
+  const nodes = [...home.querySelectorAll(".nodes .node")];
+  function launch(kind, targetIndex) {
+    if (active.size >= 2 || document.hidden) return;
+    const w = document.documentElement.clientWidth, h = window.innerHeight;
+    const orange = kind === "orange";
+    const light = document.createElement("i");
+    light.className = "c17-station-pulse" + (orange ? " c17-ember-pulse" : "");
+    light.setAttribute("aria-hidden","true");
+    home.appendChild(light); active.add(light);
+    const target = targetIndex == null ? null : nodes[targetIndex];
+    let points;
+    if (kind === "drop") points = [[w*.51,-12],[w*.51,h*.3],[w*.51,h*.48],[w*.71,h*.48],[w*.71,h+12]];
+    else {
+      const rect = target && target.getBoundingClientRect();
+      const y = rect ? rect.top+rect.height/2 : h*(.3+Math.random()*.45);
+      points = [[w+12,h*.28],[w*.07,h*.28],[w*.07,h*.84],[w*.88,h*.84],[w*.88,y]];
+      points.push(rect ? [rect.right-18,y] : [w*.54,y]);
+      if (!target && !orange) points.push([w*.54,h+12]);
+    }
+    const distances = points.slice(1).map((p,i)=>Math.hypot(p[0]-points[i][0],p[1]-points[i][1]));
+    const total = distances.reduce((a,b)=>a+b,0); let traveled=0;
+    const frames=points.map((p,i)=>{if(i)traveled+=distances[i-1];return {transform:`translate(${p[0]}px,${p[1]}px)`,offset:total ? traveled/total : 0};});
+    const motion=light.animate(frames,{duration:kind === "drop" ? 5600 : 10500,easing:"linear",fill:"forwards"});
+    motion.finished.then(()=>{
+      if(target){target.classList.add("c17-node-hit");setTimeout(()=>target.classList.remove("c17-node-hit"),1000);}
+      return light.animate([{opacity:1},{opacity:0}],{duration:550,fill:"forwards"}).finished;
+    }).catch(()=>{}).finally(()=>{light.remove();active.delete(light);});
+  }
+  setTimeout(()=>launch("drop"),1000);
+  setTimeout(()=>launch("green",0),3600);
+  function next(){
+    setTimeout(()=>{
+      const orange=Math.random()<.16;
+      launch(orange?"orange":"green",!orange&&Math.random()<.24?Math.floor(Math.random()*nodes.length):null);
+      next();
+    },6500+Math.random()*6500);
+  }
+  setTimeout(next,10000);
 }
 
 signalNode.addEventListener("click", openChannel);
 
 signalNode.addEventListener("touchend", event => {
+  if (event.touches.length || (window.visualViewport && window.visualViewport.scale > 1.01)) return;
   event.preventDefault();
   openChannel();
 }, {
