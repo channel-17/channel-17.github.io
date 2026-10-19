@@ -5177,7 +5177,7 @@ function openChannel() {
   // Keep the surviving artwork at exactly its pre-click viewport rectangle.
   const survivor = innerSymbol.cloneNode(false);
   survivor.removeAttribute("id");
-  survivor.className = "c17-trust-traveler";
+  survivor.className = "c17-trust-traveler c17-station-survivor";
   Object.assign(survivor.style,{left:`${start.left}px`,top:`${start.top}px`,width:`${start.width}px`,height:`${start.height}px`});
   document.body.appendChild(survivor);
   const landed = home.querySelector(".home-inner");
@@ -5192,7 +5192,7 @@ function openChannel() {
     signalGhost.style.setProperty("display","none","important");
     document.documentElement.classList.remove("c17-trust-transition");
     document.documentElement.classList.add("c17-trust-entered");
-    survivor.remove();
+    // Keep this same body-level image: no handoff into a transformed ancestor.
     c17StartStationPulses();
   });
   c17PlaceRoach();
@@ -5260,7 +5260,9 @@ function c17StartStationPulses() {
     const lengths=points.slice(1).map((p,i)=>Math.hypot(p[0]-points[i][0],p[1]-points[i][1]));
     const total=lengths.reduce((a,b)=>a+b,0);let sum=0;
     const frames=points.map((p,i)=>{if(i)sum+=lengths[i-1];return {transform:`translate(${p[0]}px,${p[1]}px)`,offset:total?sum/total:0};});
-    const duration=opening?9500:Math.max(4500,Math.min(14000,total/(65+Math.random()*45)*1000));
+    // CSS pixels per second: leisurely signals, independent of route length.
+    const speed=opening?22:14+Math.random()*12;
+    const duration=total/speed*1000;
     let decayTimer;
     const motion=light.animate(frames,{duration,easing:"linear",fill:"forwards"});
     if(orange) decayTimer=setTimeout(()=>{
@@ -5274,14 +5276,14 @@ function c17StartStationPulses() {
   }
   // First arrival reads as a new upload; the next two signals simply leave.
   setTimeout(()=>launch("green",0,true),1000);
-  setTimeout(()=>launch("green"),12500);
-  setTimeout(()=>launch("green"),20500);
+  setTimeout(()=>launch("green"),45000);
+  setTimeout(()=>launch("green"),68000);
   function next(){setTimeout(()=>{
     const orange=Math.random()<.16;
     launch(orange?"orange":"green",!orange&&Math.random()<.08?Math.floor(Math.random()*nodes.length):null);
     next();
-  },9500+Math.random()*9000);}
-  setTimeout(next,22000);
+  },18000+Math.random()*20000);}
+  setTimeout(next,70000);
   // Reserve no third slot: wait for room if the minute signal meets two travelers.
   function jinxSignal(){
     if(document.hidden){setTimeout(jinxSignal,3000);return;}
