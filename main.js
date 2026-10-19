@@ -5174,30 +5174,28 @@ function openChannel() {
   closeFounderWindow();
   signalNode.style.pointerEvents = "none";
   const start = innerSymbol.getBoundingClientRect();
-  const traveler = innerSymbol.cloneNode(false);
-  traveler.removeAttribute("id");
-  traveler.className = "c17-trust-traveler";
-  Object.assign(traveler.style,{left:`${start.left}px`,top:`${start.top}px`,width:`${start.width}px`,height:`${start.height}px`});
-  document.body.appendChild(traveler);
+  // Keep the surviving artwork at exactly its pre-click viewport rectangle.
+  const survivor = innerSymbol.cloneNode(false);
+  survivor.removeAttribute("id");
+  survivor.className = "c17-trust-traveler";
+  Object.assign(survivor.style,{left:`${start.left}px`,top:`${start.top}px`,width:`${start.width}px`,height:`${start.height}px`});
+  document.body.appendChild(survivor);
+  const landed = home.querySelector(".home-inner");
+  Object.assign(landed.style,{position:"fixed",left:`${start.left}px`,top:`${start.top}px`,width:`${start.width}px`,height:`${start.height}px`,margin:"0",transform:"none",animation:"none"});
   document.documentElement.classList.add("c17-trust-transition");
   signalNode.classList.add("c17-trusting");
-  maze.classList.remove("active");
-  idleMaze.classList.remove("active");
+  maze.classList.remove("active"); idleMaze.classList.remove("active");
   home.classList.add("open");
-  const end = home.querySelector(".home-inner").getBoundingClientRect();
-  const move = traveler.animate([
-    {transform:"translate(0,0) scale(1,1)"},
-    {transform:`translate(${end.left-start.left}px,${end.top-start.top}px) scale(${end.width/start.width},${end.height/start.height})`}
-  ],{duration:900,easing:"ease-in-out",fill:"forwards"});
-  move.finished.finally(()=>{
+  const dissolve = outerSymbol.animate([{opacity:1},{opacity:0}],{duration:950,easing:"ease-out",fill:"forwards"});
+  dissolve.finished.finally(()=>{
     signalNode.style.setProperty("display","none","important");
     signalGhost.style.setProperty("display","none","important");
     document.documentElement.classList.remove("c17-trust-transition");
     document.documentElement.classList.add("c17-trust-entered");
-    traveler.remove();
+    survivor.remove();
+    c17StartStationPulses();
   });
   c17PlaceRoach();
-  c17StartStationPulses();
 }
 
 function c17PlaceRoach() {
@@ -5209,49 +5207,88 @@ function c17PlaceRoach() {
 }
 window.addEventListener("resize",()=>{if(home.classList.contains("open")) c17PlaceRoach();},{passive:true});
 
-// Two tiny moving lights, no rendered paths or stationary pellets.
+// Sparse signals cross a larger world. Only rare green signals visit a node.
+function c17PulseRoute(w,h,target,opening=false) {
+  const rand=(lo,hi)=>lo+Math.random()*(hi-lo);
+  const edge=Math.floor(Math.random()*4);
+  let p;
+  if(opening) {
+    p=[[w+14,h*.23],[w*.06,h*.23],[w*.06,h*.84],[w*.88,h*.84]];
+  } else if(edge===0) p=[[-14,rand(.12,.85)*h]];
+  else if(edge===1) p=[[w+14,rand(.12,.85)*h]];
+  else if(edge===2) p=[[rand(.08,.92)*w,-14]];
+  else p=[[rand(.08,.92)*w,h+14]];
+  let last=p[p.length-1];
+  let horizontal=opening ? false : edge<2;
+  const turns=2+Math.floor(Math.random()*4);
+  for(let i=0;i<turns;i++) {
+    const next=horizontal?[rand(.06,.94)*w,last[1]]:[last[0],rand(.12,.88)*h];
+    p.push(next);last=next;horizontal=!horizontal;
+  }
+  if(target) {
+    const x=target.right-18,y=target.top+target.height/2;
+    p.push([last[0],y],[x,y]);
+  } else {
+    // Depart through an edge; do not converge on a shared circuit.
+    p.push(horizontal?[edge===1?-14:w+14,last[1]]:[last[0],edge===3?-14:h+14]);
+  }
+  return p;
+}
 function c17StartStationPulses() {
-  if (home.dataset.pulsesStarted) return;
-  home.dataset.pulsesStarted = "true";
-  const active = new Set();
-  const nodes = [...home.querySelectorAll(".nodes .node")];
-  function launch(kind, targetIndex) {
-    if (active.size >= 2 || document.hidden) return;
-    const w = document.documentElement.clientWidth, h = window.innerHeight;
-    const orange = kind === "orange";
-    const light = document.createElement("i");
-    light.className = "c17-station-pulse" + (orange ? " c17-ember-pulse" : "");
+  if(home.dataset.pulsesStarted) return;
+  home.dataset.pulsesStarted="true";
+  const active=new Set();
+  const nodes=[...home.querySelectorAll(".nodes .node")];
+  let lastRoute="";
+  function launch(kind="green",targetIndex=null,opening=false) {
+    if(active.size>=2 || document.hidden) return false;
+    const orange=kind==="orange",jinx=kind==="jinx";
+    const target=!orange&&!jinx&&targetIndex!==null?nodes[targetIndex]:null;
+    const w=document.documentElement.clientWidth,h=window.innerHeight;
+    let points,signature;
+    do {points=c17PulseRoute(w,h,target?target.getBoundingClientRect():null,opening);signature=JSON.stringify(points);} while(signature===lastRoute);
+    lastRoute=signature;
+    // Orange may expire on its way, instead of reaching its offscreen endpoint.
+    const burnout=orange&&Math.random()<.65;
+    if(burnout) points=points.slice(0,Math.max(2,Math.floor(points.length*.65)));
+    const light=document.createElement("i");
+    light.className="c17-station-pulse c17-pulse-carrier";
     light.setAttribute("aria-hidden","true");
-    home.appendChild(light); active.add(light);
-    const target = targetIndex == null ? null : nodes[targetIndex];
-    let points;
-    if (kind === "drop") points = [[w*.51,-12],[w*.51,h*.3],[w*.51,h*.48],[w*.71,h*.48],[w*.71,h+12]];
-    else {
-      const rect = target && target.getBoundingClientRect();
-      const y = rect ? rect.top+rect.height/2 : h*(.3+Math.random()*.45);
-      points = [[w+12,h*.28],[w*.07,h*.28],[w*.07,h*.84],[w*.88,h*.84],[w*.88,y]];
-      points.push(rect ? [rect.right-18,y] : [w*.54,y]);
-      if (!target && !orange) points.push([w*.54,h+12]);
-    }
-    const distances = points.slice(1).map((p,i)=>Math.hypot(p[0]-points[i][0],p[1]-points[i][1]));
-    const total = distances.reduce((a,b)=>a+b,0); let traveled=0;
-    const frames=points.map((p,i)=>{if(i)traveled+=distances[i-1];return {transform:`translate(${p[0]}px,${p[1]}px)`,offset:total ? traveled/total : 0};});
-    const motion=light.animate(frames,{duration:kind === "drop" ? 5600 : 10500,easing:"linear",fill:"forwards"});
+    const core=document.createElement("span");
+    core.className="c17-pulse-core"+(orange?" c17-core-ember":jinx?" c17-core-jinx":"");
+    light.appendChild(core);home.appendChild(light);active.add(light);
+    const lengths=points.slice(1).map((p,i)=>Math.hypot(p[0]-points[i][0],p[1]-points[i][1]));
+    const total=lengths.reduce((a,b)=>a+b,0);let sum=0;
+    const frames=points.map((p,i)=>{if(i)sum+=lengths[i-1];return {transform:`translate(${p[0]}px,${p[1]}px)`,offset:total?sum/total:0};});
+    const duration=opening?9500:Math.max(4500,Math.min(14000,total/(65+Math.random()*45)*1000));
+    let decayTimer;
+    const motion=light.animate(frames,{duration,easing:"linear",fill:"forwards"});
+    if(orange) decayTimer=setTimeout(()=>{
+      core.classList.add("c17-core-burning-out");
+    },Math.max(0,duration-1800));
     motion.finished.then(()=>{
       if(target){target.classList.add("c17-node-hit");setTimeout(()=>target.classList.remove("c17-node-hit"),1000);}
-      return light.animate([{opacity:1},{opacity:0}],{duration:550,fill:"forwards"}).finished;
-    }).catch(()=>{}).finally(()=>{light.remove();active.delete(light);});
+      return light.animate([{opacity:1},{opacity:0}],{duration:orange?100:350,fill:"forwards"}).finished;
+    }).catch(()=>{}).finally(()=>{clearTimeout(decayTimer);light.remove();active.delete(light);});
+    return true;
   }
-  setTimeout(()=>launch("drop"),1000);
-  setTimeout(()=>launch("green",0),3600);
-  function next(){
-    setTimeout(()=>{
-      const orange=Math.random()<.16;
-      launch(orange?"orange":"green",!orange&&Math.random()<.24?Math.floor(Math.random()*nodes.length):null);
-      next();
-    },6500+Math.random()*6500);
+  // First arrival reads as a new upload; the next two signals simply leave.
+  setTimeout(()=>launch("green",0,true),1000);
+  setTimeout(()=>launch("green"),12500);
+  setTimeout(()=>launch("green"),20500);
+  function next(){setTimeout(()=>{
+    const orange=Math.random()<.16;
+    launch(orange?"orange":"green",!orange&&Math.random()<.08?Math.floor(Math.random()*nodes.length):null);
+    next();
+  },9500+Math.random()*9000);}
+  setTimeout(next,22000);
+  // Reserve no third slot: wait for room if the minute signal meets two travelers.
+  function jinxSignal(){
+    if(document.hidden){setTimeout(jinxSignal,3000);return;}
+    if(!launch("jinx")){setTimeout(jinxSignal,1000);return;}
+    setTimeout(jinxSignal,60000);
   }
-  setTimeout(next,10000);
+  setTimeout(jinxSignal,60000);
 }
 
 signalNode.addEventListener("click", openChannel);
