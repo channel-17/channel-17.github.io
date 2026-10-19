@@ -1616,9 +1616,7 @@ body {
   justify-content: center;
   width: min(78vw, 330px);
   min-height: 560px;
-  background:
-    radial-gradient(circle at 50% 35%, rgba(223,255,63,0.13), transparent 25%),
-    radial-gradient(circle at 50% 55%, rgba(223,255,63,0.045), transparent 40%);
+  background: none;
 }
 
 .home-symbol {
