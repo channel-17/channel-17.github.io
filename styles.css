@@ -14911,3 +14911,29 @@ html.tawnya-dossier-open .c17-tawnya-photo-stage,
 html.tawnya-dossier-open .c17-tawnya-photo-stage * {
   touch-action:none !important;
 }
+
+/* Brick 19: quiet Reconnect arrival and sparse invisible-track lights. */
+#home .node::before {display:none!important;}
+html.c17-trust-transition #home .nodes {animation:none!important;opacity:0!important;}
+html.c17-trust-entered #home .nodes {animation:c17NodesArrive .45s ease both!important;}
+@keyframes c17NodesArrive {from{opacity:0}to{opacity:1}}
+html.c17-trust-transition #home .survivor-chalk,
+html.c17-trust-transition #home .golden-roach-button {visibility:hidden!important;}
+.c17-station-pulse {position:fixed;left:0;top:0;width:5px;height:5px;border-radius:50%;background:#cfff48;box-shadow:0 0 8px #a8e83d,0 0 16px #83bf3260;pointer-events:none;z-index:20;}
+.c17-station-pulse::after {content:"";position:absolute;inset:-3px;border-radius:50%;background:#cfff4830;animation:c17LightBeat .85s ease-in-out infinite;}
+.c17-ember-pulse {background:#ff862b;box-shadow:0 0 9px #ff6b25,0 0 15px #ff5a2440;}
+.c17-ember-pulse::after {background:#ff862b30;}
+@keyframes c17LightBeat {50%{opacity:.2;transform:scale(.6)}}
+#home .node.c17-node-hit {border-color:#cfff48!important;color:#edffbf!important;box-shadow:0 0 18px #b6f13b66!important;transition:box-shadow .25s,border-color .25s;}
+#home .golden-roach-button {left:50%!important;right:auto!important;bottom:auto!important;top:var(--c17-roach-y,calc(100% + 52px))!important;transform:translateX(-50%)!important;}
+#home .home-core {overflow:visible!important;}
+#home .survivor-chalk {position:fixed!important;right:7vw!important;bottom:18px!important;width:24px!important;height:30px!important;opacity:.16!important;transform:rotate(-8deg)!important;}
+#home .survivor-chalk span {width:3px!important;height:16px!important;top:7px!important;left:10px!important;box-shadow:none!important;}
+/* Native pinch stays available on the loader, landing and frozen ancestors. */
+html,body,#home,#signalNode {touch-action:pan-x pan-y pinch-zoom!important;}
+/* Reduce large composited surfaces while inspecting the dossier. */
+html.tawnya-dossier-open .c17-tawnya-profile-overlay,
+html.tawnya-dossier-open .c17-tawnya-profile-overlay * {backdrop-filter:none!important;-webkit-backdrop-filter:none!important;will-change:auto!important;}
+html.tawnya-dossier-open .c17-tawnya-profile-overlay {transform:none!important;filter:none!important;}
+html.tawnya-dossier-open .c17-tawnya-profile-overlay::before,
+html.tawnya-dossier-open .c17-tawnya-profile-overlay::after {animation:none!important;filter:none!important;}
