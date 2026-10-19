@@ -14953,3 +14953,12 @@ html.c17-trust-transition #signalNode {background:transparent!important;box-shad
 @keyframes c17JinxSignal {0%,100%{background:#b4ff43;box-shadow:0 0 9px #b4ff43;opacity:.85;transform:scale(.85)}40%{opacity:.25}50%{background:#a94cff;box-shadow:0 0 12px #a94cff;opacity:1;transform:scale(1.15)}90%{opacity:.3}}
 .c17-core-burning-out {animation:c17EmberDies 1.8s linear forwards!important;}
 @keyframes c17EmberDies {0%{opacity:.95;transform:scale(1)}20%{opacity:.2;transform:scale(.6)}32%{opacity:.8;transform:scale(.85)}50%{opacity:.12;transform:scale(.45)}62%{opacity:.5;transform:scale(.65)}80%{opacity:.08;transform:scale(.25)}100%{opacity:0;transform:scale(0);box-shadow:none}}
+
+/* Keep the exact same visible image before and after dissolution.
+   A body-level survivor avoids the landing page's transformed containing block. */
+html.c17-trust-entered #home .home-inner {visibility:hidden!important;}
+.c17-station-survivor {animation:none!important;transition:none!important;transform:none!important;}
+.c17-pulse-core {animation-duration:2.8s;}
+.c17-core-jinx {animation-duration:3.6s;}
+html.c17-trust-transition #signalGhost,
+html.c17-trust-entered #signalGhost {display:none!important;}
