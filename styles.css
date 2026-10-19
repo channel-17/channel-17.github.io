@@ -14937,3 +14937,19 @@ html.tawnya-dossier-open .c17-tawnya-profile-overlay * {backdrop-filter:none!imp
 html.tawnya-dossier-open .c17-tawnya-profile-overlay {transform:none!important;filter:none!important;}
 html.tawnya-dossier-open .c17-tawnya-profile-overlay::before,
 html.tawnya-dossier-open .c17-tawnya-profile-overlay::after {animation:none!important;filter:none!important;}
+
+/* Corrected arrival: only the outer pyramid dissolves; inner art never travels. */
+html.c17-trust-transition #signalNode {visibility:visible!important;}
+html.c17-trust-transition #signalNode > :not(#outerSymbol) {visibility:hidden!important;}
+html.c17-trust-transition #outerSymbol {visibility:visible!important;}
+html.c17-trust-transition #signalNode {background:transparent!important;box-shadow:none!important;}
+/* Motion belongs to the carrier; visible breathing belongs to its entire core. */
+.c17-pulse-carrier {width:0!important;height:0!important;background:none!important;box-shadow:none!important;}
+.c17-pulse-carrier::after {display:none!important;}
+.c17-pulse-core {display:block;width:6px;height:6px;margin:-3px;border-radius:50%;background:#cfff48;box-shadow:0 0 7px #b2ed42,0 0 15px #a7ea4270;animation:c17WholePulse 1.4s ease-in-out infinite;}
+@keyframes c17WholePulse {0%,100%{opacity:.22;transform:scale(.58)}50%{opacity:1;transform:scale(1.2)}}
+.c17-core-ember {background:#ff862b;box-shadow:0 0 8px #ff7225,0 0 15px #ff5d2460;}
+.c17-core-jinx {animation:c17JinxSignal 2.8s ease-in-out infinite;}
+@keyframes c17JinxSignal {0%,100%{background:#b4ff43;box-shadow:0 0 9px #b4ff43;opacity:.85;transform:scale(.85)}40%{opacity:.25}50%{background:#a94cff;box-shadow:0 0 12px #a94cff;opacity:1;transform:scale(1.15)}90%{opacity:.3}}
+.c17-core-burning-out {animation:c17EmberDies 1.8s linear forwards!important;}
+@keyframes c17EmberDies {0%{opacity:.95;transform:scale(1)}20%{opacity:.2;transform:scale(.6)}32%{opacity:.8;transform:scale(.85)}50%{opacity:.12;transform:scale(.45)}62%{opacity:.5;transform:scale(.65)}80%{opacity:.08;transform:scale(.25)}100%{opacity:0;transform:scale(0);box-shadow:none}}
