@@ -2341,7 +2341,55 @@ if (carlPhotoClose) carlPhotoClose.addEventListener("click", closeCarlPhotos);
 if (hiveWound) hiveWound.addEventListener("click", openHiveMindCarlFile);
 if (carlProfilePortal) carlProfilePortal.addEventListener("click", openHiveMindCarlFile);
 if (hiveClose) hiveClose.addEventListener("click", closeCarlProfile);
-if (survivorChalk) survivorChalk.addEventListener("click", event => { event.preventDefault(); survivorChalk.classList.add("found"); });
+function c17OpenDrawingWall() {
+  let wall=document.getElementById('c17DrawingWall');
+  if(!wall) {
+    wall=document.createElement('section');
+    wall.id='c17DrawingWall';wall.className='c17-drawing-wall';wall.hidden=true;
+    wall.setAttribute('role','dialog');wall.setAttribute('aria-modal','true');wall.setAttribute('aria-label','Remembering the survivors');
+    wall.innerHTML=`<div class="c17-wall-controls"><button type="button" data-wall-action="close" aria-label="Return to the frequency">×</button><button type="button" data-wall-action="home" aria-label="Return to centerpiece">⌂</button><button type="button" data-wall-action="out" aria-label="Zoom out">−</button><button type="button" data-wall-action="in" aria-label="Zoom in">+</button></div><div class="c17-drawing-viewport" tabindex="0" aria-label="Drawing wall. Drag to explore, pinch to zoom, or use arrow keys and plus or minus."><div class="c17-drawing-world"><img class="c17-drawing-art c17-drawing-center" src="Wall.Centerpiece.PNG" alt="Remembering the survivors…" draggable="false"><img class="c17-drawing-art c17-drawing-dcsp" src="Wall.DCSP.PNG" alt="Square peg chalk drawing" draggable="false"><img class="c17-drawing-art c17-drawing-coke" src="Wall.Coke.PNG" alt="Boss bottle and paper chalk drawing" draggable="false"></div></div>`;
+    document.body.appendChild(wall);
+    const view=wall.querySelector('.c17-drawing-viewport'),world=wall.querySelector('.c17-drawing-world');
+    let x=0,y=0,scale=1,restoreFocus=null;
+    const pointers=new Map();let gesture=null;
+    const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+    function paint(){
+      x=clamp(x,view.clientWidth-3200*scale,0);y=clamp(y,view.clientHeight-2400*scale,0);
+      world.style.transform=`translate(${x}px,${y}px) scale(${scale})`;
+    }
+    function reset(){
+      scale=Math.min(1,view.clientWidth/1050,view.clientHeight/650);
+      x=view.clientWidth/2-1600*scale;y=view.clientHeight/2-1200*scale;paint();
+    }
+    function zoom(next,cx=view.clientWidth/2,cy=view.clientHeight/2){
+      next=clamp(next,.18,4);const ratio=next/scale;
+      x=cx-(cx-x)*ratio;y=cy-(cy-y)*ratio;scale=next;paint();
+    }
+    function close(){wall.hidden=true;pointers.clear();gesture=null;document.documentElement.classList.remove('c17-drawing-open');if(restoreFocus)restoreFocus.focus();}
+    function beginGesture(){
+      const p=[...pointers.values()];
+      if(p.length===1)gesture={x,y,px:p[0].x,py:p[0].y};
+      else if(p.length>=2){const cx=(p[0].x+p[1].x)/2,cy=(p[0].y+p[1].y)/2;gesture={scale,d:Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y),wx:(cx-x)/scale,wy:(cy-y)/scale};}
+      else gesture=null;
+    }
+    function point(e){const r=view.getBoundingClientRect();return {x:e.clientX-r.left,y:e.clientY-r.top};}
+    view.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button!==0)return;view.setPointerCapture(e.pointerId);pointers.set(e.pointerId,point(e));beginGesture();});
+    view.addEventListener('pointermove',e=>{
+      if(!pointers.has(e.pointerId)||!gesture)return;pointers.set(e.pointerId,point(e));const p=[...pointers.values()];
+      if(p.length===1){x=gesture.x+p[0].x-gesture.px;y=gesture.y+p[0].y-gesture.py;}
+      else {const cx=(p[0].x+p[1].x)/2,cy=(p[0].y+p[1].y)/2;scale=clamp(gesture.scale*Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y)/Math.max(1,gesture.d),.18,4);x=cx-gesture.wx*scale;y=cy-gesture.wy*scale;}paint();
+    });
+    for(const name of ['pointerup','pointercancel','lostpointercapture'])view.addEventListener(name,e=>{pointers.delete(e.pointerId);beginGesture();});
+    view.addEventListener('wheel',e=>{e.preventDefault();const p=point(e);zoom(scale*Math.exp(-e.deltaY*.0015),p.x,p.y);},{passive:false});
+    wall.addEventListener('click',e=>{const b=e.target.closest('[data-wall-action]');if(!b)return;const a=b.dataset.wallAction;if(a==='close')close();else if(a==='home')reset();else zoom(scale*(a==='in'?1.3:1/1.3));});
+    wall.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();close();}else if(e.key==='+'||e.key==='='){e.preventDefault();zoom(scale*1.2);}else if(e.key==='-'){e.preventDefault();zoom(scale/1.2);}else if(e.key.startsWith('Arrow')){e.preventDefault();x+=e.key==='ArrowLeft'?70:e.key==='ArrowRight'?-70:0;y+=e.key==='ArrowUp'?70:e.key==='ArrowDown'?-70:0;paint();}else if(e.key==='Tab'){const items=[...wall.querySelectorAll('button,[tabindex="0"]')];const first=items[0],last=items.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}});
+    window.addEventListener('resize',()=>{if(!wall.hidden)reset();},{passive:true});
+    wall.c17Show=()=>{restoreFocus=document.activeElement;wall.hidden=false;document.documentElement.classList.add('c17-drawing-open');reset();wall.querySelector('button').focus();};
+  }
+  wall.c17Show();
+}
+if (survivorChalk) survivorChalk.addEventListener("click", event => { event.preventDefault(); c17OpenDrawingWall(); });
+
 if (takeCampTest && campTestModal) {
   takeCampTest.addEventListener("click", () => {
     campTestModal.classList.add("open");
@@ -4566,7 +4614,7 @@ function ensureTawnyaSnail() {
       {id:"someday", sender:"TICKET DESK", address:"tickets@venue.example", subject:"Your SOMEDⒶY tickets are confirmed", preview:"Your tickets are in. Keep this message for entry.", date:"SEP 12", body:p("Your SOMEDⒶY tickets are confirmed.","Keep this message for entry. Doors and ticket details are attached to the recovered account record.")},
       {id:"subpoena", sender:"COURT NOTICE", address:"efile@court.example", subject:"NOTICE TO APPEAR — SUMMONS/SUBPOENA", preview:"Electronic notice available for review.", date:"SEP 08", body:"<p class='c17-snail-artifact-note'>[COURT DOCUMENT RESERVED — CONTENT NOT YET WRITTEN.]</p>"},
       {id:"enemy", sender:"UNKNOWN", address:"unknown", subject:"YOU KNOW EXACTLY WHY I'M EMAILING YOU", preview:"Fuck you, Tawnya. Don't call me. Don't message me…", date:"SEP 04", body:p("Fuck you, Tawnya.","Don't call me. Don't message me. Don't send Renee to talk to me either because I swear to God I'll tell her exactly what you did.","You wanna act like you don't know? Fine.","Keep acting stupid.","I'm coming to see you myself.","— [HER]")},
-      {id:"mom", sender:"Mom", address:"momma.grey@Snail.com", subject:"NEVER AGAIN", preview:"What the HELL was in that gummy?!", date:"SEP 24", avatar:"T.Snail.Mom.PNG", unread:true, body:p("Tawnya,","What the HELL was in that gummy?!","ONE. I took ONE because you said it would help me sleep.","My shoe dropped and woke me up, and I had NO IDEA where I was. I thought I was in a hotel. I couldn’t figure out whether I rented the room or if I had SNUCK INTO THE DAMN PLACE.","There were people in the hallway. I didn’t know if they were coming in. The room wouldn’t stop spinning, and at one point I thought I was going to go THROUGH THE FLOOR.","And I couldn’t figure out how to get my shoe so I could get the hell OUT.","I WAS IN MY OWN BED, TAWNYA.","You gave me a bedtime gummy and I spent the night wondering if I was trespassing.","NEVER. AGAIN.","— Mom")},
+      {id:"mom", sender:"Mom", address:"StarBooBoo@snail.com", subject:"NEVER AGAIN", preview:"What the HELL was in that gummy?!", date:"SEP 24", avatar:"T.Snail.Mom.PNG", unread:true, body:p("Tawnya,","What the HELL was in that gummy?!","ONE. I took ONE because you said it would help me sleep.","My shoe dropped and woke me up, and I had NO IDEA where I was. I thought I was in a hotel. I couldn’t figure out whether I rented the room or if I had SNUCK INTO THE DAMN PLACE.","There were people in the hallway. I didn’t know if they were coming in. The room wouldn’t stop spinning, and at one point I thought I was going to go THROUGH THE FLOOR.","And I couldn’t figure out how to get my shoe so I could get the hell OUT.","I WAS IN MY OWN BED, TAWNYA.","You gave me a bedtime gummy and I spent the night wondering if I was trespassing.","NEVER. AGAIN.","— Mom")},
       {id:"reset", sender:"SNAIL Security", avatar:"T.Snail.Privacy.PNG", address:"security@Snail.com", subject:"New sign-in to your account", preview:"A new device signed in near Worcester, MA.", date:"AUG 29", body:p("New sign-in detected.","Device: iPhone","Location estimate: Worcester, MA","If this was you, no action is required. If it wasn't, maybe stop using the same password everywhere.","— SNAIL Security")},
       {id:"scott-tripp", sender:"Scott Tripp", subject:"IT’S COMING…", preview:"Yo ninja… We Gathering this year?!?!", date:"SEP 29", avatar:"T.Snail.Scott.PNG", unread:true, body:p("Yo ninja…","We Gathering this year?!?!","Been too fuckin long. WHOOP WHOOP <img class='c17-snail-inline-emoji' src='T.Snail.Clown.PNG' alt='clown'>")},
       {id:"shipping", sender:"Parcel Possum", avatar:"T.Snail.Possum.PNG", address:"tracking@parcelpossum.example", subject:"Your package is out for delivery", preview:"Driver has 47 stops before yours. Please stop refreshing.", date:"AUG 27", body:p("Your package is out for delivery.","Estimated arrival: eventually.","Driver has 47 stops before yours.","Please stop refreshing. It does not make the truck move faster.")}
@@ -5180,6 +5228,11 @@ function openChannel() {
   survivor.className = "c17-trust-traveler c17-station-survivor";
   Object.assign(survivor.style,{left:`${start.left}px`,top:`${start.top}px`,width:`${start.width}px`,height:`${start.height}px`});
   document.body.appendChild(survivor);
+  // Glow expands from this image's surviving pixels, never a separate background.
+  survivor.animate([
+    {filter:"brightness(1.28) contrast(1.14) saturate(.92) sepia(.18) drop-shadow(0 0 0px rgba(223,255,63,0)) drop-shadow(0 0 0px rgba(223,255,63,0))"},
+    {filter:"brightness(1.28) contrast(1.14) saturate(.92) sepia(.18) drop-shadow(0 0 12px rgba(223,255,63,.32)) drop-shadow(0 0 30px rgba(223,255,63,.2))"}
+  ],{duration:1200,easing:"ease-out",fill:"forwards"});
   const landed = home.querySelector(".home-inner");
   Object.assign(landed.style,{position:"fixed",left:`${start.left}px`,top:`${start.top}px`,width:`${start.width}px`,height:`${start.height}px`,margin:"0",transform:"none",animation:"none"});
   document.documentElement.classList.add("c17-trust-transition");
