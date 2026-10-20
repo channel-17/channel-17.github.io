@@ -2358,8 +2358,9 @@ function c17OpenDrawingWall() {
       world.style.transform=`translate(${x}px,${y}px) scale(${scale})`;
     }
     function reset(){
-      scale=Math.min(1,view.clientWidth/1050,view.clientHeight/650);
-      x=view.clientWidth/2-1600*scale;y=view.clientHeight/2-1200*scale;paint();
+      const width=view.clientWidth||window.innerWidth,height=view.clientHeight||window.innerHeight;
+      scale=Math.min(1,width/1050,height/650);
+      x=width/2-1600*scale;y=height/2-1200*scale;paint();
     }
     function zoom(next,cx=view.clientWidth/2,cy=view.clientHeight/2){
       next=clamp(next,.18,4);const ratio=next/scale;
@@ -2384,7 +2385,7 @@ function c17OpenDrawingWall() {
     wall.addEventListener('click',e=>{const b=e.target.closest('[data-wall-action]');if(!b)return;const a=b.dataset.wallAction;if(a==='close')close();else if(a==='home')reset();else zoom(scale*(a==='in'?1.3:1/1.3));});
     wall.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();close();}else if(e.key==='+'||e.key==='='){e.preventDefault();zoom(scale*1.2);}else if(e.key==='-'){e.preventDefault();zoom(scale/1.2);}else if(e.key.startsWith('Arrow')){e.preventDefault();x+=e.key==='ArrowLeft'?70:e.key==='ArrowRight'?-70:0;y+=e.key==='ArrowUp'?70:e.key==='ArrowDown'?-70:0;paint();}else if(e.key==='Tab'){const items=[...wall.querySelectorAll('button,[tabindex="0"]')];const first=items[0],last=items.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}});
     window.addEventListener('resize',()=>{if(!wall.hidden)reset();},{passive:true});
-    wall.c17Show=()=>{restoreFocus=document.activeElement;wall.hidden=false;document.documentElement.classList.add('c17-drawing-open');reset();wall.querySelector('button').focus();};
+    wall.c17Show=()=>{restoreFocus=document.activeElement;wall.hidden=false;document.documentElement.classList.add('c17-drawing-open');requestAnimationFrame(()=>{if(!wall.hidden){reset();wall.querySelector('button').focus();}});};
   }
   wall.c17Show();
 }
@@ -5253,10 +5254,35 @@ function openChannel() {
 
 function c17PlaceRoach() {
   if(window.visualViewport && Math.abs(window.visualViewport.scale-1)>.01) return;
-  const core=home.querySelector(".home-core");
-  const last=home.querySelector(".nodes .node:last-child");
-  if(!core || !last) return;
-  core.style.setProperty("--c17-roach-y",`${last.getBoundingClientRect().bottom-core.getBoundingClientRect().top+52}px`);
+  const core=home.querySelector(".home-core"),last=home.querySelector(".nodes .node:last-child");
+  const button=document.getElementById("goldenRoachButton");
+  if(!core || !last || !button) return;
+  const cr=core.getBoundingClientRect(),nr=last.getBoundingClientRect();
+  core.style.setProperty("--c17-roach-x",`${nr.left+nr.width/2-cr.left}px`);
+  core.style.setProperty("--c17-roach-y",`${nr.bottom-cr.top+52}px`);
+  const img=button.querySelector("img");
+  if(!img) return;
+  function centerVisibleArt(){
+    if(!img.naturalWidth || !img.naturalHeight) return;
+    try {
+      const canvas=document.createElement("canvas");
+      // Small sampling surface is enough to find transparent asset padding.
+      const ratio=Math.min(1,256/Math.max(img.naturalWidth,img.naturalHeight));
+      canvas.width=Math.max(1,Math.round(img.naturalWidth*ratio));canvas.height=Math.max(1,Math.round(img.naturalHeight*ratio));
+      const ctx=canvas.getContext("2d",{willReadFrequently:true});ctx.drawImage(img,0,0,canvas.width,canvas.height);
+      const pixels=ctx.getImageData(0,0,canvas.width,canvas.height).data;
+      let left=canvas.width,right=-1,top=canvas.height,bottom=-1;
+      for(let y=0;y<canvas.height;y++)for(let x=0;x<canvas.width;x++)if(pixels[(y*canvas.width+x)*4+3]>24){left=Math.min(left,x);right=Math.max(right,x);top=Math.min(top,y);bottom=Math.max(bottom,y);}
+      if(right<left) return;
+      const size=img.getBoundingClientRect();
+      const fit=Math.min(size.width/canvas.width,size.height/canvas.height);
+      const dx=(canvas.width/2-(left+right+1)/2)*fit;
+      const dy=(canvas.height/2-(top+bottom+1)/2)*fit;
+      img.style.transform=`translate(${dx}px,${dy}px)`;
+      canvas.width=canvas.height=1;
+    } catch (_) { img.style.transform="none"; }
+  }
+  if(img.complete)centerVisibleArt();else img.addEventListener("load",centerVisibleArt,{once:true});
 }
 window.addEventListener("resize",()=>{if(home.classList.contains("open")) c17PlaceRoach();},{passive:true});
 
@@ -5265,15 +5291,18 @@ function c17PulseRoute(w,h,target,opening=false) {
   const rand=(lo,hi)=>lo+Math.random()*(hi-lo);
   const edge=Math.floor(Math.random()*4);
   let p;
-  if(opening) {
-    p=[[w+14,h*.23],[w*.06,h*.23],[w*.06,h*.84],[w*.88,h*.84]];
+  if(opening && target) {
+    const sy=(document.querySelector(".c17-station-survivor")||home.querySelector(".home-inner")).getBoundingClientRect();
+    const y=target.top+target.height/2;
+    const startY=Math.min(y-45,sy.bottom+12);
+    return [[w*.5,startY],[w*.84,startY],[w*.84,y],[target.right-18,y]];
   } else if(edge===0) p=[[-14,rand(.12,.85)*h]];
   else if(edge===1) p=[[w+14,rand(.12,.85)*h]];
   else if(edge===2) p=[[rand(.08,.92)*w,-14]];
   else p=[[rand(.08,.92)*w,h+14]];
   let last=p[p.length-1];
   let horizontal=opening ? false : edge<2;
-  const turns=2+Math.floor(Math.random()*4);
+  const turns=1+Math.floor(Math.random()*3);
   for(let i=0;i<turns;i++) {
     const next=horizontal?[rand(.06,.94)*w,last[1]]:[last[0],rand(.12,.88)*h];
     p.push(next);last=next;horizontal=!horizontal;
@@ -5293,7 +5322,7 @@ function c17StartStationPulses() {
   const active=new Set();
   const nodes=[...home.querySelectorAll(".nodes .node")];
   let lastRoute="";
-  function launch(kind="green",targetIndex=null,opening=false) {
+  function launch(kind="green",targetIndex=null,opening=false,after=null) {
     if(active.size>=2 || document.hidden) return false;
     const orange=kind==="orange",jinx=kind==="jinx";
     const target=!orange&&!jinx&&targetIndex!==null?nodes[targetIndex]:null;
@@ -5309,12 +5338,12 @@ function c17StartStationPulses() {
     light.setAttribute("aria-hidden","true");
     const core=document.createElement("span");
     core.className="c17-pulse-core"+(orange?" c17-core-ember":jinx?" c17-core-jinx":"");
-    light.appendChild(core);home.appendChild(light);active.add(light);
+    light.appendChild(core);document.body.appendChild(light);active.add(light);
     const lengths=points.slice(1).map((p,i)=>Math.hypot(p[0]-points[i][0],p[1]-points[i][1]));
     const total=lengths.reduce((a,b)=>a+b,0);let sum=0;
     const frames=points.map((p,i)=>{if(i)sum+=lengths[i-1];return {transform:`translate(${p[0]}px,${p[1]}px)`,offset:total?sum/total:0};});
     // CSS pixels per second: leisurely signals, independent of route length.
-    const speed=opening?27.5:17.5+Math.random()*15;
+    const speed=opening?34:25+Math.random()*10;
     const duration=total/speed*1000;
     let decayTimer;
     const motion=light.animate(frames,{duration,easing:"linear",fill:"forwards"});
@@ -5324,13 +5353,15 @@ function c17StartStationPulses() {
     motion.finished.then(()=>{
       if(target){target.classList.add("c17-node-hit");setTimeout(()=>target.classList.remove("c17-node-hit"),1000);}
       return light.animate([{opacity:1},{opacity:0}],{duration:orange?100:350,fill:"forwards"}).finished;
-    }).catch(()=>{}).finally(()=>{clearTimeout(decayTimer);light.remove();active.delete(light);});
+    }).catch(()=>{}).finally(()=>{clearTimeout(decayTimer);light.remove();active.delete(light);if(after)after();});
     return true;
   }
   // First arrival reads as a new upload; the next two signals simply leave.
-  setTimeout(()=>launch("green",0,true),1000);
-  setTimeout(()=>launch("green"),45000);
-  setTimeout(()=>launch("green"),68000);
+  setTimeout(()=>launch("green",0,true,()=>{
+    setTimeout(()=>launch("green",null,false,()=>{
+      setTimeout(()=>launch("green"),5000);
+    }),4000);
+  }),1000);
   function next(){setTimeout(()=>{
     const orange=Math.random()<.16;
     launch(orange?"orange":"green",!orange&&Math.random()<.08?Math.floor(Math.random()*nodes.length):null);
