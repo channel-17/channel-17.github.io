@@ -1899,7 +1899,7 @@ body {
   height: 92px;
 }
 
-/* Tiny survivor-wall chalk seed. Present, clickable, but not opened yet. */
+/* Hidden chalk entrance to the explorable survivor wall. */
 .survivor-chalk {
   position: absolute;
   right: 23px;
@@ -1932,6 +1932,21 @@ body {
   transform: rotate(-16deg) scale(1.08);
   filter: drop-shadow(0 0 8px rgba(242,238,229,0.18));
 }
+
+/* Explorable chalk wall: artwork stays separate from the expandable surface. */
+.c17-drawing-wall[hidden] {display:none!important;}
+.c17-drawing-wall {position:fixed;inset:0;z-index:200000;background:#101312;color:#eee;isolation:isolate;}
+.c17-drawing-viewport {position:absolute;inset:0;overflow:hidden;touch-action:none;cursor:grab;outline:none;}
+.c17-drawing-viewport:active {cursor:grabbing;}
+.c17-drawing-world {position:absolute;left:0;top:0;width:3200px;height:2400px;transform-origin:0 0;background-color:#111513;background-image:radial-gradient(ellipse at 25% 30%,#343c302a,transparent 65%),repeating-linear-gradient(7deg,transparent 0 13px,#e3ecd703 14px 15px);}
+.c17-drawing-art {position:absolute;display:block;object-fit:contain;user-select:none;-webkit-user-select:none;pointer-events:none;}
+.c17-drawing-center {left:1150px;top:975px;width:900px;height:450px;}
+.c17-drawing-dcsp {left:350px;top:380px;width:540px;height:540px;}
+.c17-drawing-coke {left:2240px;top:1480px;width:510px;height:540px;}
+.c17-wall-controls {position:absolute;left:14px;top:max(14px,env(safe-area-inset-top));display:flex;gap:8px;z-index:2;}
+.c17-wall-controls button {width:40px;height:40px;border:1px solid #d9dfce55;border-radius:3px;background:#101412d9;color:#eee;font:24px monospace;cursor:pointer;touch-action:manipulation;}
+.c17-wall-controls button:focus-visible {outline:2px solid #dfff3f;outline-offset:3px;}
+html.c17-drawing-open {overflow:hidden;}
 
 /* Pink page corruption tear: damaged signal leak, not a button-looking blue wound. */
 .hive-wound {
@@ -14955,7 +14970,7 @@ html.c17-trust-transition #signalNode {background:transparent!important;box-shad
 /* Keep the exact same visible image before and after dissolution.
    A body-level survivor avoids the landing page's transformed containing block. */
 html.c17-trust-entered #home .home-inner {visibility:hidden!important;}
-.c17-station-survivor {animation:none!important;transition:none!important;transform:none!important;}
+.c17-station-survivor {animation:none!important;transition:none!important;transform:none!important;filter:brightness(1.28) contrast(1.14) saturate(.92) sepia(.18) drop-shadow(0 0 12px rgba(223,255,63,.32)) drop-shadow(0 0 30px rgba(223,255,63,.2));}
 .c17-pulse-core {animation-duration:2.8s;}
 .c17-core-jinx {animation-duration:3.6s;}
 html.c17-trust-transition #signalGhost,
