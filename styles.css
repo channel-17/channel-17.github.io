@@ -1934,8 +1934,8 @@ body {
 }
 
 /* Explorable chalk wall: artwork stays separate from the expandable surface. */
-.c17-drawing-wall[hidden] {display:none!important;}
-.c17-drawing-wall {position:fixed;inset:0;z-index:200000;background:#101312;color:#eee;isolation:isolate;}
+#c17DrawingWall[hidden] {display:none!important;}
+#c17DrawingWall {position:fixed;inset:0;z-index:200000;background:#101312;color:#eee;isolation:isolate;}
 .c17-drawing-viewport {position:absolute;inset:0;overflow:hidden;touch-action:none;cursor:grab;outline:none;}
 .c17-drawing-viewport:active {cursor:grabbing;}
 .c17-drawing-world {position:absolute;left:0;top:0;width:3200px;height:2400px;transform-origin:0 0;background-color:#111513;background-image:radial-gradient(ellipse at 25% 30%,#343c302a,transparent 65%),repeating-linear-gradient(7deg,transparent 0 13px,#e3ecd703 14px 15px);}
@@ -14932,13 +14932,9 @@ html.c17-trust-entered #home .nodes {animation:c17NodesArrive .45s ease both!imp
 @keyframes c17NodesArrive {from{opacity:0}to{opacity:1}}
 html.c17-trust-transition #home .survivor-chalk,
 html.c17-trust-transition #home .golden-roach-button {visibility:hidden!important;}
-.c17-station-pulse {position:fixed;left:0;top:0;width:5px;height:5px;border-radius:50%;background:#cfff48;box-shadow:0 0 8px #a8e83d,0 0 16px #83bf3260;pointer-events:none;z-index:20;}
-.c17-station-pulse::after {content:"";position:absolute;inset:-3px;border-radius:50%;background:#cfff4830;animation:c17LightBeat .85s ease-in-out infinite;}
-.c17-ember-pulse {background:#ff862b;box-shadow:0 0 9px #ff6b25,0 0 15px #ff5a2440;}
-.c17-ember-pulse::after {background:#ff862b30;}
-@keyframes c17LightBeat {50%{opacity:.2;transform:scale(.6)}}
+.c17-station-pulse {position:fixed;left:0;top:0;width:0;height:0;pointer-events:none;z-index:80;}
 #home .node.c17-node-hit {border-color:#cfff48!important;color:#edffbf!important;box-shadow:0 0 18px #b6f13b66!important;transition:box-shadow .25s,border-color .25s;}
-#home .golden-roach-button {left:50%!important;right:auto!important;bottom:auto!important;top:var(--c17-roach-y,calc(100% + 52px))!important;transform:translateX(-50%)!important;}
+#home .golden-roach-button {left:var(--c17-roach-x,50%)!important;right:auto!important;bottom:auto!important;top:var(--c17-roach-y,calc(100% + 52px))!important;transform:translateX(-50%)!important;}
 #home .home-core {overflow:visible!important;}
 #home .survivor-chalk {position:fixed!important;right:7vw!important;bottom:18px!important;width:24px!important;height:30px!important;opacity:.16!important;transform:rotate(-8deg)!important;}
 #home .survivor-chalk span {width:3px!important;height:16px!important;top:7px!important;left:10px!important;box-shadow:none!important;}
@@ -14957,12 +14953,10 @@ html.c17-trust-transition #signalNode > :not(#outerSymbol) {visibility:hidden!im
 html.c17-trust-transition #outerSymbol {visibility:visible!important;}
 html.c17-trust-transition #signalNode {background:transparent!important;box-shadow:none!important;}
 /* Motion belongs to the carrier; visible breathing belongs to its entire core. */
-.c17-pulse-carrier {width:0!important;height:0!important;background:none!important;box-shadow:none!important;}
-.c17-pulse-carrier::after {display:none!important;}
-.c17-pulse-core {display:block;width:6px;height:6px;margin:-3px;border-radius:50%;background:#cfff48;box-shadow:0 0 7px #b2ed42,0 0 15px #a7ea4270;animation:c17WholePulse 1.4s ease-in-out infinite;}
+.c17-pulse-core {display:block;width:6px;height:6px;margin:-3px;border-radius:50%;background:#cfff48;box-shadow:0 0 7px #b2ed42,0 0 15px #a7ea4270;animation:c17WholePulse 2.8s ease-in-out infinite;}
 @keyframes c17WholePulse {0%,100%{opacity:.22;transform:scale(.58)}50%{opacity:1;transform:scale(1.2)}}
 .c17-core-ember {background:#ff862b;box-shadow:0 0 8px #ff7225,0 0 15px #ff5d2460;}
-.c17-core-jinx {animation:c17JinxSignal 2.8s ease-in-out infinite;}
+.c17-core-jinx {animation:c17JinxSignal 3.6s ease-in-out infinite;}
 @keyframes c17JinxSignal {0%,100%{background:#b4ff43;box-shadow:0 0 9px #b4ff43;opacity:.85;transform:scale(.85)}40%{opacity:.25}50%{background:#a94cff;box-shadow:0 0 12px #a94cff;opacity:1;transform:scale(1.15)}90%{opacity:.3}}
 .c17-core-burning-out {animation:c17EmberDies 1.8s linear forwards!important;}
 @keyframes c17EmberDies {0%{opacity:.95;transform:scale(1)}20%{opacity:.2;transform:scale(.6)}32%{opacity:.8;transform:scale(.85)}50%{opacity:.12;transform:scale(.45)}62%{opacity:.5;transform:scale(.65)}80%{opacity:.08;transform:scale(.25)}100%{opacity:0;transform:scale(0);box-shadow:none}}
@@ -14971,7 +14965,5 @@ html.c17-trust-transition #signalNode {background:transparent!important;box-shad
    A body-level survivor avoids the landing page's transformed containing block. */
 html.c17-trust-entered #home .home-inner {visibility:hidden!important;}
 .c17-station-survivor {animation:none!important;transition:none!important;transform:none!important;filter:brightness(1.28) contrast(1.14) saturate(.92) sepia(.18) drop-shadow(0 0 12px rgba(223,255,63,.32)) drop-shadow(0 0 30px rgba(223,255,63,.2));}
-.c17-pulse-core {animation-duration:2.8s;}
-.c17-core-jinx {animation-duration:3.6s;}
 html.c17-trust-transition #signalGhost,
 html.c17-trust-entered #signalGhost {display:none!important;}
