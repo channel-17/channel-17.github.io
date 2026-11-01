@@ -4597,6 +4597,83 @@ function retireTawnyaHeart() {
   tawnyaRevealNode.style.setProperty("pointer-events", "none", "important");
 }
 
+function parcelPossumEmailMarkup() {
+  const escapeHtml = value => String(value || "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+  // Prices are fictional inventory values, stored in cents. The original art
+  // deliberately has no numeric price and never contributes zero to a total.
+  const items = [
+    ['Thongs', 'Barely There™ Economy Thongs — Bulk Case', 'Why pay more? You’re selling them anyway.', 899],
+    ['Gum', 'Watermelon Chewing Gum — 3-Pack', 'For a mouth with a lot to answer for.', 249],
+    ['Picks', 'Folding Lockout Multitool', 'For when opportunity doesn’t knock.', 3400],
+    ['Deck', 'Custom Blind Skate Deck', 'A little bedtime mischief. Custom girl reaper artwork.', 8500],
+    ['Bulbs', 'Ordinary Light Bulbs — 6-Pack', 'Finally! Brighter days brought to your trailer!', 499],
+    ['Slippers', 'Dorothy’s Slip-Ons (Procured)', 'Previous owner unavailable for comment.', 45000],
+    ['DTWT', 'DTWT — Do the Wrong Things', 'Original owner still seems to be looking for them. Hot / Do not wear in Brockton.', 32000],
+    ['smoke', 'Smoke Detector — Batteries Sold Separately', 'Finally, someone in this apartment with boundaries.', 1200],
+    ['Alibi', 'Premium Alibi Planner', 'You were at brunch. There are stickers.', 1800],
+    [null, 'i love you daddy', 'Original artwork by Charlotte. One of a kind. Framed.', null],
+    ['Rags', 'UTC Under-the-Counter Tampons — 24-Pack', 'For temporary relief of acute bitchiness. If symptoms persist, it might just be your personality.', 699],
+    ['Brady', 'Tom Brady’s Game-Worn Jersey — Personally Unsigned', 'He doesn’t know we have it.', 120000],
+    ['Paint', 'Ninja Paint — Lifetime Supply', 'For broke-ass los. Faygo-resistant.', 999],
+    ['Gravity', 'Prototype Gravity Bong', 'Lab results pending. Lab assistant missing.', 7500],
+    ['Mice', 'Georgia’s Best — Live Feeder Mice', 'Little furry fucks! WATER IMMEDIATELY!!!', 1499],
+    ['Wonka', 'Wonka — Guaranteed Golden Ticket', 'Financial planning, with nougat.', 500],
+    ['Bongo', 'Baby Raccoon — Bongo / “Night Cat”', 'House-trained. Just not your house.', 25000]
+  ];
+  const money = cents => (cents / 100).toLocaleString('en-US', {style:'currency', currency:'USD'});
+  const subtotal = items.reduce((sum, item) => sum + (item[3] ?? 0), 0);
+  return `<section class="pp-email" aria-label="Parcel Possum shipment">
+    <header class="pp-letterhead"><img src="T.Snail.Possum.PNG" alt="Parcel Possum"><h2>Best. News. Evah!</h2></header>
+    <div class="pp-sarcasm"><p>Estimated arrival: eventually.</p><p>Driver has 47 stops before yours.</p><p>Please stop refreshing. It does not make the truck move faster.</p></div>
+    <p class="pp-check-copy">If you really need to check, though… track your shit here.</p>
+    <button class="pp-track-button" type="button" data-pp-track aria-controls="pp-tracking-result" aria-expanded="false"><span data-pp-button-label>Track Package</span><span class="pp-recycle" aria-hidden="true">♻</span></button>
+    <div class="pp-travel" data-pp-travel><img src="T.Snail.PP.Delivery.PNG" alt="Freight truck on its way"></div>
+    <ol class="pp-stages" aria-label="Shipment progress"><li class="is-done"><span>1</span>Received</li><li class="is-current" aria-current="step" data-pp-forwarded><span>2</span>Forwarded</li><li data-pp-delivered><span>3</span>Delivered</li></ol>
+    <p class="pp-tracking-status" data-pp-status role="status" aria-live="polite"></p>
+    <section id="pp-tracking-result" class="pp-result" data-pp-result hidden aria-label="Pickup location in Egypt">
+      <div class="pp-map"><img src="T.Snail.PP.Egypt.PNG" alt="Egypt pickup map with pyramids, the Sphinx and a red X on the freight warehouse">
+        <svg class="pp-filter-defs" aria-hidden="true"><defs><filter id="pp-red-marker" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  5 0 -5 0 -1"/></filter></defs></svg>
+        <img class="pp-marker-pulse" src="T.Snail.PP.Egypt.PNG" alt="" aria-hidden="true">
+      </div>
+      <p class="pp-delivery-status"><strong>Delivered / Pickup pending</strong><span lang="ar" dir="rtl">تم التسليم — في انتظار الاستلام</span></p>
+    </section>
+    <div class="pp-letter"><p>Dear Tawnya,</p><p>Your items of interest have been deposited in a very peculiar place. Our forwarding department assures us this was intentional.</p><p>Delivery is complete. Collection remains your responsibility.</p><p>Upon arrival, proceed as though you have been there before. If you find yourself needing water, ask for Phil three times. These must be three separate requests. Phil has been advised.</p><p>Your order is itemized below for identification purposes. We recommend familiarizing yourself with its contents before anyone asks.</p><p>Thank you for trusting Parcel Possum.</p><p>We move your shit for $.</p></div>
+    <section class="pp-order" aria-label="Order details"><header class="pp-order-head"><h3>Your items of interest</h3><span>17 items</span></header>
+      <div class="pp-order-scroll" tabindex="0" role="region" aria-label="Scroll through all 17 order items"><ol class="pp-items">${items.map(([asset, title, joke, cents]) => `<li class="pp-item">${asset ? `<img src="T.Snail.PP.${asset}.PNG" alt="${escapeHtml(title)}" loading="lazy">` : '<div class="pp-art-placeholder" role="img" aria-label="Artwork image pending"></div>'}<div class="pp-item-copy"><h4>${escapeHtml(title)}</h4><p>${escapeHtml(joke)}</p><small>Qty: 1</small></div><strong class="pp-price">${cents === null ? 'Pending…' : money(cents)}</strong></li>`).join('')}</ol></div>
+      <dl class="pp-totals"><div><dt>Priced merchandise subtotal (16 items)</dt><dd>${money(subtotal)}</dd></div><div><dt>Original artwork</dt><dd>Pending…</dd></div><div><dt>Freight forwarding</dt><dd>${money(4700)}</dd></div><div><dt>Tax</dt><dd>Included</dd></div><div class="pp-total"><dt>Priced total</dt><dd>${money(subtotal + 4700)} + artwork pending</dd></div></dl>
+    </section>
+  </section>`;
+}
+
+function startParcelPossumTracking(button) {
+  const email = button.closest('.pp-email');
+  if (!email || button.disabled) return;
+  button.disabled = true;
+  button.classList.add('is-loading');
+  button.setAttribute('aria-busy', 'true');
+  email.querySelector('[data-pp-button-label]').textContent = 'Locating Package…';
+  email.querySelector('[data-pp-status]').textContent = 'Consulting the forwarding department…';
+  window.setTimeout(() => {
+    // Message navigation replaces the DOM. Never update a different message
+    // or a newly opened instance after this request has been abandoned.
+    if (!email.isConnected) return;
+    button.classList.remove('is-loading');
+    button.removeAttribute('aria-busy');
+    button.setAttribute('aria-expanded', 'true');
+    email.querySelector('[data-pp-button-label]').textContent = 'Package Located';
+    email.querySelector('[data-pp-status]').textContent = 'Delivered / Pickup pending — Egypt';
+    email.querySelector('[data-pp-travel]').hidden = true;
+    email.querySelector('[data-pp-result]').hidden = false;
+    const forwarded = email.querySelector('[data-pp-forwarded]');
+    forwarded.className = 'is-done';
+    forwarded.removeAttribute('aria-current');
+    const delivered = email.querySelector('[data-pp-delivered]');
+    delivered.className = 'is-current is-done';
+    delivered.setAttribute('aria-current', 'step');
+  }, 2200);
+}
+
+
 function ensureTawnyaSnail() {
   let snail = document.querySelector(".c17-snail-overlay");
   if (snail) return snail;
@@ -4618,7 +4695,7 @@ function ensureTawnyaSnail() {
       {id:"mom", sender:"Mom", address:"StarBooBoo@snail.com", subject:"NEVER AGAIN", preview:"What the HELL was in that gummy?!", date:"SEP 24", avatar:"T.Snail.Mom.PNG", unread:true, body:p("Tawnya,","What the HELL was in that gummy?!","ONE. I took ONE because you said it would help me sleep.","My shoe dropped and woke me up, and I had NO IDEA where I was. I thought I was in a hotel. I couldn’t figure out whether I rented the room or if I had SNUCK INTO THE DAMN PLACE.","There were people in the hallway. I didn’t know if they were coming in. The room wouldn’t stop spinning, and at one point I thought I was going to go THROUGH THE FLOOR.","And I couldn’t figure out how to get my shoe so I could get the hell OUT.","I WAS IN MY OWN BED, TAWNYA.","You gave me a bedtime gummy and I spent the night wondering if I was trespassing.","NEVER. AGAIN.","— Mom")},
       {id:"reset", sender:"SNAIL Security", avatar:"T.Snail.Privacy.PNG", address:"security@Snail.com", subject:"New sign-in to your account", preview:"A new device signed in near Worcester, MA.", date:"AUG 29", body:p("New sign-in detected.","Device: iPhone","Location estimate: Worcester, MA","If this was you, no action is required. If it wasn't, maybe stop using the same password everywhere.","— SNAIL Security")},
       {id:"scott-tripp", sender:"Scott Tripp", subject:"IT’S COMING…", preview:"Yo ninja… We Gathering this year?!?!", date:"SEP 29", avatar:"T.Snail.Scott.PNG", unread:true, body:p("Yo ninja…","We Gathering this year?!?!","Been too fuckin long. WHOOP WHOOP <img class='c17-snail-inline-emoji' src='T.Snail.Clown.PNG' alt='clown'>")},
-      {id:"shipping", sender:"Parcel Possum", avatar:"T.Snail.Possum.PNG", address:"tracking@parcelpossum.example", subject:"Your package is out for delivery", preview:"Driver has 47 stops before yours. Please stop refreshing.", date:"AUG 27", body:p("Your package is out for delivery.","Estimated arrival: eventually.","Driver has 47 stops before yours.","Please stop refreshing. It does not make the truck move faster.")}
+      {id:"shipping", sender:"Parcel Possum", avatar:"T.Snail.Possum.PNG", address:"tracking@parcelpossum.example", subject:"Your package is out for delivery", preview:"Driver has 47 stops before yours. Please stop refreshing.", date:"AUG 27", body:parcelPossumEmailMarkup()}
     ],
     spam: [
       {id:"pivs", sender:"Personal Information Verification Solutions, LLC", subject:"FINAL NOTICE — Sorry We Took So Long To Respond", preview:"Please provide all personal information so we can finish verifying you.", date:"SEP 29", unread:true, body:p("Hello Tawnya,","We sincerely apologize for taking so long to respond.","To complete your identity verification, please reply with your full legal name, date of birth, Social Security number, current and previous addresses, mother's maiden name, first pet, elementary school, banking institution, routing and account numbers, debit/credit card numbers with expiration dates and security codes, email username and password, photographs of the front and back of your ID, and a selfie holding that ID.","Please also include your normal work schedule and the hours your home is usually empty.","Failure to provide complete information may prevent us from successfully verifying and/or becoming you.","Thank you for choosing Personal Information Verification Solutions, LLC.","Securing You Through Information™")},
@@ -4692,7 +4769,7 @@ function ensureTawnyaSnail() {
   function renderFolder(folder){activeFolder=folder;closeDrawer();reader.hidden=true;inboxView.hidden=false;search.value="";folderTitle.textContent=labels[folder]||folder.toUpperCase();snail.querySelectorAll("[data-snail-folder]").forEach(b=>b.classList.toggle("active",b.dataset.snailFolder===folder));renderList();list.scrollTop=0;}
   function openMessage(id){const m=(folders[activeFolder]||[]).find(x=>x.id===id);if(!m)return;savedScroll=list.scrollTop;m.unread=false;readerSubject.textContent=m.subject||"(no subject)";if(m.subjectIcon){const icon=document.createElement("img");icon.src=m.subjectIcon;icon.alt="";icon.style.cssText="width:1.5em;height:1.2em;object-fit:contain;vertical-align:middle;margin-right:.4em";readerSubject.prepend(icon);}const sent=activeFolder==='sent'||activeFolder==='drafts';const readerName=sent?(m.displayName||m.recipient||m.sender):m.sender;const route=sent?`from Skatergirl89@snail.com · to ${m.recipient||readerName}`:`${m.address||m.sender} · to Skatergirl89@snail.com`;readerMeta.innerHTML=`${avatarMarkup(m,'reader-avatar')}<div><b>${escapeHtml(readerName)}</b><small>${escapeHtml(route)}</small></div><time>${escapeHtml(m.date)}</time>`;readerBody.innerHTML=m.body||"<p class='c17-snail-artifact-note'>No message body recovered.</p>";inboxView.hidden=true;reader.hidden=false;reader.scrollTop=0;renderList();}
   function closeReader(){reader.hidden=true;inboxView.hidden=false;requestAnimationFrame(()=>{list.scrollTop=savedScroll;});}
-  snail.addEventListener("click",event=>{const action=event.target.closest("[data-snail-action]");if(action){const t=action.dataset.snailAction;if(t==='exit'){closeDrawer();snail.classList.remove('open');snail.setAttribute('aria-hidden','true');}else if(t==='drawer'){snail.classList.toggle('drawer-open');}else if(t==='drawer-close'){closeDrawer();}else if(t==='reader-back'){closeReader();}return;}const folder=event.target.closest("[data-snail-folder]");if(folder){renderFolder(folder.dataset.snailFolder);return;}const msg=event.target.closest("[data-snail-message]");if(msg)openMessage(msg.dataset.snailMessage);});
+  snail.addEventListener("click",event=>{const tracking=event.target.closest("[data-pp-track]");if(tracking){startParcelPossumTracking(tracking);return;}const action=event.target.closest("[data-snail-action]");if(action){const t=action.dataset.snailAction;if(t==='exit'){closeDrawer();snail.classList.remove('open');snail.setAttribute('aria-hidden','true');}else if(t==='drawer'){snail.classList.toggle('drawer-open');}else if(t==='drawer-close'){closeDrawer();}else if(t==='reader-back'){closeReader();}return;}const folder=event.target.closest("[data-snail-folder]");if(folder){renderFolder(folder.dataset.snailFolder);return;}const msg=event.target.closest("[data-snail-message]");if(msg)openMessage(msg.dataset.snailMessage);});
   search.addEventListener("input",renderList);
   renderFolder("inbox");
   return snail;
