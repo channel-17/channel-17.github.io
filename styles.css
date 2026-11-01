@@ -14601,6 +14601,64 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
 }
 
 
+/* Parcel Possum — scoped to its email; existing mailbox rules stay intact. */
+.pp-email{max-width:680px;margin:0 auto;color:#b0d9ea}
+.pp-email *{box-sizing:border-box}
+.pp-email [hidden]{display:none!important}
+.pp-letterhead{text-align:center;padding:8px 0 16px;border-bottom:1px solid #24567a}
+.pp-letterhead img{display:block;width:112px;height:112px;object-fit:contain;margin:0 auto 12px}
+.pp-letterhead h2{font-size:clamp(22px,6vw,32px);line-height:1.2;color:#bdecff;margin:0}
+.pp-sarcasm{padding:20px 0 4px;text-align:center}
+.pp-check-copy{text-align:center;color:#8bd3ff}
+.pp-track-button{display:flex;align-items:center;justify-content:center;gap:12px;margin:12px auto 0;padding:14px 22px;max-width:100%;border:1px solid #378dcc;background:#092962;color:#d4f6ff;font:800 13px/1.3 monospace;cursor:pointer;border-radius:4px;min-height:48px}
+.pp-track-button:focus-visible,.pp-order-scroll:focus-visible{outline:2px solid #8fe0ff;outline-offset:4px}
+.pp-track-button:disabled{cursor:default;opacity:.85}
+.pp-recycle{display:inline-block;font-size:23px;line-height:1}
+.pp-track-button.is-loading .pp-recycle{animation:ppRecycle 1.1s linear infinite}
+.pp-travel{height:155px;display:flex;justify-content:center;align-items:center;overflow:hidden}
+.pp-travel img{width:230px;height:230px;object-fit:contain}
+.pp-stages{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));list-style:none;padding:0;margin:8px 0 16px;text-align:center;gap:8px;font-size:10px}
+.pp-stages li{position:relative;color:#6083a4;border-top:2px solid #214063;padding-top:10px}
+.pp-stages span{display:block;margin:0 auto 7px;width:25px;height:25px;border:1px solid currentColor;border-radius:50%;line-height:23px}
+.pp-stages .is-done{color:#7ecbff;border-color:#2586db}
+.pp-stages .is-current{color:#d2f5ff;border-color:#78d5ff;font-weight:bold}
+.pp-tracking-status{text-align:center;font-size:11px;color:#87ceff}
+.pp-tracking-status:empty{display:none}
+.pp-result{margin:18px 0 24px}
+.pp-map{position:relative;aspect-ratio:1;overflow:hidden;border:1px solid #3e8dc1;background:#98c6e6}
+.pp-map>img{display:block;width:100%;height:100%;object-fit:contain}
+.pp-map .pp-marker-pulse{position:absolute;inset:0;pointer-events:none;filter:url(#pp-red-marker) drop-shadow(0 0 2px rgba(255,45,50,.35));transform-origin:64.2% 83.5%;animation:ppMarker 3.4s ease-in-out infinite}
+.pp-filter-defs{position:absolute;width:0;height:0;overflow:hidden}
+.pp-delivery-status{text-align:center;padding:14px 8px;background:#082454}
+.pp-delivery-status strong{display:block;color:#c6f0ff}
+.pp-delivery-status span{display:block;margin-top:7px;font:500 15px/1.5 sans-serif;color:#90c8f0}
+.pp-letter{padding:20px 0 8px;border-top:1px solid #24567a}
+.pp-order{margin-top:18px;border:1px solid #2e6085;background:#06163b}
+.pp-order-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px;border-bottom:1px solid #2e6085}
+.pp-order-head h3{font-size:13px;line-height:1.4;margin:0;color:#c6f0ff}
+.pp-order-head>span{white-space:nowrap;font-size:10px;color:#82bdeb}
+.pp-order-scroll{height:430px;max-height:60vh;min-height:230px;overflow-y:auto;overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y;scrollbar-width:thin;scrollbar-color:#3d97e6 #06163b}
+.pp-order-scroll::-webkit-scrollbar{width:6px}
+.pp-order-scroll::-webkit-scrollbar-thumb{background:#3d97e6;border-radius:4px}
+.pp-items{list-style:none;padding:0;margin:0}
+.pp-item{display:grid;grid-template-columns:90px minmax(0,1fr) auto;gap:12px;align-items:center;padding:15px 12px;border-bottom:1px solid #173b61}
+.pp-item>img,.pp-art-placeholder{width:90px;height:90px;object-fit:contain}
+.pp-art-placeholder{border:1px dashed #3b6a92;background:#081d44}
+.pp-item h4{margin:0 0 6px;color:#c5ecff;font-size:12px;line-height:1.4}
+.pp-email .pp-item p{margin:0 0 7px!important;font-size:10px;line-height:1.5;color:#89afcd}
+.pp-item small{font-size:10px;color:#8bc2e8}
+.pp-price{font-size:11px;white-space:nowrap;align-self:start;margin-top:5px}
+.pp-totals{padding:14px;margin:0;border-top:1px solid #3b6a92;font-size:11px}
+.pp-totals>div{display:flex;justify-content:space-between;gap:16px;margin:8px 0}
+.pp-totals dt{flex:1;min-width:0}
+.pp-totals dd{margin:0;text-align:right;max-width:55%}
+.pp-total{padding-top:12px;border-top:1px solid #24567a;color:#d2f5ff;font-weight:bold}
+@keyframes ppRecycle{to{transform:rotate(360deg)}}
+@keyframes ppMarker{0%,100%{transform:scale(1);opacity:.65}50%{transform:scale(1.035);opacity:1}}
+@media(max-width:480px){.pp-item{grid-template-columns:70px minmax(0,1fr);gap:10px;padding:12px 10px}.pp-item>img,.pp-art-placeholder{width:70px;height:70px;grid-row:span 2}.pp-price{grid-column:2;margin:0}.pp-item h4{font-size:11px}.pp-totals{font-size:10px}.pp-order-head{padding:12px 10px}}
+@media(prefers-reduced-motion:reduce){.pp-marker-pulse{animation:none!important}.pp-track-button.is-loading .pp-recycle{animation:ppRecycle 3s linear infinite}}
+
+
 /* =========================================================
    SNAIL V4 — ROUTE + COMMITTED SENDER ASSETS
    Stable dossier entry target; no overlay may steal the tap.
