@@ -4535,6 +4535,8 @@ function syncTawnyaDossierToVisibleScreen() {
   if (viewport && Math.abs(viewport.scale - 1) > 0.01) return;
   const width = document.documentElement.clientWidth || window.innerWidth;
   const height = window.innerHeight;
+  if (tawnyaProfileOverlay.style.width === `${width}px` &&
+      tawnyaProfileOverlay.style.height === `${height}px`) return;
   tawnyaProfileOverlay.style.setProperty("left", "0px", "important");
   tawnyaProfileOverlay.style.setProperty("top", "0px", "important");
   tawnyaProfileOverlay.style.setProperty("right", "auto", "important");
@@ -4602,23 +4604,23 @@ function parcelPossumEmailMarkup() {
   // Prices are fictional inventory values, stored in cents. The original art
   // deliberately has no numeric price and never contributes zero to a total.
   const items = [
-    ['Thongs', 'Barely There™ Economy Thongs — Bulk Case', 'Why pay more? You’re selling them anyway.', 899],
-    ['Gum', 'Watermelon Chewing Gum — 3-Pack', 'For a mouth with a lot to answer for.', 249],
-    ['Picks', 'Folding Lockout Multitool', 'For when opportunity doesn’t knock.', 3400],
-    ['Deck', 'Custom Blind Skate Deck', 'A little bedtime mischief. Custom girl reaper artwork.', 8500],
-    ['Bulbs', 'Ordinary Light Bulbs — 6-Pack', 'Finally! Brighter days brought to your trailer!', 499],
-    ['Slippers', 'Dorothy’s Slip-Ons (Procured)', 'Previous owner unavailable for comment.', 45000],
-    ['DTWT', 'DTWT — Do the Wrong Things', 'Original owner still seems to be looking for them. Hot / Do not wear in Brockton.', 32000],
-    ['smoke', 'Smoke Detector — Batteries Sold Separately', 'Finally, someone in this apartment with boundaries.', 1200],
-    ['Alibi', 'Premium Alibi Planner', 'You were at brunch. There are stickers.', 1800],
-    [null, 'i love you daddy', 'Original artwork by Charlotte. One of a kind. Framed.', null],
-    ['Rags', 'UTC Under-the-Counter Tampons — 24-Pack', 'For temporary relief of acute bitchiness. If symptoms persist, it might just be your personality.', 699],
-    ['Brady', 'Tom Brady’s Game-Worn Jersey — Personally Unsigned', 'He doesn’t know we have it.', 120000],
-    ['Paint', 'Ninja Paint — Lifetime Supply', 'For broke-ass los. Faygo-resistant.', 999],
-    ['Gravity', 'Prototype Gravity Bong', 'Lab results pending. Lab assistant missing.', 7500],
-    ['Mice', 'Georgia’s Best — Live Feeder Mice', 'Little furry fucks! WATER IMMEDIATELY!!!', 1499],
-    ['Wonka', 'Wonka — Guaranteed Golden Ticket', 'Financial planning, with nougat.', 500],
-    ['Bongo', 'Baby Raccoon — Bongo / “Night Cat”', 'House-trained. Just not your house.', 25000]
+    ["Thongs", "Barely There™ Economy Thongs — Bulk Case", "Women’s economy thongs. Case quantity: 1.", 499],
+    ["Gum", "Watermelon Chewing Gum — 3-Pack", "Watermelon-flavored chewing gum. Three packs.", 75],
+    ["Picks", "Folding Lockout Multitool", "Folding pocket multitool for accidental lockouts.", 2500],
+    ["Deck", "Custom Blind Skate Deck", "Skateboard deck with custom baby reaper artwork.", 15000],
+    ["Bulbs", "Ordinary Light Bulbs — 6-Pack", "Standard household light bulbs. Six bulbs.", 99],
+    ["Slippers", "Dorothy’s Slip-Ons (Procured)", "Dorothy’s ruby slippers. One pair. Collector’s item.", 350000000],
+    ["DTWT", "DTWT — Do the Wrong Things", "Custom blue suede sneakers. One pair.", 32000],
+    ["smoke", "Smoke Detector", "Household smoke detector. Batteries not included.", 200],
+    ["Alibi", "Premium Alibi Planner", "Printed planner with scheduling pages and stickers.", 4999],
+    [null, "i love you daddy", "Original artwork by Charlotte. One of a kind. Framed.", null],
+    ["Rags", "UTC Under-the-Counter Tampons — 24-Pack", "Tampons. Twenty-four count.", 300],
+    ["Brady", "Tom Brady’s Game-Worn Jersey", "Game-worn Tom Brady jersey. Collector’s item.", 50000000],
+    ["Paint", "Ninja Paint — Lifetime Supply", "Bulk face-paint bundle. Lifetime-supply package.", 1299],
+    ["Gravity", "Prototype Gravity Bong", "Prototype gravity bong. One unit.", 75000],
+    ["Mice", "Georgia’s Best — Live Feeder Mice", "Live feeder mice. One package.", 500],
+    ["Wonka", "Wonka — Guaranteed Golden Ticket", "Wrapped Wonka chocolate with guaranteed golden ticket.", 2500000],
+    ["Bongo", "Baby Raccoon — Bongo", "Baby raccoon. Listing name: Bongo.", 80000]
   ];
   const money = cents => (cents / 100).toLocaleString('en-US', {style:'currency', currency:'USD'});
   const subtotal = items.reduce((sum, item) => sum + (item[3] ?? 0), 0);
@@ -4631,18 +4633,39 @@ function parcelPossumEmailMarkup() {
     <ol class="pp-stages" aria-label="Shipment progress"><li class="is-done"><span>1</span>Received</li><li class="is-current" aria-current="step" data-pp-forwarded><span>2</span>Forwarded</li><li data-pp-delivered><span>3</span>Delivered</li></ol>
     <p class="pp-tracking-status" data-pp-status role="status" aria-live="polite"></p>
     <section id="pp-tracking-result" class="pp-result" data-pp-result hidden aria-label="Pickup location in Egypt">
-      <div class="pp-map"><img src="T.Snail.PP.Egypt.PNG" alt="Egypt pickup map with pyramids, the Sphinx and a red X on the freight warehouse">
-        <svg class="pp-filter-defs" aria-hidden="true"><defs><filter id="pp-red-marker" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  5 0 -5 0 -1"/></filter></defs></svg>
-        <img class="pp-marker-pulse" src="T.Snail.PP.Egypt.PNG" alt="" aria-hidden="true">
+      <div class="pp-map"><img loading="lazy" decoding="async" src="T.Snail.PP.Egypt.PNG" alt="Egypt pickup map with pyramids, the Sphinx and a red X on the freight warehouse">
+        <svg class="pp-marker-pulse" viewBox="0 0 120 140" aria-hidden="true"><path d="M12 12 L108 128 M108 12 L12 128" fill="none" stroke="#e43a42" stroke-width="13" stroke-linecap="round"/></svg>
       </div>
       <p class="pp-delivery-status"><strong>Delivered / Pickup pending</strong><span lang="ar" dir="rtl">تم التسليم — في انتظار الاستلام</span></p>
     </section>
-    <div class="pp-letter"><p>Dear Tawnya,</p><p>Your items of interest have been deposited in a very peculiar place. Our forwarding department assures us this was intentional.</p><p>Delivery is complete. Collection remains your responsibility.</p><p>Upon arrival, proceed as though you have been there before. If you find yourself needing water, ask for Phil three times. These must be three separate requests. Phil has been advised.</p><p>Your order is itemized below for identification purposes. We recommend familiarizing yourself with its contents before anyone asks.</p><p>Thank you for trusting Parcel Possum.</p><p>We move your shit for $.</p></div>
+    <div class="pp-letter"><p>Dear Tawnya,</p><p>Your items of interest have been deposited in a very peculiar place. Our forwarding department assures us this was intentional.</p><p>Delivery is complete. Collection remains your responsibility.</p><p>Upon arrival, proceed as though you have been there before. If you find yourself needing water, ask for Phil three times. These must be three separate requests. Phil has been advised.</p><p>Your order is itemized below for identification purposes. We recommend familiarizing yourself with its contents before anyone asks.</p><p>Thank you for trusting Parcel Possum.</p><p>We move your shit for $.</p><p>– Mr. E.</p></div>
     <section class="pp-order" aria-label="Order details"><header class="pp-order-head"><h3>Your items of interest</h3><span>17 items</span></header>
-      <div class="pp-order-scroll" tabindex="0" role="region" aria-label="Scroll through all 17 order items"><ol class="pp-items">${items.map(([asset, title, joke, cents]) => `<li class="pp-item">${asset ? `<img src="T.Snail.PP.${asset}.PNG" alt="${escapeHtml(title)}" loading="lazy">` : '<div class="pp-art-placeholder" role="img" aria-label="Artwork image pending"></div>'}<div class="pp-item-copy"><h4>${escapeHtml(title)}</h4><p>${escapeHtml(joke)}</p><small>Qty: 1</small></div><strong class="pp-price">${cents === null ? 'Pending…' : money(cents)}</strong></li>`).join('')}</ol></div>
-      <dl class="pp-totals"><div><dt>Priced merchandise subtotal (16 items)</dt><dd>${money(subtotal)}</dd></div><div><dt>Original artwork</dt><dd>Pending…</dd></div><div><dt>Freight forwarding</dt><dd>${money(4700)}</dd></div><div><dt>Tax</dt><dd>Included</dd></div><div class="pp-total"><dt>Priced total</dt><dd>${money(subtotal + 4700)} + artwork pending</dd></div></dl>
+      <div class="pp-order-scroll" tabindex="0" role="region" aria-label="Scroll through all 17 order items"><ol class="pp-items">${items.map(([asset, title, description, cents]) => `<li class="pp-item">${asset ? `<img data-pp-src="T.Snail.PP.${asset}.PNG" alt="${escapeHtml(title)}" width="90" height="90" decoding="async">` : '<div class="pp-art-placeholder" role="img" aria-label="Artwork image pending"></div>'}<div class="pp-item-copy"><h4>${escapeHtml(title)}</h4><p>${escapeHtml(description)}</p><small>Qty: 1</small></div><strong class="pp-price">${cents === null ? 'Priced separately as discussed' : money(cents)}</strong></li>`).join('')}</ol></div>
+      <dl class="pp-totals"><div><dt>Priced merchandise subtotal (16 items)</dt><dd>${money(subtotal)}</dd></div><div><dt>Original artwork</dt><dd>Priced separately as discussed</dd></div><div><dt>Freight forwarding</dt><dd>${money(4700)}</dd></div><div><dt>Tax</dt><dd>Included</dd></div><div class="pp-total"><dt>Priced total</dt><dd>${money(subtotal + 4700)} + artwork priced separately</dd></div></dl>
     </section>
   </section>`;
+}
+
+function observeParcelPossumImages(container) {
+  const root = container.querySelector('.pp-order-scroll');
+  if (!root) return () => {};
+  const images = [...root.querySelectorAll('img[data-pp-src]')];
+  const load = image => { image.src = image.dataset.ppSrc; };
+  if (!('IntersectionObserver' in window)) {
+    images.forEach(load);
+    return () => images.forEach(image => image.removeAttribute('src'));
+  }
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(({target, isIntersecting}) => {
+      if (isIntersecting) load(target);
+      else target.removeAttribute('src');
+    });
+  }, {root, rootMargin: '160px 0px'});
+  images.forEach(image => observer.observe(image));
+  return () => {
+    observer.disconnect();
+    images.forEach(image => image.removeAttribute('src'));
+  };
 }
 
 function startParcelPossumTracking(button) {
@@ -4762,14 +4785,16 @@ function ensureTawnyaSnail() {
 
   const list=snail.querySelector("[data-snail-list]"), inboxView=snail.querySelector("[data-snail-inbox-view]"), reader=snail.querySelector("[data-snail-reader]"), readerSubject=snail.querySelector("[data-snail-reader-subject]"), readerMeta=snail.querySelector("[data-snail-reader-meta]"), readerBody=snail.querySelector("[data-snail-reader-body]"), folderTitle=snail.querySelector("[data-snail-folder-title]"), count=snail.querySelector("[data-snail-count]"), search=snail.querySelector("[data-snail-search]");
   let activeFolder="inbox", savedScroll=0;
+  let disposeParcelImages = () => {};
+  function clearReader(){disposeParcelImages();disposeParcelImages=()=>{};readerBody.replaceChildren();}
   function avatarMarkup(m,cls=""){return m.avatar?`<img class="${cls}" src="${escapeHtml(m.avatar)}" alt="">`:`<span class="c17-snail-avatar-fallback ${cls}" aria-hidden="true">${escapeHtml((m.sender||"?").slice(0,1))}</span>`;}
   function closeDrawer(){snail.classList.remove("drawer-open");}
   function visibleMessages(){const q=search.value.trim().toLowerCase(); const all=folders[activeFolder]||[]; return q?all.filter(m=>[m.sender,m.subject,m.preview,m.recipient].join(" ").toLowerCase().includes(q)):all;}
   function renderList(){const messages=visibleMessages(); count.textContent=`${messages.length} MESSAGE${messages.length===1?"":"S"}`; if(!messages.length){list.innerHTML=`<div class="c17-snail-empty"><span>NOTHING HERE</span><small>${search.value?'Try a less suspicious search.':'No recovered messages.'}</small></div>`;return;} list.innerHTML=messages.map(m=>`<button class="c17-snail-message${m.unread?' unread':''}" type="button" data-snail-message="${escapeHtml(m.id)}">${avatarMarkup(m)}<span class="c17-snail-message-copy"><b>${escapeHtml(activeFolder==='sent'?(m.displayName||m.recipient||m.sender):m.sender)}</b><strong>${escapeHtml(m.subject||'(no subject)')}</strong><small>${escapeHtml(m.preview||' ')}</small></span><time>${escapeHtml(m.date)}</time></button>`).join("");}
-  function renderFolder(folder){activeFolder=folder;closeDrawer();reader.hidden=true;inboxView.hidden=false;search.value="";folderTitle.textContent=labels[folder]||folder.toUpperCase();snail.querySelectorAll("[data-snail-folder]").forEach(b=>b.classList.toggle("active",b.dataset.snailFolder===folder));renderList();list.scrollTop=0;}
-  function openMessage(id){const m=(folders[activeFolder]||[]).find(x=>x.id===id);if(!m)return;savedScroll=list.scrollTop;m.unread=false;readerSubject.textContent=m.subject||"(no subject)";if(m.subjectIcon){const icon=document.createElement("img");icon.src=m.subjectIcon;icon.alt="";icon.style.cssText="width:1.5em;height:1.2em;object-fit:contain;vertical-align:middle;margin-right:.4em";readerSubject.prepend(icon);}const sent=activeFolder==='sent'||activeFolder==='drafts';const readerName=sent?(m.displayName||m.recipient||m.sender):m.sender;const route=sent?`from Skatergirl89@snail.com · to ${m.recipient||readerName}`:`${m.address||m.sender} · to Skatergirl89@snail.com`;readerMeta.innerHTML=`${avatarMarkup(m,'reader-avatar')}<div><b>${escapeHtml(readerName)}</b><small>${escapeHtml(route)}</small></div><time>${escapeHtml(m.date)}</time>`;readerBody.innerHTML=m.body||"<p class='c17-snail-artifact-note'>No message body recovered.</p>";inboxView.hidden=true;reader.hidden=false;reader.scrollTop=0;renderList();}
-  function closeReader(){reader.hidden=true;inboxView.hidden=false;requestAnimationFrame(()=>{list.scrollTop=savedScroll;});}
-  snail.addEventListener("click",event=>{const tracking=event.target.closest("[data-pp-track]");if(tracking){startParcelPossumTracking(tracking);return;}const action=event.target.closest("[data-snail-action]");if(action){const t=action.dataset.snailAction;if(t==='exit'){closeDrawer();snail.classList.remove('open');snail.setAttribute('aria-hidden','true');}else if(t==='drawer'){snail.classList.toggle('drawer-open');}else if(t==='drawer-close'){closeDrawer();}else if(t==='reader-back'){closeReader();}return;}const folder=event.target.closest("[data-snail-folder]");if(folder){renderFolder(folder.dataset.snailFolder);return;}const msg=event.target.closest("[data-snail-message]");if(msg)openMessage(msg.dataset.snailMessage);});
+  function renderFolder(folder){clearReader();activeFolder=folder;closeDrawer();reader.hidden=true;inboxView.hidden=false;search.value="";folderTitle.textContent=labels[folder]||folder.toUpperCase();snail.querySelectorAll("[data-snail-folder]").forEach(b=>b.classList.toggle("active",b.dataset.snailFolder===folder));renderList();list.scrollTop=0;}
+  function openMessage(id){const m=(folders[activeFolder]||[]).find(x=>x.id===id);if(!m)return;savedScroll=list.scrollTop;m.unread=false;readerSubject.textContent=m.subject||"(no subject)";if(m.subjectIcon){const icon=document.createElement("img");icon.src=m.subjectIcon;icon.alt="";icon.style.cssText="width:1.5em;height:1.2em;object-fit:contain;vertical-align:middle;margin-right:.4em";readerSubject.prepend(icon);}const sent=activeFolder==='sent'||activeFolder==='drafts';const readerName=sent?(m.displayName||m.recipient||m.sender):m.sender;const route=sent?`from Skatergirl89@snail.com · to ${m.recipient||readerName}`:`${m.address||m.sender} · to Skatergirl89@snail.com`;readerMeta.innerHTML=`${avatarMarkup(m,'reader-avatar')}<div><b>${escapeHtml(readerName)}</b><small>${escapeHtml(route)}</small></div><time>${escapeHtml(m.date)}</time>`;clearReader();readerBody.innerHTML=m.body||"<p class='c17-snail-artifact-note'>No message body recovered.</p>";inboxView.hidden=true;reader.hidden=false;reader.scrollTop=0;disposeParcelImages=observeParcelPossumImages(readerBody);renderList();}
+  function closeReader(){clearReader();reader.hidden=true;inboxView.hidden=false;requestAnimationFrame(()=>{list.scrollTop=savedScroll;});}
+  snail.addEventListener("click",event=>{const tracking=event.target.closest("[data-pp-track]");if(tracking){startParcelPossumTracking(tracking);return;}const action=event.target.closest("[data-snail-action]");if(action){const t=action.dataset.snailAction;if(t==='exit'){closeDrawer();closeReader();document.documentElement.classList.remove('c17-snail-open');snail.classList.remove('open');snail.setAttribute('aria-hidden','true');}else if(t==='drawer'){snail.classList.toggle('drawer-open');}else if(t==='drawer-close'){closeDrawer();}else if(t==='reader-back'){closeReader();}return;}const folder=event.target.closest("[data-snail-folder]");if(folder){renderFolder(folder.dataset.snailFolder);return;}const msg=event.target.closest("[data-snail-message]");if(msg)openMessage(msg.dataset.snailMessage);});
   search.addEventListener("input",renderList);
   renderFolder("inbox");
   return snail;
@@ -4777,6 +4802,7 @@ function ensureTawnyaSnail() {
 
 function openTawnyaSnail() {
   const snail = ensureTawnyaSnail();
+  document.documentElement.classList.add("c17-snail-open");
   snail.classList.add("open");
   snail.setAttribute("aria-hidden", "false");
   requestAnimationFrame(() => snail.querySelector("[data-snail-list]")?.focus?.({preventScroll:true}));
@@ -4786,7 +4812,7 @@ function closeTawnyaProfile() {
   if (!tawnyaProfileOverlay) return;
   tawnyaProfileOverlay.classList.remove("open");
   tawnyaProfileOverlay.setAttribute("aria-hidden", "true");
-  document.documentElement.classList.remove("tawnya-dossier-open");
+  document.documentElement.classList.remove("tawnya-dossier-open", "c17-snail-open");
   document.body.classList.remove("tawnya-dossier-open");
   retireTawnyaHeart();
 }
