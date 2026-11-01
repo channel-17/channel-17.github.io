@@ -12957,29 +12957,6 @@ body.employment-open { overflow:hidden; }
   }
 }
 /* =========================================================
-   BRICK 16 — DOSSIER NATIVE PINCH-ZOOM
-   Allow iPhone two-finger zoom without sacrificing one-finger scroll.
-========================================================= */
-
-.c17-dossier-overlay,
-.c17-dossier-overlay.open,
-.c17-tawnya-dossier,
-html.frost-dead-world.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17-dossier-overlay.open,
-html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17-dossier-overlay.open {
-  touch-action: pan-x pan-y pinch-zoom !important;
-}
-
-.c17-dossier-overlay,
-.c17-tawnya-dossier,
-.c17-dossier-body,
-.c17-dossier-page,
-.c17-tawnya-social-profile,
-.c17-tawnya-wall {
-  touch-action: pan-x pan-y pinch-zoom !important;
-}
-
-
-/* =========================================================
    BRICK 16 — DOSSIER LOCK PASS / MAIN 85
    Authority: redline shell + exact Following assets.
 ========================================================= */
@@ -14614,7 +14591,7 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
 .pp-track-button:focus-visible,.pp-order-scroll:focus-visible{outline:2px solid #8fe0ff;outline-offset:4px}
 .pp-track-button:disabled{cursor:default;opacity:.85}
 .pp-recycle{display:inline-block;font-size:23px;line-height:1}
-.pp-track-button.is-loading .pp-recycle{animation:ppRecycle 1.1s linear infinite}
+.pp-track-button.is-loading .pp-recycle{animation:ppRecycle 1.1s linear infinite;animation-play-state:running!important}
 .pp-travel{height:155px;display:flex;justify-content:center;align-items:center;overflow:hidden}
 .pp-travel img{width:230px;height:230px;object-fit:contain}
 .pp-stages{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));list-style:none;padding:0;margin:8px 0 16px;text-align:center;gap:8px;font-size:10px}
@@ -14627,8 +14604,7 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
 .pp-result{margin:18px 0 24px}
 .pp-map{position:relative;aspect-ratio:1;overflow:hidden;border:1px solid #3e8dc1;background:#98c6e6}
 .pp-map>img{display:block;width:100%;height:100%;object-fit:contain}
-.pp-map .pp-marker-pulse{position:absolute;inset:0;pointer-events:none;filter:url(#pp-red-marker) drop-shadow(0 0 2px rgba(255,45,50,.35));transform-origin:64.2% 83.5%;animation:ppMarker 3.4s ease-in-out infinite}
-.pp-filter-defs{position:absolute;width:0;height:0;overflow:hidden}
+.pp-map .pp-marker-pulse{position:absolute;left:59.8%;top:78.5%;width:8.5%;height:10%;pointer-events:none;filter:drop-shadow(0 0 2px #e43a4266);animation:ppMarker 3.4s ease-in-out infinite;animation-play-state:running!important}
 .pp-delivery-status{text-align:center;padding:14px 8px;background:#082454}
 .pp-delivery-status strong{display:block;color:#c6f0ff}
 .pp-delivery-status span{display:block;margin-top:7px;font:500 15px/1.5 sans-serif;color:#90c8f0}
@@ -14637,7 +14613,7 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
 .pp-order-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px;border-bottom:1px solid #2e6085}
 .pp-order-head h3{font-size:13px;line-height:1.4;margin:0;color:#c6f0ff}
 .pp-order-head>span{white-space:nowrap;font-size:10px;color:#82bdeb}
-.pp-order-scroll{height:430px;max-height:60vh;min-height:230px;overflow-y:auto;overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y;scrollbar-width:thin;scrollbar-color:#3d97e6 #06163b}
+.pp-order-scroll{height:430px;max-height:60vh;min-height:230px;overflow-y:auto;overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y pinch-zoom;scrollbar-width:thin;scrollbar-color:#3d97e6 #06163b}
 .pp-order-scroll::-webkit-scrollbar{width:6px}
 .pp-order-scroll::-webkit-scrollbar-thumb{background:#3d97e6;border-radius:4px}
 .pp-items{list-style:none;padding:0;margin:0}
@@ -14647,7 +14623,7 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
 .pp-item h4{margin:0 0 6px;color:#c5ecff;font-size:12px;line-height:1.4}
 .pp-email .pp-item p{margin:0 0 7px!important;font-size:10px;line-height:1.5;color:#89afcd}
 .pp-item small{font-size:10px;color:#8bc2e8}
-.pp-price{font-size:11px;white-space:nowrap;align-self:start;margin-top:5px}
+.pp-price{max-width:130px;font-size:11px;white-space:normal;overflow-wrap:anywhere;align-self:start;margin-top:5px}
 .pp-totals{padding:14px;margin:0;border-top:1px solid #3b6a92;font-size:11px}
 .pp-totals>div{display:flex;justify-content:space-between;gap:16px;margin:8px 0}
 .pp-totals dt{flex:1;min-width:0}
@@ -14655,7 +14631,7 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
 .pp-total{padding-top:12px;border-top:1px solid #24567a;color:#d2f5ff;font-weight:bold}
 @keyframes ppRecycle{to{transform:rotate(360deg)}}
 @keyframes ppMarker{0%,100%{transform:scale(1);opacity:.65}50%{transform:scale(1.035);opacity:1}}
-@media(max-width:480px){.pp-item{grid-template-columns:70px minmax(0,1fr);gap:10px;padding:12px 10px}.pp-item>img,.pp-art-placeholder{width:70px;height:70px;grid-row:span 2}.pp-price{grid-column:2;margin:0}.pp-item h4{font-size:11px}.pp-totals{font-size:10px}.pp-order-head{padding:12px 10px}}
+@media(max-width:480px){.pp-item{grid-template-columns:70px minmax(0,1fr);gap:10px;padding:12px 10px}.pp-item>img,.pp-art-placeholder{width:70px;height:70px;grid-row:span 2}.pp-price{max-width:130px;grid-column:2;margin:0}.pp-item h4{font-size:11px}.pp-totals{font-size:10px}.pp-order-head{padding:12px 10px}}
 @media(prefers-reduced-motion:reduce){.pp-marker-pulse{animation:none!important}.pp-track-button.is-loading .pp-recycle{animation:ppRecycle 3s linear infinite}}
 
 
@@ -14964,24 +14940,37 @@ html.c17-trust-transition #home .nodes {animation:c17StationArrival 1.1s ease bo
   visibility:hidden !important;
 }
 
-/* Native dossier zoom: allow the gesture through the frozen-page ancestors. */
-html.tawnya-dossier-open,
-html.tawnya-dossier-open body,
-html.frost-dead-world.tawnya-dossier-open body,
+/* Native zoom has one authority, including frozen-page ancestors. */
+html,body,#home,#signalNode,
 html.tawnya-dossier-open .c17-dossier-overlay,
 html.tawnya-dossier-open .c17-dossier-overlay * {
   touch-action:pan-x pan-y pinch-zoom !important;
 }
-/* Avoid magnifying a full-screen live backdrop filter on mobile Safari. */
-html.tawnya-dossier-open .c17-tawnya-profile-overlay {
+html.tawnya-dossier-open .c17-tawnya-profile-overlay,
+html.tawnya-dossier-open .c17-tawnya-profile-overlay * {
   backdrop-filter:none !important;
   -webkit-backdrop-filter:none !important;
+  will-change:auto !important;
 }
-/* The separate photo viewer keeps its existing custom image controls. */
+html.tawnya-dossier-open .c17-tawnya-profile-overlay {
+  transform:none !important;
+  filter:none !important;
+}
+html.tawnya-dossier-open .c17-tawnya-profile-overlay::before,
+html.tawnya-dossier-open .c17-tawnya-profile-overlay::after {
+  animation:none !important;
+  filter:none !important;
+}
+/* The separate photo viewer retains its custom gesture controls. */
 html.tawnya-dossier-open .c17-tawnya-photo-stage,
-html.tawnya-dossier-open .c17-tawnya-photo-stage * {
-  touch-action:none !important;
-}
+html.tawnya-dossier-open .c17-tawnya-photo-stage * {touch-action:none !important;}
+/* Mail is opaque. Keep its covered scene out of Safari's zoom paint tree.
+   DOM and canvas state remain intact and return when mail closes. */
+html.c17-snail-open body > #screen,
+html.c17-snail-open body > .c17-frost-overlay,
+html.c17-snail-open body > .c17-frost-actor-snapshot,
+html.c17-snail-open body > .c17-frozen-snowflake-anchor,
+html.c17-snail-open .c17-dossier-overlay > .c17-tawnya-dossier {display:none !important;}
 
 /* Brick 19: quiet Reconnect arrival and sparse invisible-track lights. */
 #home .node::before {display:none!important;}
@@ -14996,15 +14985,6 @@ html.c17-trust-transition #home .golden-roach-button {visibility:hidden!importan
 #home .home-core {overflow:visible!important;}
 #home .survivor-chalk {position:fixed!important;right:7vw!important;bottom:18px!important;width:24px!important;height:30px!important;opacity:.16!important;transform:rotate(-8deg)!important;}
 #home .survivor-chalk span {width:3px!important;height:16px!important;top:7px!important;left:10px!important;box-shadow:none!important;}
-/* Native pinch stays available on the loader, landing and frozen ancestors. */
-html,body,#home,#signalNode {touch-action:pan-x pan-y pinch-zoom!important;}
-/* Reduce large composited surfaces while inspecting the dossier. */
-html.tawnya-dossier-open .c17-tawnya-profile-overlay,
-html.tawnya-dossier-open .c17-tawnya-profile-overlay * {backdrop-filter:none!important;-webkit-backdrop-filter:none!important;will-change:auto!important;}
-html.tawnya-dossier-open .c17-tawnya-profile-overlay {transform:none!important;filter:none!important;}
-html.tawnya-dossier-open .c17-tawnya-profile-overlay::before,
-html.tawnya-dossier-open .c17-tawnya-profile-overlay::after {animation:none!important;filter:none!important;}
-
 /* Corrected arrival: only the outer pyramid dissolves; inner art never travels. */
 html.c17-trust-transition #signalNode {visibility:visible!important;}
 html.c17-trust-transition #signalNode > :not(#outerSymbol) {visibility:hidden!important;}
