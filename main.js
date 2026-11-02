@@ -2678,6 +2678,7 @@ function snapshotFrostActors() {
       if (originalCanvases[i]) copy.getContext("2d")?.drawImage(originalCanvases[i], 0, 0);
     });
     snapshot.removeAttribute("id");
+    delete snapshot.dataset.frostSwapScheduled;
     snapshot.classList.remove(
       "heart-fade-black",
       "heart-pop",
@@ -2709,7 +2710,7 @@ function snapshotFrostActors() {
         redStyle && redStyle.visibility !== "hidden" && Number.parseFloat(redStyle.opacity || "0") > 0.03
       ));
     } else if (actor.classList.contains("carl")) {
-      snapshot.classList.add("c17-frost-carl-snapshot");
+      snapshot.classList.add("c17-frost-carl-snapshot", "c17-frost-profile-snapshot");
       snapshot.dataset.frostCarl = "true";
     } else if (actor.classList.contains("frank")) {
       snapshot.classList.add("c17-frost-profile-snapshot", "c17-frost-frank-snapshot");
@@ -4268,7 +4269,6 @@ function ensureTawnyaProfileOverlay() {
           tawnyaProfileOverlay.appendChild(viewer);
 
           const thumbs = viewer.querySelector(".c17-tawnya-photo-thumbs");
-          const stage = viewer.querySelector(".c17-tawnya-photo-stage");
           const large = viewer.querySelector(".c17-tawnya-photo-large");
 
           photoFiles.forEach((src, index) => {
@@ -4281,126 +4281,7 @@ function ensureTawnyaProfileOverlay() {
             thumbs.appendChild(thumb);
           });
 
-          let photoScale = 1;
-          let photoX = 0;
-          let photoY = 0;
-          let gestureStartScale = 1;
-          let gestureStartDistance = 0;
-          let gestureStartX = 0;
-          let gestureStartY = 0;
-          let lastTapAt = 0;
-          const activePointers = new Map();
-          const MAX_PHOTO_ZOOM = 5;
-
-          const clampPhotoPan = () => {
-            if (photoScale <= 1) {
-              photoX = 0;
-              photoY = 0;
-              return;
-            }
-            const rect = stage.getBoundingClientRect();
-            const maxX = Math.max(0, rect.width * (photoScale - 1) * 0.5);
-            const maxY = Math.max(0, rect.height * (photoScale - 1) * 0.5);
-            photoX = Math.max(-maxX, Math.min(maxX, photoX));
-            photoY = Math.max(-maxY, Math.min(maxY, photoY));
-          };
-
-          const paintPhotoTransform = (animate = false) => {
-            clampPhotoPan();
-            large.classList.toggle("zoomed", photoScale > 1.001);
-            large.style.transition = animate ? "transform .18s ease" : "none";
-            large.style.transform = `translate3d(${photoX}px, ${photoY}px, 0) scale(${photoScale})`;
-            if (animate) {
-              window.setTimeout(() => {
-                if (large) large.style.transition = "none";
-              }, 190);
-            }
-          };
-
-          const resetPhotoZoom = (animate = false) => {
-            photoScale = 1;
-            photoX = 0;
-            photoY = 0;
-            activePointers.clear();
-            paintPhotoTransform(animate);
-          };
-
-          const pointerDistance = () => {
-            const points = [...activePointers.values()];
-            if (points.length < 2) return 0;
-            return Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y);
-          };
-
-          stage.addEventListener("pointerdown", event => {
-            event.preventDefault();
-            stage.setPointerCapture?.(event.pointerId);
-            activePointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
-
-            if (activePointers.size === 1) {
-              gestureStartX = event.clientX - photoX;
-              gestureStartY = event.clientY - photoY;
-            } else if (activePointers.size === 2) {
-              gestureStartDistance = pointerDistance();
-              gestureStartScale = photoScale;
-            }
-          });
-
-          stage.addEventListener("pointermove", event => {
-            if (!activePointers.has(event.pointerId)) return;
-            event.preventDefault();
-            activePointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
-
-            if (activePointers.size >= 2) {
-              const distance = pointerDistance();
-              if (gestureStartDistance > 0) {
-                photoScale = Math.max(1, Math.min(MAX_PHOTO_ZOOM, gestureStartScale * (distance / gestureStartDistance)));
-                paintPhotoTransform(false);
-              }
-            } else if (activePointers.size === 1 && photoScale > 1) {
-              photoX = event.clientX - gestureStartX;
-              photoY = event.clientY - gestureStartY;
-              paintPhotoTransform(false);
-            }
-          });
-
-          const releasePhotoPointer = event => {
-            if (!activePointers.has(event.pointerId)) return;
-            activePointers.delete(event.pointerId);
-
-            if (activePointers.size === 1) {
-              const remaining = [...activePointers.values()][0];
-              gestureStartX = remaining.x - photoX;
-              gestureStartY = remaining.y - photoY;
-            }
-            clampPhotoPan();
-            paintPhotoTransform(false);
-          };
-
-          stage.addEventListener("pointerup", releasePhotoPointer);
-          stage.addEventListener("pointercancel", releasePhotoPointer);
-          stage.addEventListener("lostpointercapture", releasePhotoPointer);
-
-          stage.addEventListener("click", event => {
-            const now = Date.now();
-            if (now - lastTapAt < 320) {
-              event.preventDefault();
-              event.stopPropagation();
-              if (photoScale > 1.05) {
-                resetPhotoZoom(true);
-              } else {
-                photoScale = 2.6;
-                photoX = 0;
-                photoY = 0;
-                paintPhotoTransform(true);
-              }
-              lastTapAt = 0;
-            } else {
-              lastTapAt = now;
-            }
-          });
-
           const closeViewer = () => {
-            resetPhotoZoom(false);
             viewer.classList.remove("open");
             viewer.setAttribute("aria-hidden", "true");
           };
@@ -4415,14 +4296,11 @@ function ensureTawnyaProfileOverlay() {
             if (!button) return;
             thumbs.querySelectorAll(".c17-tawnya-photo-thumb").forEach(item => item.classList.remove("active"));
             button.classList.add("active");
-            resetPhotoZoom(false);
             large.src = button.dataset.src;
             large.alt = `Tawnya Grey photo ${button.dataset.index}`;
           });
         }
 
-        const large = viewer.querySelector(".c17-tawnya-photo-large");
-        if (large) large.style.transform = "translate3d(0,0,0) scale(1)";
         viewer.classList.add("open");
         viewer.setAttribute("aria-hidden", "false");
       });
@@ -4599,28 +4477,48 @@ function retireTawnyaHeart() {
   tawnyaRevealNode.style.setProperty("pointer-events", "none", "important");
 }
 
+function pothWorkInProgressMarkup() {
+  return `<section class="poth-wip" aria-label="Poth’s unfinished email and working notes">
+    <header class="poth-work-head"><span>INTERNAL CORRESPONDENCE</span><b>WORKING COPY</b><small>GRIEVANCE GENERATOR / REV. 0.3</small></header>
+    <div class="poth-draft"><small>[SENDER IDENTITY — UNASSIGNED]</small><p>Fuck you, Tawnya.</p><p>Don’t call me. Don’t message me—<span class="poth-caret" aria-hidden="true">▏</span></p><span class="poth-red poth-human-note">MAKE THIS SOUND HUMAN.<br><small>Unfortunately.</small></span></div>
+    <section class="poth-notes"><h3>POTH — WORKING NOTES</h3>
+      <p>Why is this person angry? Establish grievance before adding more profanity.</p>
+      <p class="poth-red poth-grievance">“She knows what she did.”<br><small>I still need to decide what she did.</small></p>
+      <p>Supervisor requested “a believable antagonist.” Supervisor supplied no believable instructions.</p>
+      <div class="poth-margin-row"><figure class="poth-boss-doodle"><svg viewBox="0 0 240 180" role="img" aria-label="Red pen caricature of Biffe with an enormous head and a tiny penis-shaped clipboard"><g fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M56 15 Q24 16 25 52 Q18 89 65 93 Q109 96 108 57 Q113 19 70 14 M32 29 l-12 -8 m23 1 l-1 -14 m23 9 l10 -10 M49 48 l10 2 m19 -2 l10 -3 M61 65 q12 7 23 -2 M65 94 l-3 39 -24 29 m24 -29 l27 30 m-27 -50 l-24 15 m28 -17 l55 19 M44 166 l-16 0 m63 0 l12 0 M132 127 l0 -22 q0 -10 6 -10 q6 0 6 10 l0 22 m-12 0 q-10 -7 -11 1 q-1 8 10 8 q6 0 7 -5 q2 9 10 5 q10 -5 0 -10 M133 108 l9 0 M128 142 l34 6"/></g><text x="117" y="72" fill="currentColor" font-size="16" font-family="PothNotes, cursive" transform="rotate(-7 117 72)">VISIONARY.</text><path d="M148 78 q-12 2 -22 -10 m0 0 1 9 m-1 -9 8 3" fill="none" stroke="currentColor" stroke-width="2"/></svg><figcaption class="poth-red">Enormous head.<br>Tiny fucking brief.</figcaption></figure>
+      <div class="poth-break-note poth-red"><s>BREAK: 7 MINUTES.</s><p>TIME IS A LOCAL<br>CONSTRUCT.</p><small>essential containment<br>maintenance</small></div></div>
+      <div class="poth-alien-note poth-red"><p lang="x-poth">Vesh kar’eth. Biffe dra vel neth. Sha morakh du venari.</p><span>↳ DO NOT TRANSLATE FOR MANAGEMENT.</span></div>
+      <p class="poth-red poth-opinion"><span aria-hidden="true">☐</span> Remove personal opinions before submission.</p>
+      <p class="poth-release">DO NOT RELEASE. SUBJECT CAN READ.</p>
+    </section>
+    <footer class="poth-work-footer"><figure class="poth-stall-doodle"><svg viewBox="0 0 190 145" role="img" aria-label="Poth peeking over a toilet stall door"><g fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M17 22 l0 106 m153 -106 l0 106 M25 75 l134 -2 0 58 -134 1 z M69 70 Q52 46 68 31 Q92 13 112 32 Q128 47 114 71 M78 28 l-7 -12 m35 12 l8 -12 M72 48 q9 -12 15 1 q-9 7 -15 -1 m25 0 q7 -13 15 -1 q-7 9 -15 1 M86 63 q7 3 12 -1 M53 76 q0 -13 6 -12 l2 12 m56 -1 q4 -15 9 -10 l0 10 M145 99 l6 0"/></g><text x="40" y="114" fill="currentColor" font-family="PothNotes, cursive" font-size="18" transform="rotate(-3 40 114)">AVAILABLE.</text></svg></figure>
+      <div class="poth-birthday"><svg xmlns="http://www.w3.org/2000/svg" class="poth-date-glyphs" viewBox="0 0 154 88" role="img" aria-label="November 2, 2026, in Poth’s dot-and-bar numerals" fill="#ee625b" stroke="#ee625b" stroke-width="2.4" stroke-linecap="round"><g data-date-value="11" transform="translate(2 0)"><circle cx="10" cy="49" r="2.5"/><path d="M4 77 q13 -1 27 0"/><path d="M4 68 q13 -1 27 0"/></g><g data-date-value="2" transform="translate(57 0)"><circle cx="10" cy="67" r="2.5"/><circle cx="22" cy="67" r="2.5"/></g><g data-date-value="26" transform="translate(112 0)"><circle cx="10" cy="22" r="2.5"/><path d="M4 77 q13 -1 27 0"/><path d="M4 68 q13 -1 27 0"/><path d="M4 59 q13 -1 27 0"/><path d="M4 50 q13 -1 27 0"/><path d="M4 41 q13 -1 27 0"/></g></svg><span>… Happy Birthday</span></div>
+    </footer>
+  </section>`;
+}
+
 function parcelPossumEmailMarkup() {
   const escapeHtml = value => String(value || "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
   // Prices are fictional inventory values, stored in cents. The original art
   // deliberately has no numeric price and never contributes zero to a total.
   const items = [
-    ["Thongs", "Barely There™ Economy Thongs — Bulk Case", "Women’s economy thongs. Case quantity: 1.", 499],
-    ["Gum", "Watermelon Chewing Gum — 3-Pack", "Watermelon-flavored chewing gum. Three packs.", 75],
-    ["Picks", "Folding Lockout Multitool", "Folding pocket multitool for accidental lockouts.", 2500],
-    ["Deck", "Custom Blind Skate Deck", "Skateboard deck with custom baby reaper artwork.", 15000],
-    ["Bulbs", "Ordinary Light Bulbs — 6-Pack", "Standard household light bulbs. Six bulbs.", 99],
-    ["Slippers", "Dorothy’s Slip-Ons (Procured)", "Dorothy’s ruby slippers. One pair. Collector’s item.", 350000000],
-    ["DTWT", "DTWT — Do the Wrong Things", "Custom blue suede sneakers. One pair.", 32000],
-    ["smoke", "Smoke Detector", "Household smoke detector. Batteries not included.", 200],
-    ["Alibi", "Premium Alibi Planner", "Printed planner with scheduling pages and stickers.", 4999],
-    [null, "i love you daddy", "Original artwork by Charlotte. One of a kind. Framed.", null],
-    ["Rags", "UTC Under-the-Counter Tampons — 24-Pack", "Tampons. Twenty-four count.", 300],
-    ["Brady", "Tom Brady’s Game-Worn Jersey", "Game-worn Tom Brady jersey. Collector’s item.", 50000000],
-    ["Paint", "Ninja Paint — Lifetime Supply", "Bulk face-paint bundle. Lifetime-supply package.", 1299],
-    ["Gravity", "Prototype Gravity Bong", "Prototype gravity bong. One unit.", 75000],
-    ["Mice", "Georgia’s Best — Live Feeder Mice", "Live feeder mice. One package.", 500],
-    ["Wonka", "Wonka — Guaranteed Golden Ticket", "Wrapped Wonka chocolate with guaranteed golden ticket.", 2500000],
-    ["Bongo", "Baby Raccoon — Bongo", "Baby raccoon. Listing name: Bongo.", 80000]
+    ["Thongs", "Barely There™ Economy Thongs — Bulk Case", "Why pay more? You’re selling them anyway.", 499],
+    ["Gum", "Watermelon Chewing Gum — 3-Pack", "For a mouth with a lot to answer for.", 75],
+    ["Picks", "Folding Lockout Multitool", "For when opportunity doesn’t knock.", 2500],
+    ["Deck", "Custom Blind Skate Deck", "A little bedtime mischief. Supervision was apparently optional.", 15000],
+    ["Bulbs", "Ordinary Light Bulbs — 6-Pack", "Six chances to have a bright idea. No pressure.", 99],
+    ["Slippers", "Dorothy’s Slip-Ons (Procured)", "Previous owner unavailable for comment.", 350000000],
+    ["DTWT", "DTWT — Do the Wrong Things", "Original owner still seems to be looking for them. Hot / Do not wear in Brockton.", 32000],
+    ["smoke", "Smoke Detector", "Finally, someone in this apartment with boundaries.", 200],
+    ["Alibi", "Premium Alibi Planner", "A busy woman needs somewhere to keep the stories straight.", 4999],
+    ["ILYD", "i love you daddy", "Artist: Little Known. One of a kind. Framed.", null],
+    ["Rags", "UTC Under-the-Counter Tampons — 24-Pack", "Twenty-four opportunities to tell someone you’re fine.", 300],
+    ["Brady", "Tom Brady’s Game-Worn Jersey", "He doesn’t even know we have it.", 50000000],
+    ["Paint", "Ninja Paint — Lifetime Supply", "For when the family resemblance needs a little help.", 1299],
+    ["Gravity", "Prototype Gravity Bong", "One small pull for mankind. There goes your fucking afternoon.", 75000],
+    ["Mice", "Georgia’s Best — Live Feeder Mice", "Please have someone home to sign. Preferably someone with a pulse.", 500],
+    ["Wonka", "Wonka — Guaranteed Golden Ticket", "Financial planning, with chocolate.", 2500000],
+    ["Bongo", "Baby Raccoon — Bongo", "House-trained. Just not your house.", 80000]
   ];
   const money = cents => (cents / 100).toLocaleString('en-US', {style:'currency', currency:'USD'});
   const subtotal = items.reduce((sum, item) => sum + (item[3] ?? 0), 0);
@@ -4636,11 +4534,11 @@ function parcelPossumEmailMarkup() {
       <div class="pp-map"><img loading="lazy" decoding="async" src="T.Snail.PP.Egypt.PNG" alt="Egypt pickup map with pyramids, the Sphinx and a red X on the freight warehouse">
         <svg class="pp-marker-pulse" viewBox="0 0 120 140" aria-hidden="true"><path d="M12 12 L108 128 M108 12 L12 128" fill="none" stroke="#e43a42" stroke-width="13" stroke-linecap="round"/></svg>
       </div>
-      <p class="pp-delivery-status"><strong>Delivered / Pickup pending</strong><span lang="ar" dir="rtl">تم التسليم — في انتظار الاستلام</span></p>
+      <p class="pp-delivery-status"><strong>Delivered / Pickup pending</strong><small class="pp-discretion">Proof of delivery withheld as proof of discretion.</small><span lang="ar" dir="rtl">تم التسليم — في انتظار الاستلام</span></p>
     </section>
     <div class="pp-letter"><p>Dear Tawnya,</p><p>Your items of interest have been deposited in a very peculiar place. Our forwarding department assures us this was intentional.</p><p>Delivery is complete. Collection remains your responsibility.</p><p>Upon arrival, proceed as though you have been there before. If you find yourself needing water, ask for Phil three times. These must be three separate requests. Phil has been advised.</p><p>Your order is itemized below for identification purposes. We recommend familiarizing yourself with its contents before anyone asks.</p><p>Thank you for trusting Parcel Possum.</p><p>We move your shit for $.</p><p>– Mr. E.</p></div>
     <section class="pp-order" aria-label="Order details"><header class="pp-order-head"><h3>Your items of interest</h3><span>17 items</span></header>
-      <div class="pp-order-scroll" tabindex="0" role="region" aria-label="Scroll through all 17 order items"><ol class="pp-items">${items.map(([asset, title, description, cents]) => `<li class="pp-item">${asset ? `<img data-pp-src="T.Snail.PP.${asset}.PNG" alt="${escapeHtml(title)}" width="90" height="90" decoding="async">` : '<div class="pp-art-placeholder" role="img" aria-label="Artwork image pending"></div>'}<div class="pp-item-copy"><h4>${escapeHtml(title)}</h4><p>${escapeHtml(description)}</p><small>Qty: 1</small></div><strong class="pp-price">${cents === null ? 'Priced separately as discussed' : money(cents)}</strong></li>`).join('')}</ol></div>
+      <div class="pp-order-scroll" tabindex="0" role="region" aria-label="Scroll through all 17 order items"><ol class="pp-items">${items.map(([asset, title, description, cents]) => `<li class="pp-item"><img data-pp-src="T.Snail.PP.${asset}.PNG" alt="${escapeHtml(title)}" width="90" height="90" decoding="async"><div class="pp-item-copy"><h4>${escapeHtml(title)}</h4><p>${escapeHtml(description)}</p><small>Qty: 1</small></div><strong class="pp-price">${cents === null ? 'Priced separately as discussed' : money(cents)}</strong></li>`).join('')}</ol></div>
       <dl class="pp-totals"><div><dt>Priced merchandise subtotal (16 items)</dt><dd>${money(subtotal)}</dd></div><div><dt>Original artwork</dt><dd>Priced separately as discussed</dd></div><div><dt>Freight forwarding</dt><dd>${money(4700)}</dd></div><div><dt>Tax</dt><dd>Included</dd></div><div class="pp-total"><dt>Priced total</dt><dd>${money(subtotal + 4700)} + artwork priced separately</dd></div></dl>
     </section>
   </section>`;
@@ -4704,43 +4602,43 @@ function ensureTawnyaSnail() {
   const p = (...lines) => lines.map(line => `<p>${line}</p>`).join("");
   const folders = {
     inbox: [
-      {id:"eugene", sender:"(Eww..)Gene", address:"eugene4real@Snail.com", subject:"I think it's finally time", preview:"So I know this is probably going to come completely out of nowhere for you…", date:"SEP 27", avatar:"T.Eugene.Snail.PNG", unread:true, body:p("Hey Tawnya,","So I know this is probably going to come completely out of nowhere for you, but for me it actually goes back pretty far.","I've been in love with you since 10th grade.","I almost told you at Jessica Martin's Halloween party, but you were dating Kyle, and honestly I respected that. Then junior year I thought about saying something after chemistry, but you left before I could catch up with you.","After graduation I figured eventually there would just be a moment where we'd both know.","There hasn't been.","So I'm creating the moment.","Dinner. Just you and me. Think about it.","— Eugene","P.S. I'm off Tuesday and Thursday, but I can probably get Wednesday covered if Wednesday feels more natural for you.")},
-      {id:"rmv", sender:"Massachusetts Registry of Motor Vehicles", avatar:"T.Snail.Govseal.PNG", address:"notice@mass-rmv.example", subject:"Registration canceled — insurance lapse", preview:"Your vehicle registration has been canceled following an insurance cancellation notice.", date:"SEP 23", unread:true, body:`<div class="c17-snail-official"><div class="c17-snail-gov-letterhead"><img src="T.Snail.Govseal.PNG" alt=""></div><b>REGISTRATION STATUS NOTICE</b><p>Our records indicate that the insurance associated with your vehicle registration is no longer active.</p><p><strong>STATUS: CANCELED</strong></p><p>Do not operate the vehicle until insurance and registration requirements have been resolved.</p></div>`},
+      {id:"eugene", sender:"(Eww..)Gene", address:"eugene4real@snail.com", subject:"I think it's finally time", preview:"So I know this is probably going to come completely out of nowhere for you…", date:"SEP 27", avatar:"T.Eugene.Snail.PNG", unread:true, body:p("Hey Tawnya,","So I know this is probably going to come completely out of nowhere for you, but for me it actually goes back pretty far.","I've been in love with you since 10th grade.","I almost told you at Jessica Martin's Halloween party, but you were dating Kyle, and honestly I respected that. Then junior year I thought about saying something after chemistry, but you left before I could catch up with you.","After graduation I figured eventually there would just be a moment where we'd both know.","There hasn't been.","So I'm creating the moment.","Dinner. Just you and me. Think about it.","— Eugene","P.S. I'm off Tuesday and Thursday, but I can probably get Wednesday covered if Wednesday feels more natural for you.")},
+      {id:"rmv", sender:"Massachusetts Registry of Motor Vehicles", avatar:"T.Snail.Govseal.PNG", address:"mass.rmv@snail.com/notices", subject:"Registration canceled — insurance lapse", preview:"Your vehicle registration has been canceled following an insurance cancellation notice.", date:"SEP 23", unread:true, body:`<div class="c17-snail-official"><div class="c17-snail-gov-letterhead"><img src="T.Snail.Govseal.PNG" alt=""></div><b>REGISTRATION STATUS NOTICE</b><p>Our records indicate that the insurance associated with your vehicle registration is no longer active.</p><p><strong>STATUS: CANCELED</strong></p><p>Do not operate the vehicle until insurance and registration requirements have been resolved.</p></div>`},
       {id:"keisha", sender:"Keisha", address:"Keisha31@snail.com", subject:"...", preview:"bitch you better pray i dont run into your punk ass…", date:"SEP 30", avatar:"T.Snail.Keisha.PNG", unread:true, body:p("bitch you better pray i dont run into your punk ass if i see you or that skank felicia imma beat both yalls asses bet")},
-      {id:"bm-menu", sender:"GreenQueen1971", address:"greenqueen1971@Snail.com", subject:"This week's garden 🌿", preview:"THE HERBOLOGIST — WEEKLY MENU", date:"SEP 22", body:`<p class="c17-snail-menu-title">THE HERBOLOGIST — WEEKLY MENU</p>${p("🌿 Bayou Blessing — 35 — Soft, slow & don't make no plans.","🍯 Mama's Honey Jar — 50 — Sweet going in. Mind your business coming out.","🌙 Midnight Moss — 45 — For after the children and respectable people have gone to bed.","🔥 Devil's Houseplant — 60 — Don't call me tomorrow saying I didn't warn you.","Cash keeps everybody honest. — BM")}`},
-      {id:"gregory", sender:"Gregory P.", address:"gregory.p83@Snail.com", subject:"RE: order #88104", preview:"These were advertised as USED. I am extremely disappointed.", date:"SEP 21", body:p("Hello,","I don't normally complain, but these were advertised as USED and what arrived was frankly nowhere near the condition I expected.","I paid extra for authenticity. These smell like laundry detergent.","I would like either a replacement with the advertised level of wear or a partial refund.","This is honestly about principle at this point.","Gregory P.")},
-      {id:"deposit-sf", sender:"DesiredDischarge", address:"Badkitty", avatar:"T.Snail.Discharge.PNG", subject:"Deposit received — DesiredDischarge", preview:"Badkitty creator payout deposited to checking •••• 4319", date:"SEP 20", body:"<p class='c17-snail-deposit'>+$3,417.82</p><p>Creator payout deposited to checking •••• 4319</p>"},
-      {id:"oda-rain", sender:"GooGooJuice", avatar:"T.Friends.Oda.PNG", address:"googoojuice@Snail.com", subject:"Don't answer it", preview:"Baby, if somebody knocks three times tonight, don't answer the door…", date:"SEP 18", body:p("Baby, if somebody knocks three times tonight, don't answer the door.","Unless it's UPS. My package says delivered and I accidentally used your address again.","whispers in the rain.","— Oda")},
-      {id:"deposit-feet", sender:"SoakedSocks89", address:"Funkprincess27", avatar:"T.Snail.Socks.PNG", subject:"Deposit received — SoakedSocks89", preview:"Funkprincess27 creator payout deposited to checking •••• 4319", date:"SEP 15", body:"<p class='c17-snail-deposit'>+$1,286.40</p><p>Creator payout deposited to checking •••• 4319</p>"},
-      {id:"someday", sender:"TICKET DESK", address:"tickets@venue.example", subject:"Your SOMEDⒶY tickets are confirmed", preview:"Your tickets are in. Keep this message for entry.", date:"SEP 12", body:p("Your SOMEDⒶY tickets are confirmed.","Keep this message for entry. Doors and ticket details are attached to the recovered account record.")},
-      {id:"subpoena", sender:"COURT NOTICE", address:"efile@court.example", subject:"NOTICE TO APPEAR — SUMMONS/SUBPOENA", preview:"Electronic notice available for review.", date:"SEP 08", body:"<p class='c17-snail-artifact-note'>[COURT DOCUMENT RESERVED — CONTENT NOT YET WRITTEN.]</p>"},
-      {id:"enemy", sender:"UNKNOWN", address:"unknown", subject:"YOU KNOW EXACTLY WHY I'M EMAILING YOU", preview:"Fuck you, Tawnya. Don't call me. Don't message me…", date:"SEP 04", body:p("Fuck you, Tawnya.","Don't call me. Don't message me. Don't send Renee to talk to me either because I swear to God I'll tell her exactly what you did.","You wanna act like you don't know? Fine.","Keep acting stupid.","I'm coming to see you myself.","— [HER]")},
+      {id:"bm-menu", sender:"GreenQueen1971", address:"greenqueen1971@snail.com", subject:"This week's garden 🌿", preview:"THE HERBOLOGIST — WEEKLY MENU", date:"SEP 22", body:`<p class="c17-snail-menu-title">THE HERBOLOGIST — WEEKLY MENU</p>${p("🌿 Bayou Blessing — 35 — Soft, slow & don't make no plans.","🍯 Mama's Honey Jar — 50 — Sweet going in. Mind your business coming out.","🌙 Midnight Moss — 45 — For after the children and respectable people have gone to bed.","🔥 Devil's Houseplant — 60 — Don't call me tomorrow saying I didn't warn you.","Cash keeps everybody honest. — BM")}`},
+      {id:"gregory", sender:"Gregory P.", address:"gregory.p83@snail.com", subject:"RE: order #88104", preview:"These were advertised as USED. I am extremely disappointed.", date:"SEP 21", body:p("Hello,","I don't normally complain, but these were advertised as USED and what arrived was frankly nowhere near the condition I expected.","I paid extra for authenticity. These smell like laundry detergent.","I would like either a replacement with the advertised level of wear or a partial refund.","This is honestly about principle at this point.","Gregory P.")},
+      {id:"deposit-sf", sender:"DesiredDischarge", address:"payouts.desireddischarge@snail.com", avatar:"T.Snail.Discharge.PNG", subject:"Deposit received — DesiredDischarge", preview:"Badkitty creator payout deposited to checking •••• 4319", date:"SEP 20", body:"<p class='c17-snail-deposit'>+$3,417.82</p><p>Creator payout deposited to checking •••• 4319</p>"},
+      {id:"oda-rain", sender:"GooGooJuice", avatar:"T.Friends.Oda.PNG", address:"googoojuice@snail.com", subject:"Don't answer it", preview:"Baby, if somebody knocks three times tonight, don't answer the door…", date:"SEP 18", body:p("Baby, if somebody knocks three times tonight, don't answer the door.","Unless it's UPS. My package says delivered and I accidentally used your address again.","whispers in the rain.","— Oda")},
+      {id:"deposit-feet", sender:"SoakedSocks89", address:"payouts.soakedsocks89@snail.com", avatar:"T.Snail.Socks.PNG", subject:"Deposit received — SoakedSocks89", preview:"Funkprincess27 creator payout deposited to checking •••• 4319", date:"SEP 15", body:"<p class='c17-snail-deposit'>+$1,286.40</p><p>Creator payout deposited to checking •••• 4319</p>"},
+      {id:"someday", sender:"TICKET DESK", address:"someday.boxoffice@snail.com", subject:"Your SOMEDⒶY tickets are confirmed", preview:"Your tickets are in. Keep this message for entry.", date:"SEP 12", body:p("Your SOMEDⒶY tickets are confirmed.","Keep this message for entry. Doors and ticket details are attached to the recovered account record.")},
+      {id:"subpoena", sender:"COURT NOTICE", address:"court.efile@snail.com", subject:"NOTICE TO APPEAR — SUMMONS/SUBPOENA", preview:"Electronic notice available for review.", date:"SEP 08", body:"<p class='c17-snail-artifact-note'>[COURT DOCUMENT RESERVED — CONTENT NOT YET WRITTEN.]</p>"},
+      {id:"enemy", sender:"UNKNOWN", address:"FuckyouBiffe@snail.com(FIX B4 SUBMIT)", subject:"YOU KNOW EXACTLY WHY I'M EMAILING YOU", preview:"[SENDER IDENTITY — UNASSIGNED] / POTH — WORKING NOTES", date:"NOV 02", body:pothWorkInProgressMarkup()},
       {id:"mom", sender:"Mom", address:"StarBooBoo@snail.com", subject:"NEVER AGAIN", preview:"What the HELL was in that gummy?!", date:"SEP 24", avatar:"T.Snail.Mom.PNG", unread:true, body:p("Tawnya,","What the HELL was in that gummy?!","ONE. I took ONE because you said it would help me sleep.","My shoe dropped and woke me up, and I had NO IDEA where I was. I thought I was in a hotel. I couldn’t figure out whether I rented the room or if I had SNUCK INTO THE DAMN PLACE.","There were people in the hallway. I didn’t know if they were coming in. The room wouldn’t stop spinning, and at one point I thought I was going to go THROUGH THE FLOOR.","And I couldn’t figure out how to get my shoe so I could get the hell OUT.","I WAS IN MY OWN BED, TAWNYA.","You gave me a bedtime gummy and I spent the night wondering if I was trespassing.","NEVER. AGAIN.","— Mom")},
-      {id:"reset", sender:"SNAIL Security", avatar:"T.Snail.Privacy.PNG", address:"security@Snail.com", subject:"New sign-in to your account", preview:"A new device signed in near Worcester, MA.", date:"AUG 29", body:p("New sign-in detected.","Device: iPhone","Location estimate: Worcester, MA","If this was you, no action is required. If it wasn't, maybe stop using the same password everywhere.","— SNAIL Security")},
-      {id:"scott-tripp", sender:"Scott Tripp", subject:"IT’S COMING…", preview:"Yo ninja… We Gathering this year?!?!", date:"SEP 29", avatar:"T.Snail.Scott.PNG", unread:true, body:p("Yo ninja…","We Gathering this year?!?!","Been too fuckin long. WHOOP WHOOP <img class='c17-snail-inline-emoji' src='T.Snail.Clown.PNG' alt='clown'>")},
-      {id:"shipping", sender:"Parcel Possum", avatar:"T.Snail.Possum.PNG", address:"tracking@parcelpossum.example", subject:"Your package is out for delivery", preview:"Driver has 47 stops before yours. Please stop refreshing.", date:"AUG 27", body:parcelPossumEmailMarkup()}
+      {id:"reset", sender:"SNAIL Security", avatar:"T.Snail.Privacy.PNG", address:"snail.auth-daemon_0x7f.a91c@snail.com", subject:"New sign-in to your account", preview:"A new device signed in near Worcester, MA.", date:"AUG 29", body:p("New sign-in detected.","Device: iPhone","Location estimate: Worcester, MA","If this was you, no action is required. If it wasn't, maybe stop using the same password everywhere.","— SNAIL Security")},
+      {id:"scott-tripp", address:"TrippWire@snail.com", sender:"Scott Tripp", subject:"IT’S COMING…", preview:"Yo ninja… We Gathering this year?!?!", date:"SEP 29", avatar:"T.Snail.Scott.PNG", unread:true, body:p("Yo ninja…","We Gathering this year?!?!","Been too fuckin long. WHOOP WHOOP <img class='c17-snail-inline-emoji' src='T.Snail.Clown.PNG' alt='clown'>")},
+      {id:"shipping", sender:"Parcel Possum", avatar:"T.Snail.Possum.PNG", address:"dead.drop@snail.com", subject:"Your package is out for delivery", preview:"Driver has 47 stops before yours. Please stop refreshing.", date:"AUG 27", body:parcelPossumEmailMarkup()}
     ],
     spam: [
-      {id:"pivs", sender:"Personal Information Verification Solutions, LLC", subject:"FINAL NOTICE — Sorry We Took So Long To Respond", preview:"Please provide all personal information so we can finish verifying you.", date:"SEP 29", unread:true, body:p("Hello Tawnya,","We sincerely apologize for taking so long to respond.","To complete your identity verification, please reply with your full legal name, date of birth, Social Security number, current and previous addresses, mother's maiden name, first pet, elementary school, banking institution, routing and account numbers, debit/credit card numbers with expiration dates and security codes, email username and password, photographs of the front and back of your ID, and a selfie holding that ID.","Please also include your normal work schedule and the hours your home is usually empty.","Failure to provide complete information may prevent us from successfully verifying and/or becoming you.","Thank you for choosing Personal Information Verification Solutions, LLC.","Securing You Through Information™")},
-      {id:"spam1", sender:"MYSTERY PRIZE CENTER", address:"winner@definitelyreal.example", subject:"TAWNYA YOU HAVE BEEN SELECTED!!!", preview:"Claim your $7,400 gift card before midnight.", date:"SEP 26", body:p("CONGRATULATIONS TAWNYA!!!","You have been selected from several billion extremely lucky people.","Reply with your mother's maiden name, first pet, and a photograph of both sides of your debit card.","This is definitely normal.")},
-      {id:"spam2", sender:"Local Singles Alert", address:"localsingles/phishing.net:/sCam@snail.com", subject:"Local Singles - Your box is stuffed!!", subjectIcon:"T.Snail.Localsingles.PNG", preview:"One of them claims to own a boat!", date:"SEP 19", body:p("Hey Skatergirl89@snail.com,","There are about 10 new scumpas showing up in Winchetucky, only 34 miles from your current location. One of them claims to own a boat!","<em>Our people have not verified the legitimacy of this claim</em>")},
-      {id:"spam3", sender:"Extended Warranty Department", address:"urgent@warranty.example", subject:"FINAL FINAL FINAL NOTICE", preview:"We have been trying to reach you since the invention of the automobile.", date:"SEP 10", body:p("This is your FINAL FINAL FINAL notice.","We have been trying to reach you about your vehicle's extended warranty since approximately the invention of the automobile.")}
+      {id:"pivs", address:"identity.collection@snail.com", sender:"Personal Information Verification Solutions, LLC", subject:"FINAL NOTICE — Sorry We Took So Long To Respond", preview:"Please provide all personal information so we can finish verifying you.", date:"SEP 29", unread:true, body:p("Hello Tawnya,","We sincerely apologize for taking so long to respond.","To complete your identity verification, please reply with your full legal name, date of birth, Social Security number, current and previous addresses, mother's maiden name, first pet, elementary school, banking institution, routing and account numbers, debit/credit card numbers with expiration dates and security codes, email username and password, photographs of the front and back of your ID, and a selfie holding that ID.","Please also include your normal work schedule and the hours your home is usually empty.","Failure to provide complete information may prevent us from successfully verifying and/or becoming you.","Thank you for choosing Personal Information Verification Solutions, LLC.","Securing You Through Information™")},
+      {id:"spam1", sender:"MYSTERY PRIZE CENTER", address:"definitely.real.prizes@snail.com", subject:"TAWNYA YOU HAVE BEEN SELECTED!!!", preview:"Claim your $7,400 gift card before midnight.", date:"SEP 26", body:p("CONGRATULATIONS TAWNYA!!!","You have been selected from several billion extremely lucky people.","Reply with your mother's maiden name, first pet, and a photograph of both sides of your debit card.","This is definitely normal.")},
+      {id:"spam2", sender:"Local Singles Alert", address:"localsingles.phishing.scam@snail.com", subject:"Local Singles - Your box is stuffed!!", subjectIcon:"T.Snail.Localsingles.PNG", preview:"One of them claims to own a boat!", date:"SEP 19", body:p("Hey Skatergirl89@snail.com,","There are about 10 new scumpas showing up in Winchetucky, only 34 miles from your current location. One of them claims to own a boat!","<em>Our people have not verified the legitimacy of this claim</em>")},
+      {id:"spam3", sender:"Extended Warranty Department", address:"AdamLovesHisJetSki82@snail.com", subject:"FINAL FINAL FINAL NOTICE", preview:"We have been trying to reach you since the invention of the automobile.", date:"SEP 10", body:p("This is your FINAL FINAL FINAL notice.","We have been trying to reach you about your vehicle's extended warranty since approximately the invention of the automobile.")}
     ],
     sent: [
-      {id:"wink-sent", sender:"Tawnya Grey", displayName:"The Winkinator", recipient:"Walter “Wink” Winkler <Winkinator@Snail.com>", subject:"you left this here", preview:"Found your hoodie. Again.", date:"SEP 27", avatar:"T.Snail.Wink.PNG", body:p("Wink —","Found your hoodie. Again.","I'm putting it on the chair by the door because apparently my apartment is your lost and found now.","Also tell me why your contact photo still makes me laugh every single time.","— T")},
-      {id:"sent-oda", sender:"Tawnya Grey", displayName:"GooGooJuice", recipient:"Oda <GooGooJuice@Snail.com>", subject:"RE: Don't answer it", preview:"If it is a ghost I'm giving it your package.", date:"SEP 18", body:p("If it is a ghost I'm giving it your package.","And stop shipping things to my house.","Love you, swamp goblin.","— T")},
-      {id:"sent-greg", sender:"Tawnya Grey", displayName:"Gregory P.", recipient:"Gregory P. <gregory.p83@Snail.com>", subject:"RE: order #88104", preview:"Gregory, I don't know how to say this professionally…", date:"SEP 21", body:p("Gregory,","I don't know how to say this professionally, so I won't.","You ordered underwear from a stranger on the internet and you're emailing quality control because they smell too clean.","Refund issued. Please go outside.","— Tawnya")}
+      {id:"wink-sent", sender:"Tawnya Grey", displayName:"The Winkinator", recipient:"Walter “Wink” Winkler <Winkinator@snail.com>", subject:"you left this here", preview:"Found your hoodie. Again.", date:"SEP 27", avatar:"T.Snail.Wink.PNG", body:p("Wink —","Found your hoodie. Again.","I'm putting it on the chair by the door because apparently my apartment is your lost and found now.","Also tell me why your contact photo still makes me laugh every single time.","— T")},
+      {id:"sent-oda", sender:"Tawnya Grey", displayName:"GooGooJuice", recipient:"Oda <googoojuice@snail.com>", subject:"RE: Don't answer it", preview:"If it is a ghost I'm giving it your package.", date:"SEP 18", body:p("If it is a ghost I'm giving it your package.","And stop shipping things to my house.","Love you, swamp goblin.","— T")},
+      {id:"sent-greg", sender:"Tawnya Grey", displayName:"Gregory P.", recipient:"Gregory P. <gregory.p83@snail.com>", subject:"RE: order #88104", preview:"Gregory, I don't know how to say this professionally…", date:"SEP 21", body:p("Gregory,","I don't know how to say this professionally, so I won't.","You ordered underwear from a stranger on the internet and you're emailing quality control because they smell too clean.","Refund issued. Please go outside.","— Tawnya")}
     ],
     drafts: [
-      {id:"draft1", sender:"DRAFT", recipient:"Mom", subject:"RE: Call me when you wake up", preview:"I DID check that cabinet…", date:"SEP 24", body:p("I DID check that cabinet.","[draft not sent]")},
-      {id:"draft2", sender:"DRAFT", recipient:"UNKNOWN", subject:"You don't get to—", preview:"Actually no. Fuck this.", date:"SEP 05", body:p("You don't get to disappear for six months and then—","Actually no. Fuck this.","[draft not sent]")}
+      {id:"draft1", sender:"DRAFT", recipient:"Mom <StarBooBoo@snail.com>", subject:"RE: Call me when you wake up", preview:"I DID check that cabinet…", date:"SEP 24", body:p("I DID check that cabinet.","[draft not sent]")},
+      {id:"draft2", sender:"DRAFT", recipient:"UNKNOWN <FuckyouBiffe@snail.com(FIX B4 SUBMIT)>", subject:"You don't get to—", preview:"Actually no. Fuck this.", date:"SEP 05", body:p("You don't get to disappear for six months and then—","Actually no. Fuck this.","[draft not sent]")}
     ],
     trash: [
-      {id:"braidyn-p", sender:"Braidyn P.", address:"UzlesspHatfuk0@Snail.com", subject:"yo u still got the hookup", preview:"yo tawnya i just got outta juvie dont ask what happened…", date:"OCT 13", avatar:"T.Snail.OBCD.PNG", unread:true, body:p("yo tawnya i just got outta juvie dont ask what happened its all bullshit anyway","listen i know its been a minute but u still doing that fall off the truck special","i need like 4 boxes of twinkies and them ho hos bad","not the little packs either i mean the BOXES","they barely gave us shit in there and i been thinking about them cream filled ones for like three weeks straight","i got 11 dollars right now but my aunt said i can probably get another 6 when she gets paid unless she remembers i owe her money","please dont tax me either tawnya im literally fresh out","if u got zebra cakes too throw them in and ill owe u","dont tell nobody im back yet","your favorite")},
-      {id:"trey", sender:"Trey", subject:"Damn.. Sup girl!", preview:"Got yo info from Lesley…", date:"SEP 21", avatar:"T.Snail.Trey.PNG", body:p("Got yo info from Lesley…","HMB, fa’real fa’real.","…. Let’s introduce your stuff to my stuff…","Know what I’m sayin..")},
-      {id:"oda-lottery", sender:"GooGooJuice", address:"googoojuice@Snail.com", subject:"stars be shinin", preview:"Girl them stars be shinin down on the games tonight…", date:"SEP 17", body:p("Girl them stars be shinin down on the games tonight. Been hearin them crickets carryin on since sundown and they keep givin me 3, 24, 39, 61, 65… & 9.","If I don't make it down to the market, one of us better play em.","And don't you go fuckin with them numbers neither.","The crickets ain't been stutterin'. You know.","— Oda")},
-      {id:"trash2", sender:"SNAIL", avatar:"T.Snail.Privacy.PNG", address:"noreply@Snail.com", subject:"Storage almost full", preview:"You have used 96% of your recovered storage.", date:"SEP 03", body:p("Your SNAIL storage is almost full.","Maybe delete the 2,846 screenshots you swear you're going to look at later.")},
-      {id:"trash3", sender:"Pizza Palace", avatar:"T.Snail.Pizza.PNG", address:"coupons@pizza.example", subject:"We miss you, skatergirl89", preview:"It's been 9 days. This is getting weird for both of us.", date:"AUG 28", body:p("We miss you, skatergirl89.","It's been 9 days since your last order.","This is getting weird for both of us.")},
+      {id:"braidyn-p", sender:"Braidyn P.", address:"UzlesspHatfuk0@snail.com", subject:"yo u still got the hookup", preview:"yo tawnya i just got outta juvie dont ask what happened…", date:"OCT 13", avatar:"T.Snail.OBCD.PNG", unread:true, body:p("yo tawnya i just got outta juvie dont ask what happened its all bullshit anyway","listen i know its been a minute but u still doing that fall off the truck special","i need like 4 boxes of twinkies and them ho hos bad","not the little packs either i mean the BOXES","they barely gave us shit in there and i been thinking about them cream filled ones for like three weeks straight","i got 11 dollars right now but my aunt said i can probably get another 6 when she gets paid unless she remembers i owe her money","please dont tax me either tawnya im literally fresh out","if u got zebra cakes too throw them in and ill owe u","dont tell nobody im back yet","your favorite")},
+      {id:"trey", address:"TreyAfterDark@snail.com", sender:"Trey", subject:"Damn.. Sup girl!", preview:"Got yo info from Lesley…", date:"SEP 21", avatar:"T.Snail.Trey.PNG", body:p("Got yo info from Lesley…","HMB, fa’real fa’real.","…. Let’s introduce your stuff to my stuff…","Know what I’m sayin..")},
+      {id:"oda-lottery", sender:"GooGooJuice", address:"googoojuice@snail.com", subject:"stars be shinin", preview:"Girl them stars be shinin down on the games tonight…", date:"SEP 17", body:p("Girl them stars be shinin down on the games tonight. Been hearin them crickets carryin on since sundown and they keep givin me 3, 24, 39, 61, 65… & 9.","If I don't make it down to the market, one of us better play em.","And don't you go fuckin with them numbers neither.","The crickets ain't been stutterin'. You know.","— Oda")},
+      {id:"trash2", sender:"SNAIL", avatar:"T.Snail.Privacy.PNG", address:"noreply@snail.com", subject:"Storage almost full", preview:"You have used 96% of your recovered storage.", date:"SEP 03", body:p("Your SNAIL storage is almost full.","Maybe delete the 2,846 screenshots you swear you're going to look at later.")},
+      {id:"trash3", sender:"Pizza Palace", avatar:"T.Snail.Pizza.PNG", address:"PizzaPalace@snail.com", subject:"We miss you, skatergirl89", preview:"It's been 9 days. This is getting weird for both of us.", date:"AUG 28", body:p("We miss you, skatergirl89.","It's been 9 days since your last order.","This is getting weird for both of us.")},
       {id:"joe", sender:"Joe", address:"Jbruce17@snail.com", subject:"ONE MORE RIDE", preview:"Black moon, back room, hatchet in the rafters…", date:"AUG 27", avatar:"T.Snail.Joe.PNG", body:`<div class="c17-snail-joe-bars"><p>Black moon, back room, hatchet in the rafters,<br>Mad clown, face down, choking on the laughter.<br>Graveyard Grey got the dead boys twitchin’,<br>Neden-lovin’ heathen with a cauldron in the kitchen.</p><p>Big-top temptress, wicked little sinner,<br>I brought dead flowers and a corpse home for dinner.<br>Juggle them jugs—<strong>JUGGALO JUGULAR JIVE</strong>,<br>Three freaks died laughing and the fourth came alive.</p><p>Creepin’ through the carnival, horny and possessed,<br>Tombstone cologne and my Sunday clown best.<br>Wanna crawl in them big-top folds, hide from the sun,<br>Pitch my little tent—<strong>OH SHIT, WRONG ONE.</strong></p><p>Hatchet in the moonlight, Faygo in the crypt,<br>Dead bitch winked, so I politely fucking dipped.<br>Grey, when the circus comes creeping into view,<br>Save a seat beneath the big top—I’m coming for you.</p><p>— Joe</p></div>`}
     ]
   };
