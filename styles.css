@@ -8676,10 +8676,7 @@ html.c17-drawing-open {overflow:hidden;}
 }
 
 .carl-trigger-heart.matrix-error-heart .carl-heart-layer {
-  transition:
-    opacity .92s cubic-bezier(.22,.70,.18,1),
-    filter .92s cubic-bezier(.22,.70,.18,1),
-    transform .92s cubic-bezier(.22,.70,.18,1) !important;
+  transition:none !important;
 }
 
 .carl-trigger-heart.matrix-error-heart.grey-return-visible .carl-heart-red,
@@ -14697,14 +14694,19 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 .poth-break-note small{font-size:12px}
 .poth-alien-note{padding:12px 0 20px;transform:rotate(-2deg)}
 .poth-wip .poth-alien-note p{font-size:18px;margin:0 0 8px!important}
-.poth-alien-note span{display:block;font-size:11px;margin-left:12px}
 .poth-opinion{font-size:14px}
 .poth-release{padding:12px 0;border-top:1px dashed #4a7193;font-size:10px;letter-spacing:1px}
 .poth-work-footer{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:8px;padding-top:18px}
-.poth-stall-doodle{width:150px;margin:0;color:var(--poth-red);transform:rotate(-3deg)}
-.poth-stall-doodle svg{display:block;width:100%;height:auto}
+.poth-stall-doodle{width:180px;margin:0;color:var(--poth-red);transform:rotate(-3deg)}
+.poth-stall-doodle svg{display:block;width:100%;height:auto;overflow:visible}
 .poth-birthday{width:min(100%,320px);margin-left:auto;padding-bottom:8px}
 .poth-birthday img{display:block;width:100%;height:auto}
+/* Locked Vesh glyph paths, shared by official and handwritten correspondence. */
+.c17-vesh{display:block;font-size:24px;line-height:1.9;letter-spacing:normal;text-transform:none;overflow-wrap:normal}
+.c17-vesh-word{display:inline-block;height:1.8em;max-width:100%;vertical-align:middle;overflow:visible}
+.poth-wip .poth-personal-quote{flex-basis:100%;width:100%;margin:12px 0 8px!important;transform:rotate(-1deg)}
+.poth-personal-quote .c17-vesh{font-size:23px}
+
 .pp-discretion{display:block;margin:8px auto 0;font-size:10px;line-height:1.6;color:#91bcdb}
 @media(max-width:480px){.poth-wip{padding:18px 14px 12px;font-size:12px}.poth-margin-row{gap:8px}.poth-break-note{font-size:12px}.poth-wip .poth-break-note p{font-size:14px}.poth-birthday{width:min(100%,280px)}.poth-stall-doodle{width:125px}}
 
@@ -14878,19 +14880,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
   text-align:center;
   cursor:pointer;
 }
-.golden-roach-holder{
-  position:absolute;
-  left:50%;
-  top:72%;
-  transform:translate(-50%,-50%);
-  width:min(58%,520px);
-  color:#6d4b20;
-  text-align:center;
-  font:800 clamp(12px,2.6vw,26px)/1.1 Georgia,serif;
-  letter-spacing:.04em;
-  text-shadow:0 1px rgba(255,232,160,.35),0 -1px rgba(44,23,4,.55);
-  pointer-events:none;
-}
+.golden-roach-holder{position:absolute;transform:translate(-50%,-50%);text-align:center;pointer-events:none;left:55%;top:75.9%;width:44%;font-family:PothNotes,"Chalkboard SE",cursive;font-weight:400;line-height:1.2;letter-spacing:0;color:#54310b;text-shadow:0 1px 0 #ffdb8599,0 -1px 1px #321800b3}
 html.golden-roach-open,html.golden-roach-open body{overflow:hidden!important}
 @media(max-width:560px){
   .golden-roach-button{right:12px;bottom:12px;width:46px;height:46px}
@@ -14947,7 +14937,8 @@ html.golden-roach-open,html.golden-roach-open body{overflow:hidden!important}
 .c17-admin-finding p { color:#b7cddd !important;font-size:1rem !important;line-height:1.65 !important; }
 .c17-admin-finding blockquote { margin:0 !important;font-size:1rem !important;line-height:1.6 !important; }
 .c17-admin-addendum { font-family:"Courier New",monospace !important;font-size:.85rem !important; }
-.c17-supervisor-note p { color:#86b5ce !important;font-family:"Courier New",monospace !important;letter-spacing:.6px !important;overflow-wrap:anywhere !important; }
+.c17-supervisor-note p{color:#86b5ce!important;margin-bottom:0}
+.c17-supervisor-vesh .c17-vesh{font-size:24px}
 /* Wren leaves no frozen representation. */
 html.frost-conquering .profile.wren,
 html.frost-dead-world .profile.wren { display:none !important; }
@@ -15102,7 +15093,7 @@ html.c17-snail-open .c17-dossier-overlay > .c17-tawnya-dossier {display:none !im
 /* Brick 19: quiet Reconnect arrival and sparse invisible-track lights. */
 #home .node::before {display:none!important;}
 html.c17-trust-transition #home .nodes {animation:none!important;opacity:0!important;}
-html.c17-trust-entered #home .nodes {animation:c17NodesArrive .45s ease both!important;}
+html.c17-trust-entered #home .nodes {animation:c17NodesArrive 1s .65s ease both!important;}
 @keyframes c17NodesArrive {from{opacity:0}to{opacity:1}}
 html.c17-trust-transition #home .survivor-chalk,
 html.c17-trust-transition #home .golden-roach-button {visibility:hidden!important;}
@@ -15132,3 +15123,24 @@ html.c17-trust-entered #home .home-inner {visibility:hidden!important;}
 .c17-station-survivor {animation:none!important;transition:none!important;transform:none!important;filter:brightness(1.28) contrast(1.14) saturate(.92) sepia(.18) drop-shadow(0 0 12px rgba(223,255,63,.32)) drop-shadow(0 0 30px rgba(223,255,63,.2));}
 html.c17-trust-transition #signalGhost,
 html.c17-trust-entered #signalGhost {display:none!important;}
+
+/* Golden Roach: the inscription is anchored to the actual contained artwork. */
+.golden-roach-object{position:relative;max-width:100%;max-height:100%}
+.golden-roach-object[hidden],.golden-roach-history[hidden]{display:none!important}
+.golden-roach-object .golden-roach-trophy{width:100%;height:100%}
+.golden-roach-history-button{position:absolute;left:27.5%;top:75.9%;transform:translate(-50%,-50%);width:44px;height:44px;padding:12px;border:0;background:transparent;color:#53310d;cursor:pointer;z-index:2}
+.golden-roach-history-button span{display:flex;flex-direction:column;gap:4px;width:100%}
+.golden-roach-history-button i{display:block;width:100%;height:2px;background:currentColor;box-shadow:0 1px #ffdc8b99,0 -1px #28150066;transform:rotate(-2deg)}
+.golden-roach-history-button i:nth-child(2){transform:rotate(1deg);width:92%}
+.golden-roach-history-button:focus-visible,.golden-roach-history-back:focus-visible{outline:2px solid #ffe9ac;outline-offset:3px}
+.golden-roach-history{position:fixed;inset:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y pinch-zoom;padding:max(85px,calc(env(safe-area-inset-top) + 65px)) max(26px,7vw) max(100px,env(safe-area-inset-bottom));color:#51300d;background-color:#b88829;background-image:repeating-linear-gradient(176deg,transparent 0 12px,#fff0a50c 13px,transparent 14px),repeating-linear-gradient(2deg,#3f1c000c 0 1px,transparent 1px 6px),radial-gradient(ellipse at 23% 10%,#f7cf73aa,transparent 55%),linear-gradient(106deg,#755017,#d5a94e 18%,#bc9137 48%,#d9b35b 76%,#75501d);box-shadow:inset 0 0 80px #3b21006b}
+.golden-roach-history:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.15;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.45' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E")}
+.golden-roach-history-back{position:absolute;left:max(18px,env(safe-area-inset-left));top:max(10px,env(safe-area-inset-top));width:44px;height:44px;background:transparent;border:0;color:#4b2b09;font:40px/1 Georgia,serif;text-shadow:0 1px #ffe8a8;cursor:pointer}
+.golden-roach-winners{position:relative;list-style:none;max-width:1000px;margin:0 auto;padding:0}
+.golden-roach-winner{display:flex;align-items:center;flex-wrap:wrap;gap:8px 20px;padding:25px 0 32px;margin:0;font-family:PothNotes,"Chalkboard SE",cursive;font-size:clamp(25px,4.6vw,48px);line-height:1.3;text-shadow:0 1px 0 #ffe6a499,0 -1px 1px #301500ba;transform:rotate(-.35deg)}
+.golden-roach-winner:nth-child(even){transform:rotate(.3deg)}
+.golden-engraved-name{overflow-wrap:anywhere}
+.golden-engraved-tallies{display:inline-flex;align-items:center;flex-wrap:wrap;gap:5px}
+.golden-tally{width:1.2em;height:1.1em;filter:drop-shadow(0 1px #ffe6a480)}
+.golden-roach-origin{display:block;flex-basis:100%;font:inherit;font-size:.47em;opacity:.8;margin-top:-2px}
+@media(prefers-reduced-motion:reduce){.golden-roach-overlay{transition:none}.golden-roach-winner{transform:none}}
