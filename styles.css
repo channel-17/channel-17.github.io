@@ -15146,7 +15146,7 @@ html.c17-trust-entered #signalGhost {display:none!important;}
 @media(prefers-reduced-motion:reduce){.golden-roach-overlay{transition:none}.golden-roach-winner{transform:none}}
 
 /* Matched marker-wall repair — external image assets, 2026-11-08. */
-:root {--c17-plastic:url("Wall.Surface.PNG");}
+:root {--c17-plastic:url("Wall.Main.Surface.PNG");}
 /* Keyhole into the molded marker wall. */
 .survivor-chalk {position:fixed;right:7vw;bottom:max(20px,env(safe-area-inset-bottom));width:30px;height:42px;padding:0;border:0;background:transparent;cursor:pointer;opacity:.58;z-index:9;transition:opacity .25s;}
 .survivor-chalk span {position:absolute;inset:3px 5px;background:radial-gradient(ellipse at 48% 36%,#aca99a55,transparent 45%),linear-gradient(125deg,#111811,#363b3255 40%,#070c08 78%);clip-path:path('M10 0 C-1 0 -3 14 5 19 L1 34 L19 34 L15 19 C23 14 21 0 10 0 Z');filter:drop-shadow(0 0 2px #bccd9555);}
