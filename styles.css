@@ -14880,7 +14880,6 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
   text-align:center;
   cursor:pointer;
 }
-.golden-roach-holder{position:absolute;transform:translate(-50%,-50%);text-align:center;pointer-events:none;left:55%;top:75.9%;width:44%;font-family:PothNotes,"Chalkboard SE",cursive;font-weight:400;line-height:1.2;letter-spacing:0;color:#54310b;text-shadow:0 1px 0 #ffdb8599,0 -1px 1px #321800b3}
 html.golden-roach-open,html.golden-roach-open body{overflow:hidden!important}
 @media(max-width:560px){
   .golden-roach-button{right:12px;bottom:12px;width:46px;height:46px}
@@ -15124,32 +15123,104 @@ html.c17-trust-entered #home .home-inner {visibility:hidden!important;}
 html.c17-trust-transition #signalGhost,
 html.c17-trust-entered #signalGhost {display:none!important;}
 
-/* Golden Roach: the inscription is anchored to the actual contained artwork. */
-.golden-roach-object{position:relative;max-width:100%;max-height:100%}
-.golden-roach-object[hidden],.golden-roach-history[hidden]{display:none!important}
-.golden-roach-object .golden-roach-trophy{width:100%;height:100%}
-.golden-roach-history-button{position:absolute;left:27.5%;top:75.9%;transform:translate(-50%,-50%);width:44px;height:44px;padding:12px;border:0;background:transparent;color:#53310d;cursor:pointer;z-index:2}
-.golden-roach-history-button span{display:flex;flex-direction:column;gap:4px;width:100%}
-.golden-roach-history-button i{display:block;width:100%;height:2px;background:currentColor;box-shadow:0 1px #ffdc8b99,0 -1px #28150066;transform:rotate(-2deg)}
-.golden-roach-history-button i:nth-child(2){transform:rotate(1deg);width:92%}
-.golden-roach-history-button:focus-visible,.golden-roach-history-back:focus-visible{outline:2px solid #ffe9ac;outline-offset:3px}
-.golden-roach-history{position:fixed;inset:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y pinch-zoom;padding:max(85px,calc(env(safe-area-inset-top) + 65px)) max(26px,7vw) max(100px,env(safe-area-inset-bottom));color:#51300d;background-color:#b88829;background-image:repeating-linear-gradient(176deg,transparent 0 12px,#fff0a50c 13px,transparent 14px),repeating-linear-gradient(2deg,#3f1c000c 0 1px,transparent 1px 6px),radial-gradient(ellipse at 23% 10%,#f7cf73aa,transparent 55%),linear-gradient(106deg,#755017,#d5a94e 18%,#bc9137 48%,#d9b35b 76%,#75501d);box-shadow:inset 0 0 80px #3b21006b}
-.golden-roach-history:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.15;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.45' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E")}
-.golden-roach-history-back{position:absolute;left:max(18px,env(safe-area-inset-left));top:max(10px,env(safe-area-inset-top));width:44px;height:44px;background:transparent;border:0;color:#4b2b09;font:40px/1 Georgia,serif;text-shadow:0 1px #ffe8a8;cursor:pointer}
-.golden-roach-winners{position:relative;list-style:none;max-width:1000px;margin:0 auto;padding:0}
-.golden-roach-winner{display:flex;align-items:center;flex-wrap:wrap;gap:8px 20px;padding:25px 0 32px;margin:0;font-family:PothNotes,"Chalkboard SE",cursive;font-size:clamp(25px,4.6vw,48px);line-height:1.3;text-shadow:0 1px 0 #ffe6a499,0 -1px 1px #301500ba;transform:rotate(-.35deg)}
-.golden-roach-winner:nth-child(even){transform:rotate(.3deg)}
-.golden-engraved-name{overflow-wrap:anywhere}
-.golden-engraved-tallies{display:inline-flex;align-items:center;flex-wrap:wrap;gap:5px}
-.golden-tally{width:1.2em;height:1.1em;filter:drop-shadow(0 1px #ffe6a480)}
-.golden-roach-origin{display:block;flex-basis:100%;font:inherit;font-size:.47em;opacity:.8;margin-top:-2px}
-@media(prefers-reduced-motion:reduce){.golden-roach-overlay{transition:none}.golden-roach-winner{transform:none}}
+/* Golden Roach: one material and one recessed engraving finish. */
+#goldenRoachOverlay {padding:8px;}
+#goldenRoachOverlay .golden-roach-stage {padding:0;min-width:0;min-height:0;}
+#goldenRoachOverlay .golden-roach-object {position:relative;max-width:100%;max-height:100%;}
+#goldenRoachOverlay .golden-roach-trophy {display:block;width:100%;height:100%;object-fit:contain;filter:none;}
+#goldenRoachOverlay .golden-roach-holder {
+  position:absolute;left:46%;top:76.1%;width:42%;margin:0;padding:0;
+  transform:translate(-50%,-50%) rotate(-.5deg);text-align:center;
+  font-family:PothNotes,"Chalkboard SE",cursive;font-weight:400;line-height:1.08;letter-spacing:0;
+  color:#2a1405;text-shadow:-.5px -.7px 0 #150900,.6px .9px 0 #ffe8a9;
+  -webkit-text-stroke:.2px #3e210b;pointer-events:none;
+}
+#goldenRoachOverlay .golden-roach-history-button {
+  position:absolute;left:74.5%;right:auto;top:76.1%;transform:translate(-50%,-50%);
+  display:grid;place-items:center;width:10%;height:9%;min-width:36px;min-height:40px;
+  margin:0;padding:8px;border:0;border-radius:0;background:transparent;cursor:pointer;z-index:2;
+}
+#goldenRoachOverlay .golden-roach-history-button span {display:flex;flex-direction:column;gap:4px;width:clamp(16px,3vw,24px);}
+#goldenRoachOverlay .golden-roach-history-button i {
+  display:block;width:100%;height:2px;border-radius:0;transform:none;
+  background:linear-gradient(#130900 0 38%,#553013 40% 100%);
+  box-shadow:0 1px 0 #ffe2a4,inset 0 1px 0 #170a01;
+}
+#goldenRoachOverlay .golden-roach-history-button i:nth-child(2) {width:100%;transform:none;}
+#goldenRoachOverlay .golden-roach-history {
+  position:fixed;inset:0;z-index:3;overflow-y:auto;overflow-x:hidden;
+  overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y pinch-zoom;
+  padding:max(96px,calc(env(safe-area-inset-top) + 72px)) max(26px,7vw) max(100px,env(safe-area-inset-bottom));
+  color:#291304;background:#96631e;box-shadow:none;isolation:isolate;
+  scrollbar-width:thin;scrollbar-color:#5b3514 #9f6b25;
+}
+/* Fixed photographic metal continues behind every scroll position; no plate edge or studs. */
+#goldenRoachOverlay .golden-roach-history::before {
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:1;
+  background-image:linear-gradient(100deg,#180b0026,transparent 22%,#fff0ba12 54%,#1b0b0030),url("GR.Winners.Gold.PNG");
+  background-size:cover;background-position:center;background-repeat:no-repeat;
+}
+#goldenRoachOverlay .golden-roach-history-back {
+  position:fixed;left:max(14px,env(safe-area-inset-left));top:max(10px,env(safe-area-inset-top));
+  z-index:4;width:44px;height:44px;padding:0;border:0;border-radius:0;background:transparent;
+  color:#291304;font:38px/1 Georgia,serif;text-shadow:-.5px -.7px 0 #1c0b00,.6px 1px 0 #ffe3a2;cursor:pointer;
+}
+#goldenRoachOverlay .golden-roach-close {z-index:5;}
+#goldenRoachOverlay .golden-roach-winners {position:relative;display:block;list-style:none;width:100%;max-width:960px;margin:0 auto;padding:0;}
+#goldenRoachOverlay .golden-roach-winner {
+  display:flex;align-items:center;flex-wrap:wrap;gap:8px 14px;padding:25px 0 32px;margin:0;
+  font-family:PothNotes,"Chalkboard SE",cursive;font-size:clamp(23px,4.6vw,44px);font-weight:400;line-height:1.35;
+  color:#291304;text-shadow:-.6px -.8px 0 #160900,.7px 1.1px 0 #ffe3a2;
+  -webkit-text-stroke:.25px #351908;transform:rotate(-.35deg);
+}
+#goldenRoachOverlay .golden-roach-winner:nth-child(even) {transform:rotate(.3deg);}
+#goldenRoachOverlay .golden-engraved-name {overflow-wrap:anywhere;}
+#goldenRoachOverlay .golden-engraved-tallies {display:inline-flex;align-items:center;flex-wrap:wrap;gap:5px;}
+#goldenRoachOverlay .golden-tally {width:1.2em;height:1.1em;filter:drop-shadow(.6px 1px 0 #ffe3a2);}
+#goldenRoachOverlay .golden-roach-origin {display:block;flex-basis:100%;font:inherit;font-size:.55em;opacity:1;margin:0;-webkit-text-stroke:0;}
+#goldenRoachOverlay button:focus-visible {outline:2px solid #ffe5a7;outline-offset:3px;}
+@media(prefers-reduced-motion:reduce) {#goldenRoachOverlay .golden-roach-winner{transform:none;}}
+
+/* Fine trophy lettering: bronze recess, directional metal bevel. */
+
+@font-face{font-family:RoachEngraving;src:url("GR.Engraved.Script.ttf") format("truetype");font-display:swap;font-weight:400;}
+#goldenRoachOverlay .golden-roach-holder{font-family:RoachEngraving,cursive;font-size:16px;color:#241000;text-shadow:-.5px -1px 0 #160800,.7px 1px 0 #f9d98e;-webkit-text-stroke:.15px #301600;}
+#goldenRoachOverlay .golden-roach-history{padding:90px clamp(20px,5vw,64px) 80px;}
+#goldenRoachOverlay .golden-roach-history::before{background-image:url("GR.Winners.Gold.PNG");background-size:cover;}
+#goldenRoachOverlay .golden-roach-winners{max-width:780px;}
+#goldenRoachOverlay .golden-roach-winner{display:grid;grid-template-columns:minmax(0,1fr) 42px;align-items:center;gap:12px;padding:20px 0 24px;font:400 clamp(30px,7.8vw,52px)/1.12 RoachEngraving,cursive;transform:none;color:#281303;text-shadow:-.55px -.85px 0 #120600,.7px 1.15px 0 #ffe2a0;-webkit-text-stroke:.22px #381b05;}
+#goldenRoachOverlay .golden-roach-winner:nth-child(even){transform:none;}
+#goldenRoachOverlay .golden-winner-text{min-width:0;}
+#goldenRoachOverlay .golden-engraved-name{display:block;overflow-wrap:normal;}
+#goldenRoachOverlay .golden-engraved-company{display:block;font:inherit;font-size:.71em;line-height:1.25;margin-top:7px;}
+#goldenRoachOverlay .golden-engraved-tallies{display:flex;align-items:center;justify-content:center;gap:4px;}
+#goldenRoachOverlay .golden-tally{width:40px;height:41px;filter:drop-shadow(.7px 1.2px 0 #ffe2a0) drop-shadow(-.4px -.5px 0 #120600);}
+
+#goldenRoachOverlay .golden-roach-holder,
+#goldenRoachOverlay .golden-engraved-name,
+#goldenRoachOverlay .golden-engraved-company {
+  color:#694016;
+  -webkit-text-stroke:0;
+  text-shadow:none;
+  background:linear-gradient(175deg,#311800 0%,#5a3510 32%,#b8873c 49%,#4b2907 64%,#78491a 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(-.45px -.65px 0 #2a1605) drop-shadow(.7px 1px 0 #ffe4a0);
+  font-synthesis:none;
+}
+#goldenRoachOverlay .golden-roach-winner{color:#694016;text-shadow:none;-webkit-text-stroke:0;font-size:clamp(31px,8vw,54px);}
+#goldenRoachOverlay .golden-engraved-company{font-size:.69em;}
+#goldenRoachOverlay .golden-roach-holder{line-height:1.2;}
+#goldenRoachOverlay .golden-tally{color:#5f3810;filter:drop-shadow(-.35px -.5px 0 #271202) drop-shadow(.6px .9px 0 #ffe1a0);}
+
 
 /* Matched marker-wall repair — external image assets, 2026-11-08. */
 :root {--c17-plastic:url("Wall.Main.Surface.PNG");}
 /* Keyhole into the molded marker wall. */
 .survivor-chalk {position:fixed;right:7vw;bottom:max(20px,env(safe-area-inset-bottom));width:30px;height:42px;padding:0;border:0;background:transparent;cursor:pointer;opacity:.58;z-index:9;transition:opacity .25s;}
-.survivor-chalk span {position:absolute;inset:3px 5px;background:radial-gradient(ellipse at 48% 36%,#aca99a55,transparent 45%),linear-gradient(125deg,#111811,#363b3255 40%,#070c08 78%);clip-path:path('M10 0 C-1 0 -3 14 5 19 L1 34 L19 34 L15 19 C23 14 21 0 10 0 Z');filter:drop-shadow(0 0 2px #bccd9555);}
+.survivor-chalk span {position:absolute;inset:0;background:none;clip-path:none;filter:none;}
+.survivor-chalk svg {display:block;width:100%;height:100%;overflow:visible;filter:drop-shadow(.4px .6px .3px #9aab6955);}
+.survivor-chalk svg path {fill:url(#c17PeepInterior);stroke:#667354;stroke-width:.45;}
+
 .survivor-chalk:hover,.survivor-chalk:focus-visible {opacity:1;outline:1px solid #b4be9a66;outline-offset:5px;border-radius:45%;}
 #c17DrawingWall[hidden] {display:none!important;}
 #c17DrawingWall {position:fixed;inset:0;z-index:200000;background:#85878a;color:#f1eee5;isolation:isolate;font-family:system-ui,sans-serif;}
@@ -15201,8 +15272,8 @@ html.c17-drawing-open,html.c17-drawing-open body {overflow:hidden;overscroll-beh
 
 /* Approved wall, 2026-11-07. The opening is centered at the yellow reference (7680,5120).
    Artwork and surface remain full resolution, independent of the distant molded geometry. */
-#home .survivor-chalk {width:30px!important;height:42px!important;opacity:.58!important;transform:none!important;bottom:max(20px,env(safe-area-inset-bottom))!important;}
-#home .survivor-chalk span {inset:3px 5px!important;width:auto!important;height:auto!important;box-shadow:none!important;}
+#home .survivor-chalk {width:36px!important;height:36px!important;opacity:.58!important;transform:none!important;bottom:max(20px,env(safe-area-inset-bottom))!important;}
+#home .survivor-chalk span {inset:0!important;width:auto!important;height:auto!important;box-shadow:none!important;}
 .c17-drawing-world {background-color:#969694;background-image:var(--c17-plastic);background-size:800px 1200px;}
 .c17-wall-panel {position:absolute;border-radius:110px;background:transparent;box-shadow:inset 30px 45px 32px #25282499,inset -14px -26px 22px #dddcd288,0 15px 9px #dfded45b;pointer-events:none;}
 .c17-wall-pipe {position:absolute;left:0;top:0;bottom:0;width:870px;background-image:linear-gradient(90deg,#3d3e3e80,#999b9640 23%,#b4b5ae70 47%,#6c6e6970 81%,#393c3b99),var(--c17-plastic);background-size:auto,1024px 1536px;box-shadow:25px 0 55px #1b1d1b88;border-right:8px solid #6d706a;pointer-events:none;}
@@ -15226,3 +15297,15 @@ html.c17-drawing-open,html.c17-drawing-open body {overflow:hidden;overscroll-beh
 .c17-ink-actions {bottom:max(157px,calc(env(safe-area-inset-bottom) + 147px));}
 .c17-wall-status {bottom:max(64px,env(safe-area-inset-bottom));}
 .c17-ink-choice,.c17-marker-toggle { -webkit-tap-highlight-color:transparent; }
+/* Keep each winner and its maker as a compact two-line entry on phones. */
+#goldenRoachOverlay .golden-engraved-name{font-size:.88em;}
+
+/* Recessed cuts: all shading stays inside the glyph, without an exterior outline. */
+#goldenRoachOverlay .golden-roach-holder,
+#goldenRoachOverlay .golden-engraved-name,
+#goldenRoachOverlay .golden-engraved-company {
+ background:none;-webkit-background-clip:initial;background-clip:initial;
+ color:#503014;-webkit-text-fill-color:currentColor;-webkit-text-stroke:0;
+ text-shadow:none;filter:url(#grRecessedCut);
+}
+#goldenRoachOverlay .golden-tally{color:#503014;filter:url(#grRecessedCut);}
