@@ -4063,6 +4063,11 @@ function ensureTawnyaProfileOverlay() {
                 </article>
 
 
+                <article class="c17-wall-comment c17-wall-comment-grampa">
+                  <img class="c17-wall-avatar" src="T.Friends.Comment.Grampa.PNG" alt="Grampa" loading="lazy" decoding="async">
+                  <div><b>Grampa</b><p>Always remember, darlin’<br>Just cause you fuck up… ain’t mean you a fuck up..</p></div>
+                </article>
+
                 <article class="c17-wall-comment c17-wall-comment-simmons">
                   <img class="c17-wall-avatar" src="T.Friends.Simmons.PNG" alt="Master Simmons’s blue ghost">
                   <div><b>Master Simmons <span class="c17-wall-tag">(Spiritual Guru)</span></b><p>Work it. WORK IT! Keep those limbs loose—you got it, baby! Unclench those cheeks! That’s a hip, not a fucking parking brake! I did NOT claw my way back from the afterlife to watch you stretch like a lawn chair.</p>
@@ -5687,10 +5692,11 @@ if (rejectionClose) rejectionClose.addEventListener("click", () => {
   // Newest winning appearance first. null means unconfirmed, never zero wins.
   // Update this list by hand after the show; no dates, scores or review archive.
   const winners = [
-    {strain:'Blue Dream', brand:'Fog Cutter', wins:null},
-    {strain:'Coughy Cake', brand:'MAC', wins:null},
-    {strain:'Cujo’ Revenge', brand:'Fog Cutter', wins:null},
-    {strain:'Sweet Tree', brand:'MAC', wins:null, origin:true}
+    {strain:'Blue Dream', brand:'Fog Cutter', company:'Baked Beans Farm', wins:1},
+    {strain:'Coughy Cake', brand:'MAC', company:'Mass Alternative Care', wins:3},
+    {strain:'GMO Pie', brand:'Realm', company:'Garden Remedies Cannabis', wins:1},
+    {strain:'Cujo’s Revenge', brand:'Fog Cutter', company:'Baked Beans Farm', wins:1},
+    {strain:'The Magic Cone', brand:'???', company:'(The Trophy’s Inspiration)', wins:null}
   ];
   const currentHolder = winners[0];
   const art = document.createElement('div');
@@ -5736,23 +5742,23 @@ if (rejectionClose) rejectionClose.addEventListener("click", () => {
   winners.forEach(winner => {
     const row = document.createElement('li');
     row.className = 'golden-roach-winner';
+    const text = document.createElement('div');
+    text.className = 'golden-winner-text';
     const name = document.createElement('span');
     name.className = 'golden-engraved-name';
-    name.textContent = `${winner.strain} / ${winner.brand}`;
-    row.appendChild(name);
+    name.textContent = `${winner.strain} | ${winner.brand}`;
+    const company = document.createElement('small');
+    company.className = 'golden-engraved-company';
+    company.textContent = winner.company;
+    text.append(name,company);
+    row.appendChild(text);
     if (Number.isInteger(winner.wins) && winner.wins > 0) {
       const tally = document.createElement('span');
       tally.className = 'golden-engraved-tallies';
       tally.setAttribute('role', 'img');
       tally.setAttribute('aria-label', `${winner.wins} Golden Roach wins`);
-      tally.innerHTML = '<span aria-hidden="true">—</span>' + tallyMarkup(winner.wins);
+      tally.innerHTML = tallyMarkup(winner.wins);
       row.appendChild(tally);
-    }
-    if (winner.origin) {
-      const origin = document.createElement('small');
-      origin.className = 'golden-roach-origin';
-      origin.textContent = 'The one that started it all.';
-      row.appendChild(origin);
     }
     list.appendChild(row);
   });
