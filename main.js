@@ -4042,18 +4042,6 @@ function ensureTawnyaProfileOverlay() {
                 </div>
               </section>
 
-              <details class="c17-honorable-mentions" aria-label="Honorable Mentions">
-                <summary>HONORABLE MENTIONS <span aria-hidden="true">⌄</span></summary>
-                <article class="c17-honorable-person">
-                  <div class="c17-honorable-heading">
-                    <span class="c17-honorable-avatar" aria-hidden="true">🐍</span>
-                    <strong>Scales</strong>
-                  </div>
-                  <!-- Insert Jinx's exact approved forked-tongue biography here; not recovered in supplied source. -->
-                  <p class="c17-honorable-bio-pending">Biography awaiting approved source text.</p>
-                </article>
-              </details>
-
               <section class="c17-tawnya-wall">
                 <header><span>WALL</span><small>RECOVERED PROFILE ACTIVITY</small></header>
 
@@ -4168,6 +4156,21 @@ function ensureTawnyaProfileOverlay() {
         friends: {
           label: "FRIENDS & FAMILY",
           html: `<div class="c17-dossier-kicker">SOCIAL CONNECTIONS</div><h2>Friends &amp; Family</h2><section class="c17-private-friends-page" aria-label="Friends list private"><div class="c17-private-friends-lock" aria-hidden="true">🔒</div><p>This user’s friends list is set to private.</p></section>`
+        },
+        honorable: {
+          label: "HONORABLE MENTIONS",
+          html: `<div class="c17-dossier-kicker">PERSONAL // HONORABLE MENTIONS</div>
+            <h2>Honorable Mentions</h2>
+            <section class="c17-honorable-directory" aria-label="Honorable Mentions">
+              <article class="c17-honorable-entry">
+                <div class="c17-honorable-avatar" aria-label="Scales avatar pending">🐍</div>
+                <div class="c17-honorable-copy">
+                  <h3>Scales</h3>
+                  <p>Two faces, one forked tongue, and neither one has ever told the truth. Comes equipped with a permanent victim complex and a mouth that apparently works better behind people's backs.</p>
+                  <p><strong>Trust him? I'd rather shake hands with a fucking rattlesnake.</strong></p>
+                </div>
+              </article>
+            </section>`
         },
         email: {
           label: "EMAILS & SUBSCRIPTIONS",
