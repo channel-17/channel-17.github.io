@@ -4042,6 +4042,18 @@ function ensureTawnyaProfileOverlay() {
                 </div>
               </section>
 
+              <details class="c17-honorable-mentions" aria-label="Honorable Mentions">
+                <summary>HONORABLE MENTIONS <span aria-hidden="true">⌄</span></summary>
+                <article class="c17-honorable-person">
+                  <div class="c17-honorable-heading">
+                    <span class="c17-honorable-avatar" aria-hidden="true">🐍</span>
+                    <strong>Scales</strong>
+                  </div>
+                  <!-- Insert Jinx's exact approved forked-tongue biography here; not recovered in supplied source. -->
+                  <p class="c17-honorable-bio-pending">Biography awaiting approved source text.</p>
+                </article>
+              </details>
+
               <section class="c17-tawnya-wall">
                 <header><span>WALL</span><small>RECOVERED PROFILE ACTIVITY</small></header>
 
@@ -4194,7 +4206,7 @@ function ensureTawnyaProfileOverlay() {
         },
         imaging: {
           label: "IMAGING",
-          html: `<div class="c17-dossier-kicker">DIAGNOSTIC IMAGING ARCHIVE</div><h2>X-Rays</h2><div class="c17-photo-placeholder-grid"><div class="c17-media-placeholder c17-media-placeholder-medical"><span>×</span><b>LEFT WRIST</b><small>X-RAY PLACEHOLDER</small></div><div class="c17-media-placeholder c17-media-placeholder-medical"><span>×</span><b>RIGHT ANKLE</b><small>X-RAY PLACEHOLDER</small></div><div class="c17-media-placeholder c17-media-placeholder-medical"><span>×</span><b>RIB SERIES</b><small>IMAGE PLACEHOLDER</small></div></div>`
+          html: `<div class="c17-dossier-kicker">DIAGNOSTIC IMAGING ARCHIVE</div><h2>X-Rays</h2><div class="c17-photo-placeholder-grid"><figure class="c17-xray-photo"><img src="T.Xrays.Poth.PNG" alt="Poth alien facial X-ray" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span class="c17-xray-missing" hidden>FACE X-RAY IMAGE PENDING</span><figcaption>POTH // FACIAL SCAN</figcaption></figure><div class="c17-media-placeholder c17-media-placeholder-medical"><span>×</span><b>RIGHT ANKLE</b><small>X-RAY PLACEHOLDER</small></div><figure class="c17-xray-photo"><img src="T.Xray.Ribs.PNG" alt="Tawnya rib series X-ray" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span class="c17-xray-missing" hidden>RIB X-RAY IMAGE NOT FOUND</span><figcaption>RIB SERIES</figcaption></figure></div>`
         },
         intake: {
           label: "INTAKE",
