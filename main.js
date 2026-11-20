@@ -4163,11 +4163,13 @@ function ensureTawnyaProfileOverlay() {
             <h2>Honorable Mentions</h2>
             <section class="c17-honorable-directory" aria-label="Honorable Mentions">
               <article class="c17-honorable-entry">
-                <div class="c17-honorable-avatar" aria-label="Scales avatar pending">🐍</div>
+                <div class="c17-honorable-identity">
+                  <img class="c17-honorable-avatar" src="T.Scales.PNG" alt="Scales original portrait">
+                  <div class="c17-honorable-heading"><h3>Scales</h3><p class="c17-honorable-opening">Two faces, one forked tongue.</p></div>
+                </div>
                 <div class="c17-honorable-copy">
-                  <h3>Scales</h3>
-                  <p>Two faces, one forked tongue, and neither one has ever told the truth. Comes equipped with a permanent victim complex and a mouth that apparently works better behind people's backs.</p>
-                  <p><strong>Trust him? I'd rather shake hands with a fucking rattlesnake.</strong></p>
+                  <p>And neither one has ever told the truth. Comes equipped with a permanent victim complex and a mouth that apparently works better behind people's backs.</p>
+                  <p class="c17-honorable-punchline"><strong>Trust him? I'd rather swap spit with a truck-stop toilet seat on chili night.</strong></p>
                 </div>
               </article>
             </section>`
@@ -4311,7 +4313,14 @@ function ensureTawnyaProfileOverlay() {
   let activeCategory = "personal";
   let activePage = "dating";
 
+  const sideTabScrollPositions = Object.create(null);
+  sideTabs.addEventListener("scroll", () => {
+    sideTabScrollPositions[activeCategory] = sideTabs.scrollTop;
+  }, { passive: true });
+
   const renderDossier = () => {
+    const previousRailScroll = sideTabs.scrollTop;
+    if (previousRailScroll > 0) sideTabScrollPositions[activeCategory] = previousRailScroll;
     topTabs.innerHTML = "";
     Object.entries(dossier).forEach(([key, category]) => {
       const button = document.createElement("button");
@@ -4340,6 +4349,7 @@ function ensureTawnyaProfileOverlay() {
       });
       sideTabs.appendChild(button);
     });
+    sideTabs.scrollTop = sideTabScrollPositions[activeCategory] || 0;
 
     documentPanel.innerHTML = dossier[activeCategory].pages[activePage].html;
 
