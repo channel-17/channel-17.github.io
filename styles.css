@@ -15331,3 +15331,62 @@ html.c17-drawing-open,html.c17-drawing-open body {overflow:hidden;overscroll-beh
 .c17-honorable-entry{display:flex;align-items:flex-start;gap:14px;padding:16px 12px;border:1px solid rgba(113,185,255,.28);background:rgba(3,20,48,.5);color:#e4f2ff}
 .c17-honorable-entry .c17-honorable-avatar{flex:0 0 62px;width:62px;height:62px;border-radius:50%;display:grid;place-items:center;background:#061b37;border:2px solid #2778d7;font-size:26px}
 .c17-honorable-copy{min-width:0}.c17-honorable-copy h3{margin:0 0 8px;font-size:1.15rem}.c17-honorable-copy p{margin:0 0 10px;font-size:.88rem;line-height:1.55}
+
+
+/* =========================================================
+   C17 FIRE — PERSONAL / HONORABLE MENTIONS
+   Restore native finger scrolling to right-hand dossier tab rail.
+   Keep all existing tab order, size, and colors.
+========================================================= */
+.c17-dossier-side-tabs {
+  box-sizing:border-box !important;
+  height:calc(100dvh - 58px) !important;
+  max-height:calc(100dvh - 58px) !important;
+  min-height:0 !important;
+  overflow-x:hidden !important;
+  overflow-y:auto !important;
+  -webkit-overflow-scrolling:touch !important;
+  overscroll-behavior-y:contain !important;
+  touch-action:pan-y !important;
+  scrollbar-width:none !important;
+}
+.c17-dossier-side-tabs button {
+  touch-action:pan-y !important;
+}
+/* Avatar/name first; full-width biography and its own closing line. */
+.c17-honorable-directory .c17-honorable-entry {
+  display:block !important;
+  padding:16px 14px !important;
+}
+.c17-honorable-identity {
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:17px;
+}
+.c17-honorable-directory .c17-honorable-avatar {
+  flex:0 0 86px !important;
+  width:86px !important;
+  height:86px !important;
+  display:block !important;
+  object-fit:cover !important;
+  border-radius:50% !important;
+}
+.c17-honorable-heading { min-width:0; }
+.c17-honorable-heading h3 { margin:0 0 7px !important; }
+.c17-honorable-opening {
+  margin:0 !important;
+  color:#b4dcff;
+  font-weight:900;
+  font-size:.95rem !important;
+  line-height:1.4 !important;
+}
+.c17-honorable-copy { min-width:0; }
+.c17-honorable-copy > p { margin:0 0 14px !important; }
+.c17-honorable-copy .c17-honorable-punchline {
+  margin:16px 0 0 !important;
+  padding:13px 0 0;
+  border-top:1px solid rgba(113,185,255,.30);
+  color:#fff;
+  font-size:.93rem !important;
+}
