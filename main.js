@@ -4048,7 +4048,7 @@ function ensureTawnyaProfileOverlay() {
                     <div class="c17-friend-avatar"><span class="c17-friend-name">Zoltan</span><span class="c17-friend-circle"><img src="T.FriendsBar.Zoltan.PNG" alt="" loading="lazy" decoding="async"></span></div>
                     <div class="c17-friend-avatar"><span class="c17-friend-name">Oda Hundy</span><span class="c17-friend-circle"><img src="T.FriendsBar.Oda.PNG" alt="" loading="lazy" decoding="async"></span></div>
                     <div class="c17-friend-avatar"><span class="c17-friend-name">Crispy</span><span class="c17-friend-circle"><img src="T.FriendsBar.Spawn.PNG" alt="" loading="lazy" decoding="async"></span></div>
-                    <button class="c17-friend-avatar c17-illuminati-avatar" type="button" aria-label="Illuminati" data-c17-illuminati><span class="c17-friend-name">Illuminati</span><span class="c17-friend-circle"><img class="c17-eye-open" src="T.FriendsBar.Illuminati.A.PNG" alt=""><img class="c17-eye-closed" src="T.FriendsBar.Illuminati.B.PNG" alt=""></span></button>
+                    <button class="c17-friend-avatar c17-illuminati-avatar" type="button" aria-label="The Illuminati" data-c17-illuminati><span class="c17-friend-name">The Illuminati</span><span class="c17-friend-circle"><img class="c17-eye-open" src="T.FriendsBar.Illuminati.A.PNG" alt=""><img class="c17-eye-closed" src="T.FriendsBar.Illuminati.B.PNG" alt=""></span></button>
                     <div class="c17-friend-avatar c17-friend-end" aria-hidden="true"><span class="c17-friend-name"></span><span class="c17-friend-circle">🔒</span></div>
                   </div>
                 </div>
@@ -4622,7 +4622,7 @@ function ensureTawnyaProfileOverlay() {
     let eyeClosed = false;
     illuminatiEye.addEventListener('click', () => {
       if (!eyeClosed) return;
-      illuminatiEye.dispatchEvent(new CustomEvent('c17:illuminati-secret', { bubbles: true }));
+      openIlluminatiCountdown();
     });
     window.setInterval(() => {
       if (!illuminatiEye.isConnected || !tawnyaProfileOverlay.classList.contains('open')) return;
@@ -4636,6 +4636,45 @@ function ensureTawnyaProfileOverlay() {
   }
 
   return tawnyaProfileOverlay;
+}
+
+// ILLUMINATI: the closed-eye secret leads to one globally synchronized countdown.
+// The target is deliberately never displayed or described to visitors.
+function openIlluminatiCountdown() {
+  const target = Date.UTC(2040, 0, 17, 0, 0, 0);
+  let screen = document.getElementById('c17-illuminati-countdown');
+  if (!screen) {
+    screen = document.createElement('div');
+    screen.id = 'c17-illuminati-countdown';
+    screen.setAttribute('role', 'dialog');
+    screen.setAttribute('aria-modal', 'true');
+    screen.setAttribute('aria-label', 'Countdown');
+    const digits = document.createElement('span');
+    digits.className = 'c17-illuminati-countdown-digits';
+    screen.appendChild(digits);
+    document.body.appendChild(screen);
+  }
+  const digits = screen.firstElementChild;
+  const render = () => {
+    const seconds = Math.max(0, Math.floor((target - Date.now()) / 1000));
+    const days = Math.floor(seconds / 86400);
+    const hours = Math.floor((seconds % 86400) / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainder = seconds % 60;
+    digits.textContent = [String(days), String(hours).padStart(2, '0'),
+      String(minutes).padStart(2, '0'), String(remainder).padStart(2, '0')].join(' : ');
+  };
+  render();
+  if (screen._c17Ticker) window.clearInterval(screen._c17Ticker);
+  screen._c17Ticker = window.setInterval(render, 250);
+  screen.classList.add('open');
+  const onEscape = event => {
+    if (event.key !== 'Escape') return;
+    screen.classList.remove('open');
+    window.clearInterval(screen._c17Ticker);
+    document.removeEventListener('keydown', onEscape);
+  };
+  document.addEventListener('keydown', onEscape);
 }
 
 function syncTawnyaDossierToVisibleScreen() {
