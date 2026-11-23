@@ -4047,7 +4047,7 @@ function ensureTawnyaProfileOverlay() {
                     <div class="c17-friend-avatar"><span class="c17-friend-name">Saba</span><span class="c17-friend-circle"><img src="T.FriendsBar.Saba.PNG" alt="" loading="lazy" decoding="async"></span></div>
                     <div class="c17-friend-avatar"><span class="c17-friend-name">Zoltan</span><span class="c17-friend-circle"><img src="T.FriendsBar.Zoltan.PNG" alt="" loading="lazy" decoding="async"></span></div>
                     <div class="c17-friend-avatar"><span class="c17-friend-name">Oda Hundy</span><span class="c17-friend-circle"><img src="T.FriendsBar.Oda.PNG" alt="" loading="lazy" decoding="async"></span></div>
-                    <div class="c17-friend-avatar"><span class="c17-friend-name">A. Simmons</span><span class="c17-friend-circle"><img src="T.FriendsBar.Spawn.PNG" alt="" loading="lazy" decoding="async"></span></div>
+                    <div class="c17-friend-avatar"><span class="c17-friend-name">Crispy</span><span class="c17-friend-circle"><img src="T.FriendsBar.Spawn.PNG" alt="" loading="lazy" decoding="async"></span></div>
                     <button class="c17-friend-avatar c17-illuminati-avatar" type="button" aria-label="Illuminati" data-c17-illuminati><span class="c17-friend-name">Illuminati</span><span class="c17-friend-circle"><img class="c17-eye-open" src="T.FriendsBar.Illuminati.A.PNG" alt=""><img class="c17-eye-closed" src="T.FriendsBar.Illuminati.B.PNG" alt=""></span></button>
                     <div class="c17-friend-avatar c17-friend-end" aria-hidden="true"><span class="c17-friend-name"></span><span class="c17-friend-circle">🔒</span></div>
                   </div>
