@@ -4638,8 +4638,7 @@ function ensureTawnyaProfileOverlay() {
   return tawnyaProfileOverlay;
 }
 
-// ILLUMINATI: the closed-eye secret leads to one globally synchronized countdown.
-// The target is deliberately never displayed or described to visitors.
+// ILLUMINATI: universal countdown and estimated worldwide annual vital events.
 function openIlluminatiCountdown() {
   const target = Date.UTC(2040, 0, 17, 0, 0, 0);
   let screen = document.getElementById('c17-illuminati-countdown');
@@ -4649,32 +4648,47 @@ function openIlluminatiCountdown() {
     screen.setAttribute('role', 'dialog');
     screen.setAttribute('aria-modal', 'true');
     screen.setAttribute('aria-label', 'Countdown');
-    const digits = document.createElement('span');
-    digits.className = 'c17-illuminati-countdown-digits';
-    screen.appendChild(digits);
+    screen.innerHTML = `<div class="c17-countdown-center">
+      <span class="c17-illuminati-countdown-digits"></span>
+      <span class="c17-countdown-message">There's still time...</span>
+    </div>
+    <div class="c17-countdown-vitals">
+      <div class="c17-countdown-vital" role="group" aria-label="Estimated worldwide births this year">
+        <svg viewBox="0 0 64 40" aria-hidden="true"><g class="c17-sperm-swim" fill="white"><ellipse cx="47" cy="18" rx="9" ry="6" transform="rotate(-15 47 18)"/><path class="c17-sperm-tail" d="M39 20 Q30 8 22 21 T5 21" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"/></g></svg>
+        <span data-vital="births"></span>
+      </div>
+      <div class="c17-countdown-vital" role="group" aria-label="Estimated worldwide deaths this year">
+        <svg viewBox="0 0 64 40" aria-hidden="true"><path fill="white" d="M32 3C20 3 14 11 14 21c0 7 4 10 9 12v5h18v-5c5-2 9-5 9-12C50 11 44 3 32 3Z"/><g fill="black"><ellipse cx="24" cy="21" rx="5" ry="5"/><ellipse cx="40" cy="21" rx="5" ry="5"/><path d="m32 26-3 5h6zM27 34h2v4h-2zM35 34h2v4h-2z"/></g></svg>
+        <span data-vital="deaths"></span>
+      </div>
+    </div>`;
     document.body.appendChild(screen);
   }
-  const digits = screen.firstElementChild;
+  const digits = screen.querySelector('.c17-illuminati-countdown-digits');
+  const births = screen.querySelector('[data-vital="births"]');
+  const deaths = screen.querySelector('[data-vital="deaths"]');
+  const format = new Intl.NumberFormat('en-US');
   const render = () => {
-    const seconds = Math.max(0, Math.floor((target - Date.now()) / 1000));
-    const days = Math.floor(seconds / 86400);
-    const hours = Math.floor((seconds % 86400) / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const remainder = seconds % 60;
-    digits.textContent = [String(days), String(hours).padStart(2, '0'),
-      String(minutes).padStart(2, '0'), String(remainder).padStart(2, '0')].join(' : ');
+    const now = Date.now();
+    const year = new Date(now).getUTCFullYear();
+    const fraction = (now - Date.UTC(year, 0, 1)) / (Date.UTC(year + 1, 0, 1) - Date.UTC(year, 0, 1));
+    digits.textContent = format.format(Math.max(0, Math.floor((target - now) / 1000)));
+    // Rounded illustrative annual rates, not live registrations.
+    births.textContent = format.format(Math.floor(fraction * 132000000));
+    deaths.textContent = format.format(Math.floor(fraction * 63000000));
   };
   render();
   if (screen._c17Ticker) window.clearInterval(screen._c17Ticker);
-  screen._c17Ticker = window.setInterval(render, 250);
+  screen._c17Ticker = window.setInterval(render, 100);
   screen.classList.add('open');
-  const onEscape = event => {
+  if (screen._c17Escape) document.removeEventListener('keydown', screen._c17Escape);
+  screen._c17Escape = event => {
     if (event.key !== 'Escape') return;
     screen.classList.remove('open');
     window.clearInterval(screen._c17Ticker);
-    document.removeEventListener('keydown', onEscape);
+    document.removeEventListener('keydown', screen._c17Escape);
   };
-  document.addEventListener('keydown', onEscape);
+  document.addEventListener('keydown', screen._c17Escape);
 }
 
 function syncTawnyaDossierToVisibleScreen() {
