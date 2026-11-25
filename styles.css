@@ -9256,10 +9256,11 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
 
 
 /* CONTROL authentication chamber, adjacent to countdown. */
-.c17-control-nav { position:absolute; top:calc(12px + env(safe-area-inset-top)); z-index:5; border:0; background:transparent; color:white; font:300 28px/1 system-ui; width:44px; height:44px; padding:0; cursor:pointer; pointer-events:auto; touch-action:manipulation; }
+#c17-control::backdrop, #c17-illuminati-countdown::backdrop { background:#000; }
+.c17-control-nav { position:absolute; top:calc(12px + env(safe-area-inset-top)); z-index:5; border:0; background:transparent; color:white; font:300 28px/1 system-ui; width:44px; height:44px; padding:0; cursor:pointer; pointer-events:auto !important; touch-action:manipulation; }
 .c17-control-nav.left {left:max(12px,env(safe-area-inset-left));}
 .c17-control-nav.right {right:max(12px,env(safe-area-inset-right));}
-#c17-control {position:fixed; inset:0; z-index:2147483647; overflow:hidden; background:#050505; color:white; display:grid; place-items:center;}
+#c17-control {position:fixed; inset:0; margin:0; border:0; padding:0; width:100%; height:100%; max-width:none; max-height:none; pointer-events:auto !important; z-index:2147483647; overflow:hidden; background:#050505; color:white; display:grid; place-items:center;}
 .c17-control-players {position:absolute; top:calc(16px + env(safe-area-inset-top)); left:max(12px,env(safe-area-inset-left)); display:grid; gap:8px; width:clamp(42px,12vw,82px); z-index:1;}
 .c17-control-players>* {width:100%; aspect-ratio:1; box-sizing:border-box; object-fit:cover; border:1px solid #bfa331; display:block;}
 .c17-control-players img:nth-child(2) {border-color:#b92b42;}
@@ -9281,6 +9282,7 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
 
 /* Secret Society: countdown, life and death. */
 #c17-illuminati-countdown {
+  margin:0; border:0; width:100%; height:100%; max-width:none; max-height:none; pointer-events:auto !important;
   position: fixed;
   inset: 0;
   z-index: 2147483647;
