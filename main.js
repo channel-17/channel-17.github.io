@@ -2785,6 +2785,10 @@ const FROZEN_SOCIAL_ASSET_MAP = new Map([
 
 let tawnyaRevealNode = null;
 let tawnyaProfileOverlay = null;
+const c17EyeEpoch = performance.now();
+function c17EyePhase(now = performance.now()) {
+  return (now - c17EyeEpoch) % 63000;
+}
 let tawnyaHoldTimer = null;
 let tawnyaHoldPointerId = null;
 let tawnyaRetired = false;
@@ -4609,7 +4613,7 @@ function ensureTawnyaProfileOverlay() {
 
   });
 
-  // FRIENDS BAR: measure actual viewport and run a fresh 60 + 3 second cycle.
+  // FRIENDS BAR: measure actual viewport and synchronize the continuous session clock.
   const friendsViewport = tawnyaProfileOverlay.querySelector('.c17-friends-swipe');
   const illuminatiEye = tawnyaProfileOverlay.querySelector('[data-c17-illuminati]');
   if (friendsViewport && illuminatiEye) {
@@ -4618,20 +4622,21 @@ function ensureTawnyaProfileOverlay() {
     };
     if (window.ResizeObserver) new ResizeObserver(measure).observe(friendsViewport);
     window.addEventListener('resize', measure, { passive: true });
-    let timer, eyeClosed = false;
-    const stop = () => { clearTimeout(timer); eyeClosed = false; illuminatiEye.classList.remove('c17-eye-is-closed'); };
-    const start = () => {
-      stop();
-      timer = setTimeout(() => {
-        if (!tawnyaProfileOverlay.classList.contains('open')) return;
-        eyeClosed = true;
-        illuminatiEye.classList.add('c17-eye-is-closed');
-        timer = setTimeout(start, 3000);
-      }, 60000);
+    let timer;
+    const syncEye = () => {
+      clearTimeout(timer);
+      const phase = c17EyePhase();
+      const closed = phase >= 60000;
+      illuminatiEye.classList.toggle('c17-eye-is-closed', closed);
+      timer = setTimeout(syncEye, Math.ceil((closed ? 63000 : 60000) - phase));
     };
-    tawnyaProfileOverlay._c17EyeStart = start;
-    tawnyaProfileOverlay._c17EyeStop = stop;
-    illuminatiEye.addEventListener('click', () => { if (eyeClosed) openIlluminatiCountdown(); });
+    document.addEventListener('visibilitychange', syncEye);
+    window.addEventListener('pageshow', syncEye);
+    illuminatiEye.addEventListener('click', () => {
+      syncEye();
+      if (c17EyePhase() >= 60000) openIlluminatiCountdown();
+    });
+    syncEye();
   }
 
   return tawnyaProfileOverlay;
@@ -4744,7 +4749,6 @@ function openTawnyaProfile() {
   const overlay = ensureTawnyaProfileOverlay();
   syncTawnyaDossierToVisibleScreen();
   overlay.classList.add("open");
-  overlay._c17EyeStart?.();
   // Measure the six visible friend slots after the profile becomes visible.
   requestAnimationFrame(() => {
     const strip = overlay.querySelector('.c17-friends-swipe');
@@ -5054,7 +5058,6 @@ function openTawnyaSnail() {
 
 function closeTawnyaProfile() {
   if (!tawnyaProfileOverlay) return;
-  tawnyaProfileOverlay._c17EyeStop?.();
   tawnyaProfileOverlay.classList.remove("open");
   tawnyaProfileOverlay.setAttribute("aria-hidden", "true");
   document.documentElement.classList.remove("tawnya-dossier-open", "c17-snail-open");
