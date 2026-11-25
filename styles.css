@@ -8855,8 +8855,8 @@ opacity:0;
    CHANNEL 17 — FROST TIMELINE
 ========================================================= */
 
-html.frost-time-stop *,
-html.frost-dead-world * {
+html.frost-time-stop *:not(#c17-illuminati-countdown, #c17-illuminati-countdown *, #c17-control, #c17-control *),
+html.frost-dead-world *:not(#c17-illuminati-countdown, #c17-illuminati-countdown *, #c17-control, #c17-control *) {
   animation-play-state: paused !important;
   transition-play-state: paused !important;
 }
@@ -9256,14 +9256,14 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
 
 
 /* CONTROL authentication chamber, adjacent to countdown. */
-.c17-control-nav { position:absolute; top:calc(12px + env(safe-area-inset-top)); z-index:5; border:0; background:transparent; color:white; font:300 28px/1 system-ui; width:44px; height:44px; padding:0; cursor:pointer; }
+.c17-control-nav { position:absolute; top:calc(12px + env(safe-area-inset-top)); z-index:5; border:0; background:transparent; color:white; font:300 28px/1 system-ui; width:44px; height:44px; padding:0; cursor:pointer; pointer-events:auto; touch-action:manipulation; }
 .c17-control-nav.left {left:max(12px,env(safe-area-inset-left));}
 .c17-control-nav.right {right:max(12px,env(safe-area-inset-right));}
 #c17-control {position:fixed; inset:0; z-index:2147483647; overflow:hidden; background:#050505; color:white; display:grid; place-items:center;}
 .c17-control-players {position:absolute; top:calc(16px + env(safe-area-inset-top)); left:max(12px,env(safe-area-inset-left)); display:grid; gap:8px; width:clamp(42px,12vw,82px); z-index:1;}
 .c17-control-players>* {width:100%; aspect-ratio:1; box-sizing:border-box; object-fit:cover; border:1px solid #bfa331; display:block;}
-.c17-control-players span:nth-child(2) {background:#310b13;border-color:#852b39;}
-.c17-control-players span:nth-child(3) {background:#21112e;border-color:#67418c;}
+.c17-control-players img:nth-child(2) {border-color:#b92b42;}
+.c17-control-players img:nth-child(3) {border-color:#8745cc;}
 .c17-control-earth {position:absolute; width:min(88vw,85vh); height:auto; left:54%; top:50%; transform:translate(-50%,-50%);}
 .c17-control-glass {position:absolute; inset:0; background:rgba(0,0,0,.48); z-index:2; pointer-events:none;}
 .c17-control-scanner {position:relative; z-index:3; width:clamp(110px,29vw,160px); aspect-ratio:4/5; background:#030303; border:0; padding:8px; touch-action:none; user-select:none; color:#b92b42;}
@@ -9629,7 +9629,7 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
 }
 
 html.frost-dead-world
-body > *:not(.c17-frost-overlay) {
+body > *:not(.c17-frost-overlay, #c17-illuminati-countdown, #c17-control) {
   pointer-events: none !important;
    
 }
