@@ -8855,15 +8855,15 @@ opacity:0;
    CHANNEL 17 — FROST TIMELINE
 ========================================================= */
 
-html.frost-time-stop *:not(#c17-illuminati-countdown, #c17-illuminati-countdown *, #c17-control, #c17-control *),
-html.frost-dead-world *:not(#c17-illuminati-countdown, #c17-illuminati-countdown *, #c17-control, #c17-control *) {
+html.frost-time-stop *:not(#c17-illuminati-countdown, #c17-illuminati-countdown *, #c17-control, #c17-control *, .c17-dossier-overlay, .c17-dossier-overlay *),
+html.frost-dead-world *:not(#c17-illuminati-countdown, #c17-illuminati-countdown *, #c17-control, #c17-control *, .c17-dossier-overlay, .c17-dossier-overlay *) {
   animation-play-state: paused !important;
   transition-play-state: paused !important;
 }
 
 html.frost-dead-world body {
   overflow: hidden !important;
-  touch-action: none !important;
+  touch-action: pan-x pan-y pinch-zoom !important;
 }
 
 .c17-frost-overlay {
@@ -9270,15 +9270,18 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
 .c17-control-scanner {position:relative; z-index:3; width:clamp(110px,29vw,160px); aspect-ratio:4/5; background:#030303; border:0; padding:8px; touch-action:none; user-select:none; color:#b92b42;}
 .c17-control-scanner::before,.c17-control-scanner::after {content:'';position:absolute;top:0;bottom:0;width:14px;border:2px solid currentColor;box-shadow:0 0 8px #8d1528;pointer-events:none;}
 .c17-control-scanner::before {left:0;border-right:0;} .c17-control-scanner::after {right:0;border-left:0;}
-.c17-control-scanner.pressed {color:#fff;box-shadow:0 0 24px #ffb8bf;}
+.c17-control-scanner.pressed {color:#ff294d;box-shadow:0 0 30px 8px #a50d32;}
+.c17-control-scanner.pressed::before,.c17-control-scanner.pressed::after {animation:c17-control-heartbeat .85s ease-in-out infinite;}
+@keyframes c17-control-heartbeat {0%,100%{box-shadow:0 0 10px #a50d32;color:#e62449}18%{box-shadow:0 0 32px 12px #f32650;color:#ffd0d8}40%{box-shadow:0 0 13px #a50d32;color:#e62449}55%{box-shadow:0 0 25px 7px #e91e48;color:#ff8299}75%{box-shadow:0 0 10px #a50d32;color:#e62449}}
 .c17-control-scanner svg {width:100%;height:100%;pointer-events:none;}
 .c17-control-runner {fill:none;stroke:#f44860;stroke-width:1.5;stroke-linecap:round;stroke-dasharray:5 95;stroke-dashoffset:105;animation:c17-control-trace 1s linear both;}
+.c17-control-runner.human {stroke-width:.85;stroke:#ff3456;stroke-dasharray:12 88;animation:c17-control-trace .95s linear both;filter:drop-shadow(0 0 1px #ff3456);}
 @keyframes c17-control-trace {0%{stroke-dashoffset:105;opacity:0}10%{opacity:1}90%{opacity:1}100%{stroke-dashoffset:0;opacity:0}}
-.c17-control-result {position:absolute;z-index:4;top:calc(50% + clamp(75px,19vw,110px));left:0;right:0;text-align:center;color:#ff3049;font:700 clamp(14px,4vw,22px)/1.4 monospace;pointer-events:none;}
+.c17-control-result {position:absolute;z-index:4;top:calc(50% + clamp(75px,19vw,110px) + 12px);left:0;right:0;text-align:center;color:#ff3049;font:700 clamp(14px,4vw,22px)/1.4 monospace;pointer-events:none;}
 .c17-control-result:not(:empty){animation:c17-control-denied .65s steps(2,end) infinite;}
 .c17-control-result small {display:block;font-size:.65em;}
 @keyframes c17-control-denied {50%{opacity:.25}}
-@media(prefers-reduced-motion:reduce){.c17-control-result:not(:empty){animation:none}.c17-control-runner{animation:none;stroke-dasharray:none;}}
+@media(prefers-reduced-motion:reduce){.c17-control-scanner.pressed::before,.c17-control-scanner.pressed::after{animation:none}.c17-control-runner.human{animation:none;stroke-dasharray:none}.c17-control-result:not(:empty){animation:none}.c17-control-runner{animation:none;stroke-dasharray:none;}}
 
 /* Secret Society: countdown, life and death. */
 #c17-illuminati-countdown {
@@ -9352,7 +9355,7 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
   padding:24px 16px 82px !important;
   overflow:visible !important;
   pointer-events:auto !important;
-  touch-action:pan-y !important;
+  touch-action:pan-x pan-y pinch-zoom !important;
 }
 .c17-dossier-side-tabs {
   position:sticky !important;
@@ -9631,7 +9634,7 @@ html.frost-conquering.tawnya-dossier-open body > .c17-tawnya-profile-overlay.c17
 }
 
 html.frost-dead-world
-body > *:not(.c17-frost-overlay, #c17-illuminati-countdown, #c17-control) {
+body > *:not(.c17-frost-overlay, #c17-illuminati-countdown, #c17-control, .c17-dossier-overlay.open) {
   pointer-events: none !important;
    
 }
@@ -12850,7 +12853,7 @@ body.employment-open { overflow:hidden; }
   overflow-y: hidden !important;
   overscroll-behavior-x: contain;
   -webkit-overflow-scrolling: touch;
-  touch-action: pan-x;
+  touch-action: pan-x pan-y pinch-zoom !important;
   scrollbar-width: none;
   border-radius: 8px !important;
   background: #020d18 !important;
@@ -15187,8 +15190,7 @@ html.c17-trust-transition #home .nodes {animation:c17StationArrival 1.1s ease bo
 /* Native zoom has one authority, including frozen-page ancestors. */
 html,body,#home,#signalNode,
 html.frost-dead-world.tawnya-dossier-open body,
-html.tawnya-dossier-open .c17-dossier-overlay,
-html.tawnya-dossier-open .c17-dossier-overlay * {
+html.tawnya-dossier-open .c17-dossier-overlay {
   touch-action:pan-x pan-y pinch-zoom !important;
 }
 html.tawnya-dossier-open .c17-tawnya-profile-overlay,
