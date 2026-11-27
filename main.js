@@ -2398,6 +2398,18 @@ function c17OpenDrawingWall() {
       x=W*scale<view.clientWidth ? (view.clientWidth-W*scale)/2 : clamp(x,view.clientWidth-W*scale,0);
       y=H*scale<view.clientHeight ? (view.clientHeight-H*scale)/2 : clamp(y,view.clientHeight-H*scale,0);
       world.style.transform=`translate(${x}px,${y}px) scale(${scale})`;
+      // Keep the SVG paint surface bounded to the visible wall, without changing ink coordinates.
+      const left=Math.max(0,Math.floor(-x/scale)-32), top=Math.max(0,Math.floor(-y/scale)-32);
+      const right=Math.min(W,Math.ceil((view.clientWidth-x)/scale)+32), bottom=Math.min(H,Math.ceil((view.clientHeight-y)/scale)+32);
+      const iw=Math.max(1,right-left), ih=Math.max(1,bottom-top);
+      ink.style.left=`${left}px`; ink.style.top=`${top}px`;
+      ink.style.width=`${iw}px`; ink.style.height=`${ih}px`;
+      ink.setAttribute('viewBox',`${left} ${top} ${iw} ${ih}`);
+      for(const item of world.querySelectorAll('.c17-wall-panel,.c17-wall-vent,.c17-drawing-art,.c17-wall-note,.c17-wall-pipe')) {
+        const visible=item.offsetLeft+item.offsetWidth>=left-160 && item.offsetLeft<=right+160 && item.offsetTop+item.offsetHeight>=top-160 && item.offsetTop<=bottom+160;
+        item.style.visibility=visible?'':'hidden';
+      }
+
     }
     function requestPaint() {if(!frame)frame=requestAnimationFrame(()=>{frame=0;paint();});}
     function zoom(next,cx=view.clientWidth/2,cy=view.clientHeight/2) {
@@ -5485,9 +5497,11 @@ function openChannel() {
     document.documentElement.classList.remove("c17-trust-transition");
     document.documentElement.classList.add("c17-trust-entered");
     // Keep this same body-level image: no handoff into a transformed ancestor.
+    c17PlaceRoach();
     c17StartStationPulses();
   });
   c17PlaceRoach();
+  requestAnimationFrame(c17PlaceRoach);
 }
 
 function c17PlaceRoach() {
@@ -5497,7 +5511,9 @@ function c17PlaceRoach() {
   if(!core || !last || !button) return;
   const cr=core.getBoundingClientRect(),nr=last.getBoundingClientRect();
   core.style.setProperty("--c17-roach-x",`${nr.left+nr.width/2-cr.left}px`);
-  core.style.setProperty("--c17-roach-y",`${nr.bottom-cr.top+52}px`);
+  const viewportBottom = window.visualViewport ? window.visualViewport.offsetTop + window.visualViewport.height : window.innerHeight;
+  const maxTop = viewportBottom - cr.top - button.offsetHeight - 18;
+  core.style.setProperty("--c17-roach-y",`${Math.min(nr.bottom-cr.top+52,maxTop)}px`);
   const img=button.querySelector("img");
   if(!img) return;
   function centerVisibleArt(){
@@ -5523,6 +5539,7 @@ function c17PlaceRoach() {
   if(img.complete)centerVisibleArt();else img.addEventListener("load",centerVisibleArt,{once:true});
 }
 window.addEventListener("resize",()=>{if(home.classList.contains("open")) c17PlaceRoach();},{passive:true});
+window.visualViewport?.addEventListener("resize",()=>{if(home.classList.contains("open")) c17PlaceRoach();},{passive:true});
 
 // Sparse signals cross a larger world. Only rare green signals visit a node.
 function c17PulseRoute(w,h,target,opening=false) {
